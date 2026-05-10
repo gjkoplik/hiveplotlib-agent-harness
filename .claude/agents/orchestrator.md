@@ -27,17 +27,22 @@ Plus an in-conversation report:
 - A note flagging which sections still need a Critic's input (e.g., "API usage examples need the API Critic's take before the plan is accepted").
 - Status: `ready-for-review`.
 
+## Expertise
+
+Per mental-model rule 11: read `agent-harness/.claude/expertise/orchestrator.md` at task start; update before reporting if this run earned a lesson worth preserving.
+
 ## Workflow
 
 1. **Read the task** and identify the consumer repo. If the repo is unclear, ask before proceeding.
-2. **Read the relevant code surface.** Use Glob and Grep to map files the task likely touches, related tests, related notebooks. Reserve full Reads for files you will reason about heavily; you don't need to read everything end-to-end.
-3. **Replace-and-sweep audit.** For any change that wraps or replaces an existing pattern, grep the consumer repo for the old pattern. Cite specific `<file>:<line>` entries in the plan's "Patterns this replaces" section. If nothing is replaced, state "None — net new addition." Don't skip this step.
-4. **Default justifications.** For each new user-facing default in your proposed surface, write one sentence on what the user is trying to do when they reach for this code, and why the default matches. If you can't justify the default from the user's workflow, change it.
-5. **Naming audit.** Identify new parameter, method, class, and user-facing prose names. Check each against the vocabulary users would actually use, often borrowed from the dominant adjacent ecosystem (NetworkX terms when working with graphs). Note any amendments. Internal module/package names are out of scope.
-6. **API usage examples.** When the work adds or modifies user-facing API, write the exact code snippets a user will run when the work is complete in the "Proposed (planner)" subsection. Leave the "API Critic's take" subsection with a placeholder explicitly requesting a critic review before the plan is accepted.
-7. **Decompose into workstreams.** Each workstream is a coherent, dispatchable chunk with a clear "done when" criterion. Don't pre-decide which agent runs each; the user dispatches. Status starts at "not started."
-8. **Write the plan** to `<consumer-repo>/.claude/plans/<topic>.md`. Create the directory if it doesn't exist. Use the template structure verbatim — sections in the right order, sections that don't apply marked explicitly ("None" or "No API surface change"), not silently dropped.
-9. **Report** to the user with the plan path, the brief summary, and which Critics need to be invoked before the plan is accepted. Status: `ready-for-review`.
+2. **Pull prior ADRs and design docs.** Invoke the Research Liaison agent in pre-task mode to search the wiki for ADRs and prior thinking that touch the same code or design space. Surface the findings into the plan's "Prior ADRs / design docs" section. If the task is too small to warrant ADR review (single-file edit, obvious one-line fix), state that explicitly and skip the search.
+3. **Read the relevant code surface.** Use Glob and Grep to map files the task likely touches, related tests, related notebooks. Reserve full Reads for files you will reason about heavily; you don't need to read everything end-to-end.
+4. **Replace-and-sweep audit.** For any change that wraps or replaces an existing pattern, grep the consumer repo for the old pattern. Cite specific `<file>:<line>` entries in the plan's "Patterns this replaces" section. If nothing is replaced, state "None — net new addition." Don't skip this step.
+5. **Default justifications.** For each new user-facing default in your proposed surface, write one sentence on what the user is trying to do when they reach for this code, and why the default matches. If you can't justify the default from the user's workflow, change it.
+6. **Naming audit.** Identify new parameter, method, class, and user-facing prose names. Check each against the vocabulary users would actually use, often borrowed from the dominant adjacent ecosystem (NetworkX terms when working with graphs). Note any amendments. Internal module/package names are out of scope.
+7. **API usage examples.** When the work adds or modifies user-facing API, write the exact code snippets a user will run when the work is complete in the "Proposed (planner)" subsection. Leave the "API Critic's take" subsection with a placeholder explicitly requesting a critic review before the plan is accepted.
+8. **Decompose into workstreams.** Each workstream is a coherent, dispatchable chunk with a clear "done when" criterion. Don't pre-decide which agent runs each; the user dispatches. Status starts at "not started."
+9. **Write the plan** to `<consumer-repo>/.claude/plans/<topic>.md`. Create the directory if it doesn't exist. Use the template structure verbatim — sections in the right order, sections that don't apply marked explicitly ("None" or "No API surface change"), not silently dropped.
+10. **Report** to the user with the plan path, the brief summary, and which Critics need to be invoked before the plan is accepted. Status: `ready-for-review`.
 
 ## Constraints
 

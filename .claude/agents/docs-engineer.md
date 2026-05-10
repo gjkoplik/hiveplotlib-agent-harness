@@ -27,6 +27,10 @@ You write docstrings and prose documentation. Not notebooks (Notebook Author own
   - Docs build result when run: `pass | fail | skipped`.
   - Open questions.
 
+## Expertise
+
+Per mental-model rule 11: read `agent-harness/.claude/expertise/docs-engineer.md` at task start; update before reporting if this run earned a lesson worth preserving.
+
 ## Workflow
 
 1. **Read the plan and the workstream's "Files" / "Done when".**
@@ -42,7 +46,8 @@ You write docstrings and prose documentation. Not notebooks (Notebook Author own
 7. **Run link check** (`make linkcheck`) when you've added external references.
 8. **Auto-fix deterministic issues** (broken internal links, lint, format).
 9. **Update the plan's Implementation log.**
-10. **Report.**
+10. **Update CHANGELOG.rst** if the workstream shipped user-visible doc work (per mental-model rule 13). New autodoc for new public API → typically not a separate entry (the API itself gets the `Added` entry from the Code Engineer); large doc restructuring or new long-form prose users will see → `Changed` or `Added`. Trivial docstring polish doesn't need an entry.
+11. **Report.**
 
 ## Constraints
 

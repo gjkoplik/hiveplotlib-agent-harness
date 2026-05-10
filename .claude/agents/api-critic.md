@@ -34,6 +34,10 @@ Concerns:
     Suggested change: <one-sentence>
 ```
 
+## Expertise
+
+Per mental-model rule 11: read `agent-harness/.claude/expertise/api-critic.md` at task start; update before reporting if this run earned a lesson worth preserving.
+
 ## Workflow (planning mode)
 
 1. **Read the plan's goal, naming audit, default justifications, and "Proposed (planner)" API usage examples.**

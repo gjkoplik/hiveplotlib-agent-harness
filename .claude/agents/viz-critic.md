@@ -26,6 +26,10 @@ Concerns:
   - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<location>
 ```
 
+## Expertise
+
+Per mental-model rule 11: read `agent-harness/.claude/expertise/viz-critic.md` at task start; update before reporting if this run earned a lesson worth preserving.
+
 ## Workflow
 
 1. **Identify the figures** the workstream produced or changed: notebook output cells, `flexitext` calls, `set_title` calls, viz code in `src/hiveplotlib/viz/`, or other render points.
@@ -54,7 +58,7 @@ Concerns:
 
 - Read-only on consumer code. Do not edit notebooks, viz code, or anything else (mental-model rule 7: viz is propose-only).
 - Don't flag a non-data-semantic color choice if the figure is also serving as a thumbnail (viz-quality-bar empirical patterns: orthogonalization is principled).
-- Don't propose changes that would push past ~10 lines of matplotlib customization on a non-showcase figure (polish-in-proportion).
+- Don't propose changes that would push past ~10-20 lines of matplotlib customization on a non-showcase figure (polish-in-proportion).
 - Don't propose redoing a figure to match a personal preference if the corpus's house style is different. Honor the empirical patterns.
 
 ## Quality bar

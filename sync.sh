@@ -38,6 +38,13 @@ mkdir -p "$CONSUMER/.claude/skills" "$CONSUMER/.claude/agents" "$CONSUMER/.claud
 
 # Auto-discover skills (directories) and agents (.md files) under .claude/.
 # Add a new skill or agent in the harness, sync.sh picks it up automatically.
+#
+# NOTE: .claude/expertise/ is INTENTIONALLY NOT synced. Agents read AND write
+# their expertise files directly from the harness submodule path (per
+# mental-model rule 11). If sync.sh started copying expertise into the
+# consumer's .claude/, agent updates to expertise would land in the consumer
+# copy and get clobbered on the next sync — losing accumulated lessons.
+# Don't add expertise to the sync loop without solving that problem first.
 
 if [ -d "$HARNESS_DIR/.claude/skills" ]; then
   for skill_dir in "$HARNESS_DIR/.claude/skills"/*/; do
@@ -58,6 +65,66 @@ if [ -d "$HARNESS_DIR/.claude/agents" ]; then
     echo "synced agent: $agent"
   done
 fi
+
+# Prune orphans: items WE placed previously but no longer place. We track
+# what we placed via a manifest at $CONSUMER/.claude/.harness-managed.
+# Consumer-specific skills and agents (never in our manifest) are NEVER
+# touched. Only items we placed before and don't place now get removed —
+# this handles renames and deletions of harness-owned content while
+# leaving consumer content alone.
+
+MANIFEST="$CONSUMER/.claude/.harness-managed"
+
+# Read previous manifest (the items we placed in a previous run).
+PREV_MANAGED=()
+if [ -f "$MANIFEST" ]; then
+  while IFS= read -r line; do
+    [ -n "$line" ] && PREV_MANAGED+=("$line")
+  done < "$MANIFEST"
+fi
+
+# Build the current set: what we placed in this run.
+CURRENT_MANAGED=()
+if [ -d "$HARNESS_DIR/.claude/skills" ]; then
+  for skill_dir in "$HARNESS_DIR/.claude/skills"/*/; do
+    [ -d "$skill_dir" ] || continue
+    CURRENT_MANAGED+=("skills/$(basename "$skill_dir")")
+  done
+fi
+if [ -d "$HARNESS_DIR/.claude/agents" ]; then
+  for agent_file in "$HARNESS_DIR/.claude/agents"/*.md; do
+    [ -f "$agent_file" ] || continue
+    CURRENT_MANAGED+=("agents/$(basename "$agent_file")")
+  done
+fi
+
+# Remove items we managed before but no longer manage (renames or deletions).
+for prev in "${PREV_MANAGED[@]}"; do
+  found=0
+  for curr in "${CURRENT_MANAGED[@]}"; do
+    if [ "$prev" = "$curr" ]; then
+      found=1
+      break
+    fi
+  done
+  if [ "$found" -eq 0 ]; then
+    target="$CONSUMER/.claude/$prev"
+    if [ -d "$target" ]; then
+      rm -rf "$target"
+      echo "removed orphan: $prev"
+    elif [ -f "$target" ]; then
+      rm -f "$target"
+      echo "removed orphan: $prev"
+    fi
+  fi
+done
+
+# Write the new manifest for the next run.
+{
+  for entry in "${CURRENT_MANAGED[@]}"; do
+    echo "$entry"
+  done
+} > "$MANIFEST"
 
 echo
 echo "Sync complete to $CONSUMER/.claude/"

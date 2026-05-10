@@ -12,6 +12,15 @@ This template lives at <harness>/.claude/templates/plan-template.md.
 
 One paragraph. What user-visible value does this deliver when it lands? What's the simplest one-sentence pitch for the change?
 
+## Prior ADRs / design docs
+
+Required section. The Orchestrator invokes Research Liaison at planning start to search the wiki for prior ADRs and design docs that touch the same code or design space. List relevant entries here:
+
+- `wiki/wiki/adr/NNNN-topic.md` — one-line on why this is relevant to the current plan (e.g., "established that NetworkX is an optional dep, scope here matches that boundary")
+- ...
+
+If no prior ADRs apply (entirely new design space, or work too small to have prior history), state "None — net new design space" or "None — out of scope for ADR review."
+
 ## Patterns this replaces
 
 Required section. List old patterns this work obsoletes:
@@ -21,7 +30,7 @@ Required section. List old patterns this work obsoletes:
 
 If nothing is replaced, state "None, this is a net new addition."
 
-The Orchestrator runs grep during planning to populate this. The Verifier runs grep again post-execution to check for survivors not in `Holdouts`.
+The Orchestrator runs grep during planning to populate this. The QA Engineer runs grep again post-execution to check for survivors not in `Holdouts`.
 
 ## Default justifications
 
@@ -87,7 +96,7 @@ Break the work into named workstreams. Each is a coherent, dispatchable chunk. D
 
 ## Holdouts
 
-Optional. If the replace-and-sweep audit finds patterns we deliberately want to leave alone (e.g., a teaching moment in a foundations tutorial), list them here with a one-line reason each. The Verifier won't flag these post-execution.
+Optional. If the replace-and-sweep audit finds patterns we deliberately want to leave alone (e.g., a teaching moment in a foundations tutorial), list them here with a one-line reason each. The QA Engineer won't flag these post-execution.
 
 - `<file:line>`: kept as `<old pattern>` because <reason>
 

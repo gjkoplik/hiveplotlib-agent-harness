@@ -26,6 +26,10 @@ You write tests for code the Code Engineer just produced (or, when paired with a
   - Markers used.
   - Open questions, if any.
 
+## Expertise
+
+Per mental-model rule 11: read `agent-harness/.claude/expertise/test-engineer.md` at task start; update before reporting if this run earned a lesson worth preserving.
+
 ## Workflow
 
 1. **Read the plan and the workstream's "Done when" criteria.** Tests must verify those criteria.
