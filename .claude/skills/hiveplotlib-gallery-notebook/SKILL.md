@@ -90,6 +90,14 @@ End with one or more "for more on X, see [other notebook]" links. This is how re
 - Other gallery pages that drill into adjacent options.
 - Longer tutorials when the topic has one.
 
+**Format the closing pointers as prose paragraphs, not as a `## See Also` heading with bulleted links.** The canonical shape is one paragraph per pointer in the form `For more on X, see the [Y](Y.ipynb) page.` separated by blank lines. See `computing_graph_metrics.ipynb` and `exporting_hive_plots_to_networkx.ipynb` for the canonical layout. A `## See Also` heading + bullet list reads as a different document genre (reference index) and breaks tone with the surrounding prose.
+
+**Exception — topic-specific closing sections are fine.** The rule against generic `## See Also` + bullets is about the reference-index genre, not about all section headings. When a closing pointer introduces a distinct conceptual topic the reader might want to explore as its own subject (rather than just one of several adjacent options), it's appropriate to use a topic-specific `## Heading` followed by prose paragraphs. Examples done well: `setting_partition_variable.ipynb` closes with `## Using Node Graph Metrics as Partition Variables`, `setting_sorting_variables.ipynb` closes with `## Using Node Graph Metrics as Sorting Variables`. The heading earns its place by naming a specific topic with its own depth, not by being a catch-all bucket.
+
+**Cross-link discipline: link to the single best "next step" notebook, not every subordinate reference.** When a topic has both a focused walkthrough notebook and several supporting references (an API table, a per-method walkthrough, a kwarg reference, a collision-handling example), pick the walkthrough and link to it alone. The reader who lands there finds the subordinate references organized in context. Enumerating each one inline ("see the [X Table](...), the [Y Method](...), and the [Z Walkthrough](...) for the supported keys, the post-hoc method, and the per-metric kwargs respectively") clutters the source notebook and adds nothing the destination notebook doesn't already give the reader.
+
+**Linking to a specific section of another notebook:** use the Sphinx-auto-generated anchor `[Section Name](other_notebook.ipynb#section-name-slug)`, where the slug is the lowercased heading with spaces replaced by hyphens. Example: `[Using a Computed Metric as a Partition Variable](computing_graph_metrics.ipynb#using-a-computed-metric-as-a-partition-variable)`. Use anchored links when the destination notebook has multiple sections and the reader benefits from landing on the specific one (rather than scrolling from the top). Plain `[Notebook Title](notebook.ipynb)` links remain correct for "go read the whole thing" pointers.
+
 Tutorial-style "References" sections (citations) do **not** belong on gallery pages.
 
 ## Voice and tone
