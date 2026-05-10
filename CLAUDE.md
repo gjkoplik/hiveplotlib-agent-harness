@@ -17,7 +17,7 @@ Source of truth for skills, agents, commands, and shared mental model used to de
 - `.claude/agents/notebook-author.md`: creates or updates `examples/` notebooks. Delegates style to the harness's tutorial/gallery skills (`hiveplotlib-tutorial-notebook`, `hiveplotlib-gallery-notebook`). Applies polish-in-proportion-to-role.
 - `.claude/agents/viz-critic.md`: read-only review of rendered figures. Confidence-tagged proposal list.
 - `.claude/agents/qa-engineer.md`: runs tests/lint/type/doc-build, audits replace-and-sweep, checks the Implementation log and CHANGELOG, auto-fixes deterministic issues, switches to formal diagnostic mode on test-failure escalation, proposes taste-call concerns. Does not run git mutating commands.
-- `.claude/commands/`: user-typed entry points. Not yet added.
+- `.claude/commands/`: user-typed slash-command entry points distributed by `sync.sh` to every consumer. Use this for shared, harness-generic commands. Currently empty. **Consumer-specific commands** (referencing project-specific paths or agents) belong in `<consumer>/.claude/commands/` directly, where they stay machine-local (gitignored) unless the consumer chooses to track them separately.
 - `.claude/templates/plan-template.md`: canonical plan template used by every plan in `<consumer-repo>/.claude/plans/`.
 - `sync.sh`: copies the harness's skills and agents into a consumer repo's `.claude/`. Auto-discovers skills (directories) and agents (`.md` files). Run from inside the consumer repo, or with the consumer path as an argument.
 
@@ -25,11 +25,3 @@ Source of truth for skills, agents, commands, and shared mental model used to de
 
 Plans for hiveplotlib work do not live here. They live at `hiveplotlib/.claude/plans/<topic>.md` (or the equivalent path for other consumer repos). The harness owns the template; the consuming repo owns the plans for its own work.
 
-## Build phases
-
-1. **Skeleton (complete):** mental-model skill, viz-quality-bar skill, plan template, Orchestrator, Code Engineer, QA Engineer.
-2. **Specialists (complete):** Test Engineer, Docs Engineer, Notebook Author, Viz Critic, API Critic, Research Liaison.
-3. Hooks and observability: PreToolUse guardrails, Stop verification, agent-action log.
-4. Self-update / pull-from-source distribution.
-
-Currently in: Phase 2 complete. Awaiting a real task to one-shot test the full harness end-to-end.

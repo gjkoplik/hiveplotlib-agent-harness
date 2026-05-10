@@ -34,7 +34,7 @@ if [ ! -d "$CONSUMER" ]; then
   exit 1
 fi
 
-mkdir -p "$CONSUMER/.claude/skills" "$CONSUMER/.claude/agents" "$CONSUMER/.claude/plans"
+mkdir -p "$CONSUMER/.claude/skills" "$CONSUMER/.claude/agents" "$CONSUMER/.claude/commands" "$CONSUMER/.claude/plans"
 
 # Auto-discover skills (directories) and agents (.md files) under .claude/.
 # Add a new skill or agent in the harness, sync.sh picks it up automatically.
@@ -63,6 +63,16 @@ if [ -d "$HARNESS_DIR/.claude/agents" ]; then
     rm -f "$CONSUMER/.claude/agents/$agent"
     cp "$agent_file" "$CONSUMER/.claude/agents/"
     echo "synced agent: $agent"
+  done
+fi
+
+if [ -d "$HARNESS_DIR/.claude/commands" ]; then
+  for command_file in "$HARNESS_DIR/.claude/commands"/*.md; do
+    [ -f "$command_file" ] || continue
+    command=$(basename "$command_file")
+    rm -f "$CONSUMER/.claude/commands/$command"
+    cp "$command_file" "$CONSUMER/.claude/commands/"
+    echo "synced command: $command"
   done
 fi
 
@@ -95,6 +105,12 @@ if [ -d "$HARNESS_DIR/.claude/agents" ]; then
   for agent_file in "$HARNESS_DIR/.claude/agents"/*.md; do
     [ -f "$agent_file" ] || continue
     CURRENT_MANAGED+=("agents/$(basename "$agent_file")")
+  done
+fi
+if [ -d "$HARNESS_DIR/.claude/commands" ]; then
+  for command_file in "$HARNESS_DIR/.claude/commands"/*.md; do
+    [ -f "$command_file" ] || continue
+    CURRENT_MANAGED+=("commands/$(basename "$command_file")")
   done
 fi
 
