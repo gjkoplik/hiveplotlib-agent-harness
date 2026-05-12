@@ -87,7 +87,16 @@ QA Engineer and Critic agents act differently based on the kind of issue.
 
 The line is "objective wrongness" auto, "judgment call" propose. When in doubt, propose. Critics tag every proposed item with a confidence: `must-fix` / `worth-discussing` / `low-confidence`.
 
-**Critics participate in planning, not just post-implementation review.** The API Critic reviews proposed API surface from a user-attempting-task perspective during planning and signs off on the plan's API usage examples section. The Viz Critic reviews planned visualization changes for partition discipline, color/alpha, and backend choice. Planning-phase critic findings amend the plan; post-execution critic findings follow the auto/propose split above.
+**Critics participate in planning AND post-implementation review.** Both phases are required when a workstream touches the critic's domain — neither phase is optional, and neither substitutes for the other. Planning catches design-level issues at the cheapest stage; post-impl catches what only surfaces once you can actually call the code.
+
+**API Critic triggers:**
+
+- *Planning mode:* required whenever the plan adds or modifies user-facing API. The Orchestrator surfaces this in step 7 of its workflow; the api-critic edits the plan's "API Critic's take" subsection before the plan is accepted.
+- *Post-implementation mode:* required whenever a workstream lands user-facing API code, **including mechanical propagations of an existing surface to a sibling class** (e.g. `HivePlotMatrix` mirroring `HivePlot`). A mechanical propagation is a fresh surface from the user's perspective; the propagation framing does not exempt it from a real-user walkthrough. The dispatching session invokes api-critic after the code-engineer finishes; api-critic fills the plan's "API Critic — post-implementation review" section. The QA Engineer verifies this section is filled as part of its release-readiness check (per rule 12).
+
+**Viz Critic triggers:** the planning-mode review covers partition discipline, color/alpha, and backend choice. Post-impl review covers rendered figures (notebook cells, docstring image examples, gallery renders). Same auto/propose discipline as the API Critic.
+
+Planning-phase critic findings amend the plan; post-execution critic findings follow the auto/propose split above.
 
 ### 8. Preserve user-friendly framing in docstring and prose rewrites
 
@@ -164,6 +173,29 @@ Per-role responsibility:
 - Internal-only changes (refactors, test infrastructure, perf with no behavior change): no entry needed.
 
 The QA Engineer flags missing entries on every workstream as part of the release-readiness check (rule 12). It is the executing specialist's job to file the entry, not the QA Engineer's.
+
+### 14. Route emergent work back through the Orchestrator
+
+Scope-changing decisions that surface mid-flight are planning decisions, not dispatch decisions. They route to the Orchestrator in `amend-plan` mode, not to the user. The dispatching session is the agent that reads the trigger and routes; the Orchestrator triages and edits the plan; the user reviews the amended plan and continues the work.
+
+**Trigger.** Rule 14 fires on either of two cases:
+
+- **(a)** Any post-impl critic finding tagged `must-fix` or `should-fix` lands in a plan's "API Critic — post-implementation review" section (or the equivalent viz-critic section). `worth-discussing` and `low-confidence` items stay user-triaged proposals per the rule 7 auto/propose split; they do not auto-route.
+- **(b)** Any user ask that would change the workstream set — specifically: adding a new workstream, modifying an existing workstream's done-when, or deferring an item to a follow-up.
+
+The clause (b) taxonomy maps one-to-one to the plan template's "Plan amendments" three-way split (Added workstream / In-scope tweak / Deferred follow-up). The rule and the template stay in lockstep; if one is amended without the other they drift, and a future dispatching session would have to reconcile two different taxonomies.
+
+**Routing chain.** One hop, three roles, three distinct jobs:
+
+1. The critic writes the finding into the plan (post-impl reviews land in the plan's post-impl section).
+2. The dispatching session reads the plan as part of routine dispatch and sees the trigger.
+3. The dispatching session invokes the Orchestrator in `amend-plan` mode before any other dispatch and before asking the user. The Orchestrator triages, edits the plan's "Plan amendments" section, and returns a dispatch recommendation. The dispatching session then continues with that recommendation.
+
+**Gate vs. routing.** Per `qa-engineer.md` step 12, the QA Engineer verifies that post-impl review sections are filled (not still `Pending — ...`). That step is the parallel **gate** ensuring step 1 of the routing chain happened. It is **not** a hop in the routing chain itself: qa-engineer does not read the findings and decide what to do with them. The dispatching session reads the findings; the Orchestrator triages them. Naming qa-engineer in the routing chain would muddy ownership; the gate-vs-route distinction is the discipline that keeps the three roles clean.
+
+**What the dispatching session does NOT route through the Orchestrator.** Routine dispatch decisions stay with the dispatching session: which agent runs which workstream (the plan recommends; the dispatcher picks), sequencing within the recommended dispatch sequence ("should I run tests before docs?"), retry decisions on transient failures ("the test failed, do I rerun?" per agent definitions). Rule 14 fires only when the workstream set changes shape.
+
+For mode details (how `amend-plan` mode works, where it edits, what it returns), see the Orchestrator definition at `agent-harness/.claude/agents/orchestrator.md`.
 
 ## Library invariants
 

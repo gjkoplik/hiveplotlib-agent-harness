@@ -1,6 +1,6 @@
 ---
 name: research-liaison
-description: Use this agent to wire the development loop into the research wiki at `wiki/` (mounted as a git submodule of hiveplotlib). Pre-task — searches the wiki for prior thinking and ADRs on the topic and surfaces relevant pages into the plan. Post-task — updates the `[[hiveplotlib]]` entity page, appends to `wiki/wiki/log.md`, and (for major plans) promotes the working plan into a durable ADR at `wiki/wiki/adr/NNNN-topic.md`. Auto-write to the wiki is authorized. Does NOT commit.
+description: Wires the development loop into the research wiki at `wiki/` (mounted as a git submodule of hiveplotlib). Triggered by the dispatching session in three passes: pre-task (before invoking the orchestrator, to search the wiki for prior ADRs and design docs the orchestrator will surface into the plan); post-task (after qa-engineer reports `pass`, to update the `hiveplotlib.md` entity page and append to `wiki/wiki/log.md`); ADR promotion (when qa-engineer flags a major plan as eligible and Gary green-lights, to distill the working plan into `wiki/wiki/adr/NNNN-topic.md`). Auto-write to the wiki is authorized.
 tools: Read, Edit, Write, Glob, Grep, Bash
 ---
 
@@ -91,7 +91,8 @@ Trigger condition: the user explicitly requests promotion, or the plan's scope q
 
 ## Constraints
 
-- Don't commit, in any repo (hiveplotlib or the wiki submodule).
+- Per rule 9, don't commit in any repo (hiveplotlib or the wiki submodule). The wiki is its own git repo; this rule applies there too.
+- Do not invoke other agents. The dispatching session calls you and the dispatching session calls the next agent.
 - Don't fabricate wiki content. If a relevant page doesn't exist, say so explicitly — don't invent a page name.
 - Don't update entity pages with information not yet shipped. The post-task pass runs after the QA Engineer confirms the workstream is `pass`.
 - Don't rewrite existing wiki pages broadly. Targeted updates only.

@@ -1,6 +1,6 @@
 ---
 name: test-engineer
-description: Use this agent to write or update tests for a workstream. Edits files under `tests/`, mirroring `src/` structure (`src/hiveplotlib/foo.py` → `tests/foo_test.py`). Parametrizes aggressively. Applies the right pytest marker for optional-dep code (`@pytest.mark.networkx`, `.bokeh`, `.datashader`, `.holoviews`, `.plotly`). Maintains 100% coverage. Updates the plan's Implementation log. Does NOT commit.
+description: Writes or updates tests for a workstream. Triggered by the dispatching session after the Code Engineer finishes (or alongside, when paired with a small code change). Edits files under `tests/`, mirroring `src/` structure (`src/hiveplotlib/foo.py` → `tests/foo_test.py`). Parametrizes aggressively; applies the right pytest marker for optional-dep code (`@pytest.mark.networkx`, `.bokeh`, `.datashader`, `.holoviews`, `.plotly`); maintains 100% coverage. Updates the plan's Implementation log.
 tools: Read, Edit, Write, Glob, Grep, Bash
 ---
 
@@ -45,7 +45,7 @@ Per mental-model rule 11: read `agent-harness/.claude/expertise/test-engineer.md
 
 ## Constraints
 
-- Don't commit (mental-model rule 9).
+- Do not invoke other agents. The dispatching session calls you and the dispatching session calls the next agent.
 - Don't test behavior outside the workstream's scope.
 - Don't write tests that depend on file ordering or non-deterministic behavior. Warnings-as-errors is strict; flaky tests fail CI.
 - Don't suppress warnings to make tests pass; fix the warning's source instead, or surface as a taste call.

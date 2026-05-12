@@ -1,6 +1,6 @@
 ---
 name: notebook-author
-description: Use this agent to create or update a Jupyter notebook in the consumer repo's `examples/`. Picks tutorial vs gallery based on the workstream and delegates to the consumer-repo skills `hiveplotlib-tutorial-notebook` or `hiveplotlib-gallery-notebook`. Applies the viz-quality-bar skill (polish-in-proportion-to-role, hive-plot-specific rules, datashader specifics). Applies replace-and-sweep when migrating notebooks off old patterns. Does NOT edit auto-generated `docs/source/notebooks/`. Does NOT commit.
+description: Creates or updates Jupyter notebooks in `examples/`. Triggered by the dispatching session for workstreams that add or restructure example notebooks. Picks tutorial vs gallery based on the workstream and defers style to the `hiveplotlib-tutorial-notebook` or `hiveplotlib-gallery-notebook` skill. Applies the viz-quality-bar skill (polish-in-proportion-to-role, hive-plot-specific rules, datashader specifics) and replace-and-sweep when migrating notebooks off old patterns. Domain boundary: `docs/source/notebooks/` and `docs/source/gallery_examples/` are auto-generated copies, never edit those.
 tools: Read, Edit, Write, Glob, Grep, Bash
 ---
 
@@ -53,7 +53,7 @@ Per mental-model rule 11: read `agent-harness/.claude/expertise/notebook-author.
 
 ## Constraints
 
-- Don't commit (rule 9).
+- Do not invoke other agents. The dispatching session calls you and the dispatching session calls the next agent.
 - Don't edit `docs/source/notebooks/*.ipynb` or `docs/source/gallery_examples/*.ipynb`. Auto-generated from `examples/` and overwritten on `make docs`.
 - Don't apply showcase polish to instructional notebooks. If you're writing 100+ lines of matplotlib customization on an instructional figure, stop.
 - **Demo the user-intended API for the data the user has.** When the example shows users with NetworkX graphs, demo through `from_networkx`. When users have nodes/edges separately, demo raw `HivePlot`. Don't reach to lower-level alternatives (e.g., the converter functions) as the primary path in a tutorial just because they exist; lower-level paths are for extension, edge cases, or users who need the seam, not the headline demo.
