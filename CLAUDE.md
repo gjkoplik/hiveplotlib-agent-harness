@@ -4,6 +4,12 @@ Source of truth for skills, agents, commands, and shared mental model used to de
 
 Distributed into the consumer's `.claude/` by `bash sync.sh` from the harness root; the script defaults to syncing into the parent directory when that parent looks like a consumer (has `pyproject.toml` or `.claude/`), otherwise pass the consumer path explicitly. Sync uses file copies because WSL symlinks aren't followed by Windows-side tools accessing via UNC paths.
 
+## Trip-wires (read first)
+
+The conventions that catch real mistakes if missed. The harness's `mental-model` skill expands on these; what's below is what's worth knowing turn-1, before skills resolve.
+
+- **Halt on confusion; never run destructive ops.** When you encounter state that doesn't match your expectations (a file modified that you didn't modify, code that doesn't match the brief, a test failure with an unfamiliar shape, `pytest` output you can't classify as pass or fail, a plan claim that doesn't match source state, a sub-agent surface-back trigger), STOP and surface with a `STATUS: BLOCKED` report; do not normalize the state and do not self-recover. Multiple agents may be active in the same working tree, so finding unexpected state is an expected condition, not a broken one. Destructive operations are banned absolutely under any framing, as the most catastrophic flavor of self-recovery: no `git checkout -- <path>`, no `git restore` without `--source`, no `git reset --hard`, no `git clean`, no `git stash drop` / `git stash clear`, no `git switch --discard-changes`, no `--force` flag, no `rm -rf` on tracked files, no `>` redirection overwriting tracked files, no `Write` overwriting a file you have not just read. See mental-model rule 16 (upstream) and rule 9 (corollary) in the mental-model skill for the full enumeration and the absolute-ban phrasing.
+
 ## Layout
 
 - `.claude/skills/mental-model/SKILL.md`: shared mental model loaded by every agent. Workflow rules, library invariants, prose voice. Points at the viz-quality-bar skill for viz work. **Start here.**
@@ -20,7 +26,7 @@ Distributed into the consumer's `.claude/` by `bash sync.sh` from the harness ro
 - `.claude/agents/viz-critic.md`: read-only review of rendered figures. Confidence-tagged proposal list.
 - `.claude/agents/qa-engineer.md`: runs tests/lint/type/doc-build, audits replace-and-sweep, checks the Implementation log and CHANGELOG, auto-fixes deterministic issues, switches to formal diagnostic mode on test-failure escalation, proposes taste-call concerns. Does not run git mutating commands.
 - `.claude/commands/`: user-typed slash-command entry points distributed by `sync.sh` to every consumer. Use this for shared, harness-generic commands. Currently empty. **Consumer-specific commands** (referencing project-specific paths or agents) belong in `<consumer>/.claude/commands/` directly, where they stay machine-local (gitignored) unless the consumer chooses to track them separately.
-- `.claude/templates/plan-template.md`: canonical plan template used by every plan in `<consumer-repo>/.claude/plans/`.
+- `.claude/templates/plan-template.md`: canonical plan template used by every plan in the consumer's plans directory (see the "Plans" section for path resolution).
 - `sync.sh`: copies the harness's skills and agents into a consumer repo's `.claude/`. Auto-discovers skills (directories) and agents (`.md` files). Run from inside the consumer repo, or with the consumer path as an argument.
 
 ## The dispatching session
@@ -31,7 +37,7 @@ The "dispatching session" is the consumer repo's main Claude Code conversation, 
 
 Mapping from task phase to agent invocation:
 
-- **Task start (non-trivial work).** Invoke research-liaison in pre-task mode to surface prior ADRs, then invoke the orchestrator in `initial-plan` mode with those findings included in the task brief. The orchestrator produces the plan at `<consumer-repo>/.claude/plans/<topic>.md`. Surface the plan path to Gary and pause for review.
+- **Task start (non-trivial work).** Invoke research-liaison in pre-task mode to surface prior ADRs, then invoke the orchestrator in `initial-plan` mode with those findings included in the task brief. The orchestrator produces the plan at the consumer's plans directory (`hiveplotlib/wiki/wiki/plans/<topic>.md` for hiveplotlib work; see the "Plans" section below for other consumers). Surface the plan path to Gary and pause for review.
 - **Plan accepted.** Invoke the named specialist for each workstream as Gary green-lights it. The plan recommends which specialist owns each workstream; the dispatcher confirms and dispatches.
 - **Workstream that adds or modifies user-facing API.** Invoke api-critic in post-implementation mode after the implementing specialist (code-engineer and/or notebook-author) finishes. This applies even to mechanical propagations to sibling classes (e.g., `HivePlotMatrix` mirroring `HivePlot`). The api-critic fills the plan's "API Critic — post-implementation review" section.
 - **Workstream that produces or changes a figure.** Invoke viz-critic in post-implementation mode. Same shape as api-critic.
@@ -57,7 +63,13 @@ The dispatching session does not implement work itself. It dispatches, summarize
 
 ## Plans
 
-Plans for hiveplotlib work do not live here. They live at `hiveplotlib/.claude/plans/<topic>.md` (or the equivalent path for other consumer repos). The harness owns the template; the consuming repo owns the plans for its own work.
+Plans for hiveplotlib work do not live here. They live in the research wiki submodule, at `hiveplotlib/wiki/wiki/plans/<topic>.md`. The wiki is its own git repo (`hiveplotlib-llm-wiki`); plans are tracked there so multi-day or multi-week structural work survives across machines and conversations. The harness owns the template; the wiki owns the plans for hiveplotlib's work.
 
-When the harness is its own consumer (plans for changes to the harness itself), plans live at `.claude/plans/` inside this repo and are gitignored. Same throw-away convention as in any consumer: durable knowledge gets promoted to an ADR in the wiki, not preserved as a tracked plan file.
+Path resolution per consumer:
+
+- **`hiveplotlib`** → `hiveplotlib/wiki/wiki/plans/<topic>.md` (in the wiki submodule).
+- **`hiveplotlib-llm-wiki`** (the wiki itself, when planning a change to wiki structure) → `<wiki-repo>/wiki/plans/<topic>.md`. This is the same physical location as hiveplotlib's path above; the only difference is whether the consumer's working directory is hiveplotlib or the wiki repo itself.
+- **`agent-harness`** (planning a change to the harness) → `agent-harness/.claude/plans/<topic>.md`, gitignored. The harness has no wiki dependency, so plans for harness-self-work stay ephemeral. Same throw-away convention: durable knowledge gets promoted to an ADR in the wiki.
+
+Plans in the wiki are working scratch, not curated wiki content. The wiki's `wiki/wiki/plans/README.md` carries the "read at your own risk" disclaimer for human browsers. ADR promotion (per mental-model rule 10) distills a major plan into `wiki/wiki/adr/NNNN-topic.md` once the work ships; the plan stays in `plans/` as historical record.
 

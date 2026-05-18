@@ -12,4 +12,4 @@ _Specific failure modes seen in this role, each tied to a real incident or repea
 
 ## Gotchas
 
-_Surprises not obvious from reading the code, docs, or other agents' definitions. Empty until earned._
+- **Widening required params to `Optional` for runtime-validated mutual exclusion needs `assert ... is not None` afterwards.** When a parameter is `Optional[T] = None` and gets resolved to non-`None` via either a validation block (raising `ValueError`) or a derivation step (e.g. extracting `nodes`/`edges` from `graph`), `ty` cannot narrow the type across that control flow. Downstream calls that expect `T` (not `Optional[T]`) will fail type-check. Fix: add `assert nodes is not None` and `assert edges is not None` after the validation/derivation block. Matches the existing `assert sorting_variables is not None` pattern at `hiveplot_matrix.py:1288`. Triggered during Workstream I (consolidated NetworkX entry points).

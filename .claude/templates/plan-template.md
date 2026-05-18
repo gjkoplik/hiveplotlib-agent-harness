@@ -1,9 +1,11 @@
 # Plan: <issue ref or topic>
 
 <!--
-Plans go to <repo>/.claude/plans/<topic>.md, where <repo> is the repo the work
-is in (hiveplotlib, hiveplotlib-llm-wiki, etc.). Tracked in git. The plan is
-the canonical reference for the work; the conversation transcript is not.
+Plans for hiveplotlib (and for the wiki itself) go to wiki/wiki/plans/<topic>.md
+in the research-wiki submodule. Plans for changes to the agent harness itself
+go to agent-harness/.claude/plans/<topic>.md (gitignored, since the harness has
+no wiki dependency). The plan is the canonical reference for the work; the
+conversation transcript is not.
 
 This template lives at <harness>/.claude/templates/plan-template.md.
 -->
@@ -57,14 +59,19 @@ Required when this work adds or modifies user-facing API. The planner and the AP
 
 ### Proposed (from planner / Orchestrator)
 
-The exact code a user will run when this work is complete, as the planner currently sees the API:
+The exact code a user will run when this work is complete, as the planner currently sees the API. Each example uses a three-part `# Example N: <context>` / `# Example data:` / `# Call site:` structure.
+
+Worked examples (positive only, one or more): each example must be runnable Python with no placeholders. Copying the `# Example data:` block into a REPL must succeed in producing the input data. Ellipses (`nodes = ...`), incomplete constructs (`g = nx.Graph(...)` without edges), and "imagine the user has..." comments fail the check.
+
+Carve-out for ecosystem inputs: when the input parameter is a data object the user constructs themselves (an `nx.Graph`, a DataFrame, a list of tuples), the `# Example data:` block constructs THAT object using realistic dominant-ecosystem calls (e.g., `g = nx.karate_club_graph()` or `g = nx.read_gml("...")` for a graph the user already has on hand). When the input parameter is something the library produces (e.g., the output of a previous `from_*` call), the block can reference the producing call. Either way the example must be runnable.
 
 ```python
-# Example 1: <one-line context — what the user is trying to do>
-<code>
+# Example 1: <one-line context: what the user is trying to do>
+# Example data:
+<runnable data construction code, no placeholders>
 
-# Example 2: <one-line context>
-<code>
+# Call site:
+<call site code>
 ```
 
 ### API Critic's take (planning mode)
@@ -103,6 +110,8 @@ If no user-facing API surface changes, state "No API surface change" and skip al
 ## Workstreams
 
 Break the work into named workstreams. Each is a coherent, dispatchable chunk. Don't pre-decide which agent runs each; the Orchestrator dispatches. Amendments that emerge after planning live in the "Plan amendments" section below.
+
+Multiple workstreams may be dispatched concurrently; agents executing this plan may encounter changes they didn't make, and that's expected, not broken state. A workstream's agent should treat in-tree state from a co-running workstream as an expected condition rather than a fault. When the expected state genuinely doesn't match the brief, the agent halts under mental-model rule 16 (`STOP and surface` with a `STATUS: BLOCKED` report) instead of self-recovering. See rule 16 for the full trigger taxonomy and anti-action enumeration.
 
 ### Workstream A: <name>
 

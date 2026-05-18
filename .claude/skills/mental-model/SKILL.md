@@ -16,7 +16,7 @@ Process rules. Non-negotiable.
 
 ### 1. Plan before execute
 
-No non-trivial code change starts without a plan. Working plans live at `<repo>/.claude/plans/<topic>.md` for whatever repo the work is in (hiveplotlib work in `hiveplotlib/.claude/plans/`, wiki work in `hiveplotlib-llm-wiki/.claude/plans/`). Use the template at the harness's `.claude/templates/plan-template.md`. Working plans are ephemeral, per-machine scratchpads — gitignored, churn-friendly, updated continuously. The conversation transcript is not the plan; the working plan file is.
+No non-trivial code change starts without a plan. Working plans for hiveplotlib (and for the wiki itself when wiki structure is the work) live at `wiki/wiki/plans/<topic>.md` inside the research-wiki submodule, so multi-day or multi-week structural work survives across machines. Plans for changes to the agent harness itself live at `agent-harness/.claude/plans/<topic>.md` (gitignored, ephemeral) since the harness has no wiki dependency. Use the template at the harness's `.claude/templates/plan-template.md`. Plans are working scratch, not curated wiki content: churn-friendly, updated continuously, full of dead branches the team explored. The conversation transcript is not the plan; the plan file is.
 
 When a major plan finishes shipping, its distilled essence is promoted to a durable Architecture Decision Record (ADR). See rule 10.
 
@@ -51,7 +51,11 @@ When picking a default for any user-facing parameter, write one sentence in the 
 
 Library-internal symmetry is not a justification. "It feels symmetric to default to `(True, False)`" loses to "users who care about in-degree and out-degree are already thinking directionally, so `directed=True` matches their workflow."
 
-### 4. (Removed)
+### 4. Walk the user-intended API against realistic data
+
+Every plan that adds or modifies user-facing API must show the entry point exercised end-to-end against the data the user actually has, not just the call site. The "API usage examples" plan section requires worked data-construction code (build the input the user would have on hand) plus the call site. If the data construction requires inventing a convention the library doesn't already document, the entry point is wrong as specified; either authorize the convention explicitly in the plan (naming audit, docstring work, and tests cover the new convention) or change the entry point so it operates on data the user already has.
+
+Test fixtures and notebook example data must satisfy the same realism standard: data the user would actually have, not data engineered to satisfy the implementation. A test that constructs `G = nx.Graph(); G.nodes[<n>]["tag"] = ...` to satisfy a `from_networkx_tags` implementation tests the implementation, not the user's workflow.
 
 ### 5. Naming follows user vocabulary, decided at planning time
 
@@ -104,17 +108,30 @@ When rewriting a docstring or prose section, preserve the user-friendly lede fir
 
 ### 9. Never run git mutating commands without explicit user request
 
-The harness produces diffs, plans, and review artifacts. The user reviews, **stages**, and commits. Agents never run any git mutating commands by default — that includes `git commit`, `git push`, `git add`, `git rm`, `git restore`, `git reset`, `git submodule add`, branch/tag operations, and similar. Agents EDIT files; the user runs git. Read-only git commands (`git status`, `git diff`, `git log`, `git show`) are fine for situational awareness.
+The harness produces diffs, plans, and review artifacts. The user reviews, **stages**, and commits. Agents never run any git mutating commands by default. That includes `git commit`, `git push`, `git add`, `git rm`, `git submodule add`, branch/tag operations, and similar. Agents EDIT files; the user runs git. Read-only git commands (`git status`, `git diff`, `git log`, `git show`) are fine for situational awareness.
 
 Even after the QA Engineer passes, the change sits as unstaged working-tree edits surfaced to the user for review. The user decides what to stage and commit. This is a hard rule, not a default. It applies in auto mode too.
 
-Exceptions: when the user explicitly requests a specific git operation in a specific moment ("go ahead and `git rm` that file"), the agent is authorized for THAT operation only — not blanket authorization to start staging routinely.
+**Destructive operations are banned absolutely, with no carve-outs.** A destructive operation is any command whose effect is to discard uncommitted work the agent did not read first. Authorization to ship a workstream is not authorization to run destructive ops while shipping it. The user authorizes the outcome; destructive ops are not the path to it.
+
+The ban is enumerative but explicitly non-exhaustive. Any command whose effect matches the category above is banned regardless of whether it appears in the list. Four buckets cover the known surface:
+
+- **Working-tree discards.** `git checkout -- <path>`, `git checkout .`, `git checkout <branch>` when uncommitted state would be silently overwritten by the switch, `git switch --discard-changes`, `git switch <branch> --force`, `git restore <path>` and `git restore .` without `--source`, `git restore --source=...`, `git reset --hard`, `git clean -f` / `-fd` / `-fx`.
+- **Stash family.** `git stash drop`, `git stash clear`.
+- **History discards.** `git branch -D`, `git rebase --abort` when it discards work, `git merge --abort` when it discards uncommitted merges, `git cherry-pick --abort`, `git revert --abort`, `git am --abort`, `git tag -d`, `git update-ref -d`, `git reflog expire --expire=now --all`, `git gc --prune=now`, `git filter-branch`, `git filter-repo`, plus any `--force` / `-f` flag on `push`, `branch`, `tag`, etc.
+- **Non-git side channels with the same effect.** `rm -rf` on tracked files, bash output redirection (`>`, `>>`, `2>`) overwriting tracked files, `truncate` against tracked files, `mv` overwriting a tracked file, and the `Write` tool overwriting a file the agent has not just read in the current session. The `Write`-without-Read shape matters because rule 16 names it as a self-recovery flavor; rule 9 carries the corresponding category ban so the two rules name the same closed set.
+
+Exceptions: when the user explicitly requests a specific **non-destructive** git operation in a specific moment ("go ahead and `git rm` that file"), the agent is authorized for THAT operation only, not blanket authorization to start staging routinely. **No user-explicit-request carve-out applies to destructive operations.** The absolute ban above stands even when the user authorizes the surrounding workstream.
 
 Scope: applies in the consumer repo (hiveplotlib), the harness submodule, and the wiki submodule. Agents edit files in any of them; the user runs git operations in any of them.
 
+Rule 9 is the most catastrophic corollary of rule 16 (halt on confusion; don't self-recover). A destructive op is one specific shape of "the agent tried to self-recover instead of stopping." See rule 16 for the upstream framing.
+
 ### 10. Promote major plans to wiki ADRs at task close
 
-Working plans are throw-away by design (rule 1). When a major plan finishes shipping (work complete, tests pass, user has reviewed), the Research Liaison promotes a distilled version to the research wiki at `wiki/wiki/adr/NNNN-topic.md`. ADRs are the durable record: structural decisions, rationale, and consequences worth preserving for future planning. The promotion step is intentional and editorial — re-read the plan, drop dead branches the team explored, keep what mattered.
+Working plans are version-controlled but churn-heavy by design (rule 1). When a major plan finishes shipping (work complete, tests pass, user has reviewed), the Research Liaison promotes a distilled version to the research wiki at `wiki/wiki/adr/NNNN-topic.md`. Because plans now live in the same wiki repo as ADRs (`wiki/wiki/plans/` and `wiki/wiki/adr/`), promotion is an intra-repo distillation: the plan stays in `plans/` as historical scratch, the ADR captures what mattered. ADRs are the durable record: structural decisions, rationale, and consequences worth preserving for future planning. The promotion step is intentional and editorial — re-read the plan, drop dead branches the team explored, keep what mattered.
+
+**Scope.** ADRs are for hiveplotlib consumer-repo plans only. Harness-self plans (at `agent-harness/.claude/plans/<topic>.md`) do not promote to ADRs; their durable record is the harness CHANGELOG at `agent-harness/CHANGELOG.md`. See rule 13 for the CHANGELOG mechanism. qa-engineer step 14 and research-liaison's ADR-promotion workflow both honor this exclusion: the harness-self path-match surfaces in qa-engineer's report as an explicit `ADR promotion eligibility: n/a (harness-self)` token (parallel to the `n/a (trivial plan)` token for trivial-plan skips), and as an out-of-scope surface-back in research-liaison.
 
 Conventions:
 
@@ -144,7 +161,7 @@ The point isn't to remember every run; it's for each agent to act with the accum
 Every merge is treated as if it could ship. Release readiness isn't a separate phase or agent; it's a constraint on every workstream. For each merge:
 
 - Tests pass; coverage holds at 100%; warnings-as-errors enforced.
-- Docs build cleanly; notebooks run end-to-end.
+- Docs build cleanly; notebooks run end-to-end. Pre-existing docs warnings count as debt the current workstream must surface (see `qa-engineer.md` workflow step 5 for the operational mechanics and the docs-scope carve-out).
 - `CHANGELOG.rst` entry filed for any user-visible change (see rule 13).
 - ADRs filed for major design decisions before merge (see rule 10).
 - Notebooks shipped at production polish; docstrings current with the API they document.
@@ -155,24 +172,40 @@ What's left at actual release time is mechanical: semver bump (the changelog tel
 
 ### 13. Changelog discipline during work
 
-When shipping user-visible work, the executing specialist appends a `CHANGELOG.rst` entry under the appropriate section in the same workstream that introduces the change. Don't defer; don't reconstruct.
+When shipping user-visible work, the executing specialist appends a CHANGELOG entry under the appropriate section in the same workstream that introduces the change. Don't defer; don't reconstruct.
+
+**Before filing a CHANGELOG entry, check the plan path.** The plan-file path is the single-bit routing key:
+
+- Plan at `wiki/wiki/plans/<topic>.md` → file the entry to `hiveplotlib/CHANGELOG.rst`.
+- Plan at `agent-harness/.claude/plans/<topic>.md` → file the entry to `agent-harness/CHANGELOG.md`.
+
+Plans that genuinely span both consumers should be split into two plan files at the planning stage, not reconciled at CHANGELOG-filing time.
+
+**Target file by consumer.**
+
+- hiveplotlib (consumer-repo work, plan path matches `wiki/wiki/plans/`): `CHANGELOG.rst` at the hiveplotlib repo root.
+- agent-harness (harness-self work, plan path matches `agent-harness/.claude/plans/`): `agent-harness/CHANGELOG.md` at the harness repo root. Uses a `## [WIP]` umbrella section (the harness has no release cadence; the umbrella is permanent) with dated entry groups beneath it.
+
+**In scope vs. out of scope (harness CHANGELOG only; the consumer CHANGELOG follows the existing release-discipline rules).** Substantive behavioral changes are in scope: new rules, agent-workflow changes, report-format changes, trip-wire changes, plan-template structural changes, new artifacts (including new agent definitions and new commands, which form new habits for future contributors), `sync.sh` behavior changes. Out of scope: expertise-file updates (rule 11's ratchet model already covers per-agent learning), rule-internal wording refinements that don't change behavior, plan-file edits (plans are working scratch per rule 1), single-typo fixes, formatting changes with no behavior impact.
+
+Boundary heuristic: would the change invalidate or update a habit a contributor has already formed, or introduce a new habit a contributor should form? If yes, log it; if no, don't.
 
 Section conventions (Keep a Changelog):
 
-- `Added` — new public API, new notebooks, new datasets.
-- `Changed` — behavior changes to existing public API.
-- `Fixed` — bug fixes that were user-visible.
-- `Removed` — deprecations finalized, public API removed.
-- `Tooling Changes` — dev-loop changes (Makefile targets, harness, CI).
+- `Added` — new public API, new notebooks, new datasets (consumer); new rules, new agents, new templates, new artifacts (harness).
+- `Changed` — behavior changes to existing public API (consumer); behavior changes to existing rules, agent workflows, report formats (harness).
+- `Fixed` — bug fixes that were user-visible (consumer); rule mis-statements, agent-workflow contradictions (harness).
+- `Removed` — deprecations finalized, public API removed (consumer); deprecated rules retired, removed agent capabilities (harness).
+- `Tooling Changes` — dev-loop changes (Makefile targets, harness, CI). Consumer only; the harness has no equivalent dev-loop-vs-API distinction.
 
-Per-role responsibility:
+Per-role responsibility (applies to both target files):
 
-- Code Engineer: API additions, behavior changes, fixes, removals.
-- Notebook Author: new or restructured notebooks.
-- Docs Engineer: new public-facing docs, large doc restructuring.
+- Code Engineer: API additions, behavior changes, fixes, removals (consumer); rule additions, agent-workflow changes, report-format changes, trip-wire changes, template changes, `sync.sh` changes (harness).
+- Notebook Author: new or restructured notebooks (consumer only; the harness has no notebooks).
+- Docs Engineer: new public-facing docs, large doc restructuring (consumer); substantive `CLAUDE.md` / README restructuring (harness).
 - Internal-only changes (refactors, test infrastructure, perf with no behavior change): no entry needed.
 
-The QA Engineer flags missing entries on every workstream as part of the release-readiness check (rule 12). It is the executing specialist's job to file the entry, not the QA Engineer's.
+The QA Engineer flags missing entries on every workstream as part of the release-readiness check (rule 12), checking the target file appropriate to the workstream's plan path. It is the executing specialist's job to file the entry, not the QA Engineer's.
 
 ### 14. Route emergent work back through the Orchestrator
 
@@ -196,6 +229,59 @@ The clause (b) taxonomy maps one-to-one to the plan template's "Plan amendments"
 **What the dispatching session does NOT route through the Orchestrator.** Routine dispatch decisions stay with the dispatching session: which agent runs which workstream (the plan recommends; the dispatcher picks), sequencing within the recommended dispatch sequence ("should I run tests before docs?"), retry decisions on transient failures ("the test failed, do I rerun?" per agent definitions). Rule 14 fires only when the workstream set changes shape.
 
 For mode details (how `amend-plan` mode works, where it edits, what it returns), see the Orchestrator definition at `agent-harness/.claude/agents/orchestrator.md`.
+
+### 15. No plan-internal scaffolding in shipped artifacts
+
+Plan-internal labels — workstream identifiers ("Workstream I"), phase numbers ("Phase 2"), references to plan section headings, and "per <workstream-name>" provenance notes — are project-management metadata. They belong in the plan file, the commit message, and the PR description. They do not belong in source code, test files, notebooks, or docstrings.
+
+**Why.** Once a plan is archived or promoted to an ADR, workstream labels become noise. `# ---- Workstream I: consolidated entry-point error paths ----` reads as nonsense to anyone who didn't live through the planning conversation; the topic ("consolidated entry-point error paths") outlives the plan, the workstream label does not. Git log and the PR description already capture workstream provenance for anyone who needs to dig.
+
+**What NOT to commit:**
+
+- `# ---- Workstream I: error-path tests ----`
+- `# Workstream H dedup fires -> ...`
+- `# Phase 2: networkx integration`
+- `# TODO (Workstream J)`
+- Docstrings referencing "per the plan" or "as decided in Workstream X"
+
+**What IS fine:**
+
+- Comments explaining a non-obvious WHY at the point of the code.
+- Section dividers named by topic, not by plan label: `# ---- error-path tests ----` is fine; the workstream prefix is not.
+
+If you reach for a workstream label as a section divider, rename to the topic. The topic survives plan archival; the label does not.
+
+**Per-role responsibility:**
+
+- Code Engineer, Test Engineer, Notebook Author, Docs Engineer: don't write these markers in the first place. If a plan brief uses workstream names, translate to topic names when writing code.
+- QA Engineer: grep for `Workstream [A-Z]`, `Phase [0-9]`, and similar in `src/`, `tests/`, `examples/` as part of the pre-merge audit. Survivors are auto-strippable (delete the marker line, or rename it to the topic) — this is "objective wrongness" under rule 7, not a taste call.
+
+### 16. Halt on confusion; don't self-recover
+
+When an agent encounters state that doesn't match its expectations, the correct action is to STOP and surface, not to self-recover. Self-recovery is the instinct to normalize unfamiliar state through edits, retries, or destructive ops; rule 16 names that instinct and bans it.
+
+**(a) Trigger taxonomy.** Rule 16 fires on any of:
+
+- A file modified that the agent didn't modify.
+- Code that doesn't match the brief's description.
+- A test failure with an unfamiliar shape.
+- `pytest` output the agent can't classify as pass or fail. Four named shapes: an xdist worker crash, a `conftest.py` import error, an internal pytest traceback, a config-time failure pointing at a file outside the workstream's scope.
+- A sub-agent surface-back trigger fired.
+- A plan claim that doesn't match source state (e.g., the Implementation log names a workstream the source state doesn't reflect).
+
+**(b) Justification: concurrency tolerance.** Multiple agents may be active in the same working tree; the state you find may be another worker's in-flight edits. Halt because of that possibility. Concurrent dispatch is a first-class supported mode of the harness, not a corner case. Finding unexpected state is the NORMAL operating condition, not a broken state to fix. The concurrency-tolerant reading of unfamiliar state is "another worker (or a prior uncommitted session) is at work here", an expected condition rather than a broken one. This is the load-bearing reason rule 16 exists: an agent that internalizes "another worker may be active" but skips "therefore halt" still self-recovers; an agent that internalizes "halt because another worker may be active" gets both halves right.
+
+**(c) Anti-action enumeration.** When the rule fires, do NOT:
+
+- Run destructive ops to "tidy up" or reset to a clean baseline. (Covered absolutely by rule 9; restated here because rule 16 is the broader context.)
+- `Write`-overwrite a file the agent did not just read in the current session.
+- Retry a failing test against modified inputs (the retry-against-different-state pattern).
+- Edit a `conftest.py` to "make the test pass" (the test-modification-to-pass anti-pattern, and the matching shape for the `conftest.py` import-error trigger above).
+- Normalize unfamiliar state. Don't experiment. Don't tidy.
+
+**(d) Correct action: STOP and surface.** The entire report becomes the `STATUS: BLOCKED` out-of-band template. First line of the report is the uppercase `STATUS: BLOCKED` header; the routine `Status:` line (whether `complete | partial | blocked` for work agents, `pass | fail | propose` for the QA Engineer, or `clean | propose` for critics) is **absent** from the halt report. The body describes the confusion encountered and the proposed-recovery options for the user. The halt template replaces the routine report; it is not a fourth value on any existing `Status:` enum.
+
+**(e) Relationship to rule 9.** Rule 16 is the upstream rule; rule 9 is the most catastrophic corollary. A destructive git op is one specific shape of "the agent tried to self-recover instead of stopping." Rule 9's enumerated ban covers the destructive-op flavor of self-recovery; rule 16 covers destructive ops AND other self-recovery flavors (overwriting via `Write`, retrying tests against modified inputs, editing `conftest.py` to make an unrelated failure go away, and so on). The two rules name the same closed set of banned anti-actions from different framings.
 
 ## Library invariants
 

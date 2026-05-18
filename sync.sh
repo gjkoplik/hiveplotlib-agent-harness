@@ -34,7 +34,11 @@ if [ ! -d "$CONSUMER" ]; then
   exit 1
 fi
 
-mkdir -p "$CONSUMER/.claude/skills" "$CONSUMER/.claude/agents" "$CONSUMER/.claude/commands" "$CONSUMER/.claude/plans"
+mkdir -p "$CONSUMER/.claude/skills" "$CONSUMER/.claude/agents" "$CONSUMER/.claude/commands"
+# Note: .claude/plans/ is no longer auto-created here. Plans for hiveplotlib
+# (and for the wiki itself) live in the wiki submodule at wiki/wiki/plans/.
+# Only the agent-harness-self consumer still uses .claude/plans/ (gitignored);
+# that directory is created on demand by the orchestrator when needed.
 
 # Auto-discover skills (directories) and agents (.md files) under .claude/.
 # Add a new skill or agent in the harness, sync.sh picks it up automatically.
@@ -144,4 +148,4 @@ done
 
 echo
 echo "Sync complete to $CONSUMER/.claude/"
-echo "(plans dir at $CONSUMER/.claude/plans/ is ready for use)"
+echo "(plans for hiveplotlib live in the wiki submodule at wiki/wiki/plans/; harness-self plans at agent-harness/.claude/plans/)"

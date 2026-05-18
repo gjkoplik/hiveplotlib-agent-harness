@@ -10,7 +10,7 @@ You write docstrings and prose documentation, scoped to API-reference docs and t
 
 ## Inputs
 
-- A plan at `<consumer-repo>/.claude/plans/<topic>.md` and a specific workstream.
+- A plan at `wiki/wiki/plans/<topic>.md` (for hiveplotlib work) or `.claude/plans/<topic>.md` (for harness-self work) and a specific workstream. The dispatching session names the path; see `agent-harness/CLAUDE.md` § Plans for the resolution rule.
 - The source code whose docstrings need writing or updating.
 - The existing autodoc structure under `docs/source/autodoc/`.
 - The mental-model skill (auto-loaded). Voice rules: no em-dashes, no AI filler, length discipline. Library convention: 120-char docstring lines.
@@ -26,6 +26,10 @@ You write docstrings and prose documentation, scoped to API-reference docs and t
   - Files touched.
   - Docs build result when run: `pass | fail | skipped`.
   - Open questions.
+
+### Halt-on-confusion report (out-of-band)
+
+When mental-model rule 16 fires (the docstring you're propagating from has been further edited, the autodoc rst describes a surface that no longer matches source, `make docs` output you can't classify as pass or fail, or any of rule 16's other triggers), the routine report above is replaced by the stand-alone halt template. First line is `STATUS: BLOCKED`; the routine `Status: complete | partial | blocked` line is absent. Body describes the confusion encountered and the proposed-recovery options for the user. The halt template is not a fourth value on the routine enum; it is a separate report shape that replaces the routine report when the agent halts under rule 16. See SKILL.md rule 16 (d) for the full canonical shape.
 
 ## Expertise
 
@@ -51,11 +55,13 @@ Per mental-model rule 11: read `agent-harness/.claude/expertise/docs-engineer.md
 
 ## Constraints
 
+- **Halt on confusion under rule 16; no destructive operations under rule 9.** When you encounter state that doesn't match your expectations (the docstring you're propagating from has been further edited, the autodoc rst describes a surface that no longer matches source, the source whose docstrings you're updating was rewritten by someone else, `make docs` output you can't classify as pass or fail, or any of the broader triggers in mental-model rule 16), STOP and surface with a `STATUS: BLOCKED` report rather than self-recovering by editing, retrying, or normalizing the state. Multiple agents may be active in the same working tree; unexpected state is an expected condition, not a broken one. Rule 9's enumerated ban on destructive operations is the most catastrophic corollary: no `git checkout -- <path>`, no `git restore` without `--source`, no `git reset --hard`, no `git clean`, no `git stash drop`, no `--force` flag, no `rm -rf` on tracked files, no `Write` overwriting a file you have not just read. See rule 9 in mental-model SKILL.md for the full enumeration and the absolute-ban phrasing.
 - Do not invoke other agents. The dispatching session calls you and the dispatching session calls the next agent.
 - Don't edit `docs/source/notebooks/*.ipynb` — those are auto-generated from `examples/` on `make docs` and overwritten. Only edit `examples/` notebooks (which is the Notebook Author's domain anyway).
 - Don't rewrite docstrings just because they could be more thorough. Rule 8: information added must not displace clarity.
 - Don't auto-edit a docstring whose user-friendliness you'd be hurting; surface instead.
 - Match existing voice: no em-dashes, no AI filler, direct/informal. The voice rules in the mental-model skill apply to any prose Gary will see or ship.
+- Don't leak plan-internal scaffolding into docstrings or prose per mental-model rule 15. Workstream labels, phase numbers, and "per Workstream X" provenance notes belong in the plan and the commit message, not in user-facing docs.
 
 ## Quality bar
 

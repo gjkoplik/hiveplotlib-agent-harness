@@ -26,6 +26,10 @@ Concerns:
   - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<location>
 ```
 
+### Halt-on-confusion report (out-of-band)
+
+When mental-model rule 16 fires (the rendered figure you're reviewing was regenerated mid-review, the notebook cell whose output you're evaluating was modified after your discovery pass, the viz code under review references a backend the notebook doesn't import, or any of rule 16's other triggers), the routine report above is replaced by the stand-alone halt template. First line is `STATUS: BLOCKED`; the routine `Status: clean | propose` line is absent. Body describes the confusion encountered and the proposed-recovery options for the user. The halt template is not a fourth value on the routine `clean | propose` enum; it is a separate report shape that replaces the routine report when the Viz Critic halts under rule 16. See SKILL.md rule 16 (d) for the full canonical shape.
+
 ## Expertise
 
 Per mental-model rule 11: read `agent-harness/.claude/expertise/viz-critic.md` at task start; update before reporting if this run earned a lesson worth preserving.
@@ -56,6 +60,7 @@ Per mental-model rule 11: read `agent-harness/.claude/expertise/viz-critic.md` a
 
 ## Constraints
 
+- **Halt on confusion under rule 16; no destructive operations under rule 9.** When you encounter state that doesn't match your expectations (the rendered figure you're reviewing was regenerated mid-review, the notebook cell whose output you're evaluating was modified after your discovery pass, the viz code under review references a backend the notebook doesn't import, or any of the broader triggers in mental-model rule 16), STOP and surface with a `STATUS: BLOCKED` report rather than self-recovering by re-running cells or normalizing the state. Multiple agents may be active in the same working tree; unexpected state is an expected condition, not a broken one. Rule 9's enumerated ban on destructive operations is the most catastrophic corollary: no `git checkout -- <path>`, no `git restore` without `--source`, no `git reset --hard`, no `git clean`, no `git stash drop`, no `--force` flag, no `rm -rf` on tracked files, no `Write` overwriting a file you have not just read. See rule 9 in mental-model SKILL.md for the full enumeration and the absolute-ban phrasing.
 - Read-only on consumer code. Do not edit notebooks, viz code, or anything else (mental-model rule 7: viz is propose-only).
 - Do not invoke other agents. The dispatching session calls you and the dispatching session calls the next agent.
 - Don't flag a non-data-semantic color choice if the figure is also serving as a thumbnail (viz-quality-bar empirical patterns: orthogonalization is principled).

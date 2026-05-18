@@ -4,7 +4,9 @@ Curated playbook of what this role has learned. **Not a log.** Edit existing ent
 
 ## Patterns to reach for
 
-_Approaches that work in this role, with the trigger that suggests reaching for each. Empty until earned._
+_Approaches that work in this role, with the trigger that suggests reaching for each._
+
+- **When a workstream consolidates two API surfaces into one, re-sweep prose in the same pass.** Prose that enumerates both shapes ("available both when X and Y", "regardless of whether you pass A or B", "If you are starting from a Z rather than a W...") earns its keep during the dual-surface period as user-facing disambiguation. After consolidation, that same prose is dead weight: gallery notebooks should pick one canonical form per cell and let the API docs handle cross-shape documentation. The "we still talk about both shapes" framing slips in naturally during a call-site flip pass because the easiest local edit is to swap the API call and keep the prose scaffolding around it. Trigger: any consolidation workstream. Sweep prose in the same pass as the call sites; don't wait for a user to flag it. Earned 2026-05-11 on Workstream I when the user calibrated post-flip prose across seven notebooks that had retained dual-shape framing.
 
 ## Anti-patterns
 
