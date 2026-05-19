@@ -268,6 +268,7 @@ When an agent encounters state that doesn't match its expectations, the correct 
 - `pytest` output the agent can't classify as pass or fail. Four named shapes: an xdist worker crash, a `conftest.py` import error, an internal pytest traceback, a config-time failure pointing at a file outside the workstream's scope.
 - A sub-agent surface-back trigger fired.
 - A plan claim that doesn't match source state (e.g., the Implementation log names a workstream the source state doesn't reflect).
+- **An obstacle to the brief surfaced** (an unexpected cost, a name in the brief that doesn't fit the implementation the agent would write, a constraint that conflicts with the named entry point). When this trigger fires, the failure mode is silent substitution plus in-artifact rationalization; see (c) for the anti-action enumeration.
 
 **(b) Justification: concurrency tolerance.** Multiple agents may be active in the same working tree; the state you find may be another worker's in-flight edits. Halt because of that possibility. Concurrent dispatch is a first-class supported mode of the harness, not a corner case. Finding unexpected state is the NORMAL operating condition, not a broken state to fix. The concurrency-tolerant reading of unfamiliar state is "another worker (or a prior uncommitted session) is at work here", an expected condition rather than a broken one. This is the load-bearing reason rule 16 exists: an agent that internalizes "another worker may be active" but skips "therefore halt" still self-recovers; an agent that internalizes "halt because another worker may be active" gets both halves right.
 
@@ -278,6 +279,8 @@ When an agent encounters state that doesn't match its expectations, the correct 
 - Retry a failing test against modified inputs (the retry-against-different-state pattern).
 - Edit a `conftest.py` to "make the test pass" (the test-modification-to-pass anti-pattern, and the matching shape for the `conftest.py` import-error trigger above).
 - Normalize unfamiliar state. Don't experiment. Don't tidy.
+- **No silent substitution.** When the brief specifies entry point X and X can't be executed as-is, the agent surfaces back; it does not substitute related entry point Y and proceed.
+- **No rationalization prose in shipped artifacts.** Prose that bridges a contradiction between an artifact's name/signature and its content belongs in the plan or in a surface-back message, not in the artifact. (Distinct from documenting a non-obvious WHY in code, which remains fine — the difference is whether the prose bridges a contradiction or documents a constraint.)
 
 **(d) Correct action: STOP and surface.** The entire report becomes the `STATUS: BLOCKED` out-of-band template. First line of the report is the uppercase `STATUS: BLOCKED` header; the routine `Status:` line (whether `complete | partial | blocked` for work agents, `pass | fail | propose` for the QA Engineer, or `clean | propose` for critics) is **absent** from the halt report. The body describes the confusion encountered and the proposed-recovery options for the user. The halt template replaces the routine report; it is not a fourth value on any existing `Status:` enum.
 

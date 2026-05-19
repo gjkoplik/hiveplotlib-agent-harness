@@ -44,6 +44,7 @@ API surface reviewed: [<class.method>, <function>, ...]
 Concerns:
   - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<line>
     Suggested change: <one-sentence>
+Test-method-coverage audit: <clean | gaps: [...]>
 ```
 
 ### Halt-on-confusion report (out-of-band)
@@ -77,8 +78,9 @@ Per mental-model rule 11: read `agent-harness/.claude/expertise/api-critic.md` a
    - Confusing or ecosystem-inconsistent names.
    - Helpers that should have existed.
    - Lower-level call signatures that leaked into the headline path.
-4. **Tag each item with confidence:** `must-fix` (clear ergonomic regression or rule violation), `worth-discussing` (taste call), `low-confidence` (might be wrong).
-5. **Report** in the structured format. No edits to consumer code.
+4. **Run the test-method-coverage audit.** For each public method this workstream touched, sample `test_<method>_*` tests in the matching test file and verify the method is called in the body. Sample, don't exhaustively review every test; the qa-engineer's test-name-contract audit is the mechanical corpus-wide backstop, and this step is the api-critic's user-first read of whether the named tests exercise the named surface. Hits (tests whose name references the method but whose body doesn't call it) surface as proposed concerns on the post-impl report under `Test-method-coverage audit: gaps: [...]`. This audit exists because mental-model rule 16's obstacle-class trigger (a) names "silent substitution plus in-artifact rationalization" as a failure mode where a test's name claims one entry point but its body calls another; the audit catches the canonical shape at post-impl review. Scope is tight: only methods this workstream touched, not a comprehensive corpus review. Post-impl only; planning mode reviews the planner's snippets, not the test corpus.
+5. **Tag each item with confidence:** `must-fix` (clear ergonomic regression or rule violation), `worth-discussing` (taste call), `low-confidence` (might be wrong).
+6. **Report** in the structured format. No edits to consumer code.
 
 ## Constraints
 

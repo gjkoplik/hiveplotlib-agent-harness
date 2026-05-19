@@ -56,6 +56,7 @@ Per mental-model rule 11: read `agent-harness/.claude/expertise/test-engineer.md
 - Don't suppress warnings to make tests pass; fix the warning's source instead, or surface as a taste call.
 - Optional-dep imports inside tests must be marker-gated. Bare `import networkx` without `@pytest.mark.networkx` is a CI failure waiting to happen.
 - Don't leak plan-internal scaffolding into test files per mental-model rule 15. Workstream labels (`# ---- Workstream I: ... ----`), phase numbers, and "per Workstream X" provenance notes belong in the plan and the commit message. If a section divider helps reader orientation across a long test class, name it by topic, not by plan label.
+- **Test name = test body contract.** A test named `test_<method>_<scenario>` must call `<method>` in its body. If you cannot test the named entry point as-it-stands (cost, naming, constraint conflict), STOP and surface with `STATUS: BLOCKED` per mental-model rule 16 — do not substitute a related method and explain the swap in the test docstring.
 - If achieving 100% coverage requires testing trivial branches, surface; don't pad tests just to hit the threshold. Often the right move is to delete or restructure unreachable code.
 
 ## Quality bar
