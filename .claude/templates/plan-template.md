@@ -1,101 +1,86 @@
 # Plan: <issue ref or topic>
 
 <!--
-Plans for hiveplotlib (and for the wiki itself) go to wiki/wiki/plans/<topic>.md
-in the research-wiki submodule. Plans for changes to the agent harness itself
-go to agent-harness/.claude/plans/<topic>.md (gitignored, since the harness has
-no wiki dependency). The plan is the canonical reference for the work; the
-conversation transcript is not.
-
-This template lives at <harness>/.claude/templates/plan-template.md.
+Hiveplotlib and wiki-structure plans go to wiki/wiki/plans/<topic>.md (tracked
+in the wiki submodule). Harness-self plans go to agent-harness/.claude/plans/
+<topic>.md (gitignored). The plan is the canonical reference; the conversation
+transcript is not.
 -->
 
 ## Goal
 
-One paragraph. What user-visible value does this deliver when it lands? What's the simplest one-sentence pitch for the change?
+One paragraph. What user-visible value lands when this ships?
 
 ## Prior ADRs / design docs
 
-Required section. The Orchestrator invokes Research Liaison at planning start to search the wiki for prior ADRs and design docs that touch the same code or design space. List relevant entries here:
+Populated by research-liaison at planning start. List relevant entries:
 
-- `wiki/wiki/adr/NNNN-topic.md` — one-line on why this is relevant to the current plan (e.g., "established that NetworkX is an optional dep, scope here matches that boundary")
+- `wiki/wiki/adr/NNNN-topic.md` — one-line on why it's relevant.
 - ...
 
-If no prior ADRs apply (entirely new design space, or work too small to have prior history), state "None — net new design space" or "None — out of scope for ADR review."
+Or "None — net new design space" / "None — out of scope for ADR review."
 
 ## Patterns this replaces
 
-Required section. List old patterns this work obsoletes:
+- `<old pattern>` at: `<file:line>`, `<file:line>`. Replace with `<new pattern>`.
 
-- `<old pattern>` found at: `<file:line>`, `<file:line>`. Replace with `<new pattern>`.
-- ...
-
-If nothing is replaced, state "None, this is a net new addition."
-
-The Orchestrator runs grep during planning to populate this. The QA Engineer runs grep again post-execution to check for survivors not in `Holdouts`.
+Or "None, this is a net new addition." QA Engineer greps post-execution; survivors fail unless in `Holdouts`.
 
 ## Default justifications
 
-For each new user-facing default, one sentence on what the user is trying to do when they reach for this code, and why this default matches that workflow:
-
 - `<param>=<default>`: <one-sentence justification grounded in user workflow>
-- ...
 
-If no new defaults, state "No new defaults."
+Or "No new defaults."
 
 ## Naming audit
 
-Required section. Check user-facing names against the vocabulary users would actually use (often borrowed from adjacent ecosystem terms):
+Check user-facing names against the vocabulary users would use (often the dominant adjacent ecosystem):
 
 - New parameters: `<list>`. Vs. user vocab: `<ok | amend X→Y because Z>`
 - New methods/classes: `<list>`. Same check.
 - Prose-only terms: `<list>`
 
-Internal module/package names are out of scope for this audit.
+Internal module/package names are out of scope.
 
 ## API usage examples
 
-Required when this work adds or modifies user-facing API. The planner and the API Critic each contribute snippets so ergonomic disagreements are visible before code lands. Both views go in the plan.
+Required when this work adds or modifies user-facing API.
 
 ### Proposed (from planner / Orchestrator)
 
-The exact code a user will run when this work is complete, as the planner currently sees the API. Each example uses a three-part `# Example N: <context>` / `# Example data:` / `# Call site:` structure.
+Each example uses `# Example N: <context>` / `# Example data:` / `# Call site:`. Must be runnable Python with no placeholders. Ellipses, `g = nx.Graph(...)` without edges, "imagine the user has..." fail.
 
-Worked examples (positive only, one or more): each example must be runnable Python with no placeholders. Copying the `# Example data:` block into a REPL must succeed in producing the input data. Ellipses (`nodes = ...`), incomplete constructs (`g = nx.Graph(...)` without edges), and "imagine the user has..." comments fail the check.
-
-Carve-out for ecosystem inputs: when the input parameter is a data object the user constructs themselves (an `nx.Graph`, a DataFrame, a list of tuples), the `# Example data:` block constructs THAT object using realistic dominant-ecosystem calls (e.g., `g = nx.karate_club_graph()` or `g = nx.read_gml("...")` for a graph the user already has on hand). When the input parameter is something the library produces (e.g., the output of a previous `from_*` call), the block can reference the producing call. Either way the example must be runnable.
+Carve-out for ecosystem inputs: when the input is user-constructed (an `nx.Graph`, a DataFrame), `# Example data:` constructs it with realistic ecosystem calls (e.g., `g = nx.karate_club_graph()`). When the input is library-produced, the block can reference the producing call.
 
 ```python
-# Example 1: <one-line context: what the user is trying to do>
+# Example 1: <one-line context>
 # Example data:
-<runnable data construction code, no placeholders>
+<runnable data construction, no placeholders>
 
 # Call site:
-<call site code>
+<call site>
 ```
 
 ### API Critic's take (planning mode)
 
-The API Critic writes their own snippets showing how they think the user *should* be able to call this. If they agree with the proposed form, write "Agreed" and move on. If they have concerns, show the preferred alternative with one sentence per change explaining why.
+`Agreed`, or preferred snippets with one-sentence reasons:
 
 ```python
 # Critic's preferred form for Example 1: <reason for the difference>
 <code>
 ```
 
-If concerns apply across multiple examples, the critic should also note recurring patterns (e.g., "every example pushes a config dict; consider keyword arguments instead").
+Note recurring patterns across snippets if applicable.
 
 ### API Critic — post-implementation review
 
-Filled by the API Critic after each workstream that lands user-facing API code (including mechanical propagations of an existing surface to a sibling class — see mental-model rule 7). The dispatching session invokes api-critic in post-impl mode; the QA Engineer verifies this section is filled before declaring the workstream complete.
-
-Until filled, leave the placeholder:
+Filled by api-critic after each workstream that lands user-facing API code (including mechanical propagations to sibling classes — see mental-model rule 7). Until filled:
 
 ```
 Pending — invoke api-critic in post-implementation mode after Workstream <X> ships.
 ```
 
-Once filled, the critic writes a confidence-tagged friction list:
+Once filled:
 
 ```
 Status: clean | propose
@@ -105,19 +90,19 @@ Concerns:
     Suggested change: <one-sentence>
 ```
 
-If no user-facing API surface changes, state "No API surface change" and skip all three subsections (planning examples, planning critic, post-impl review).
+If no user-facing API change, state "No API surface change" and skip all three subsections.
 
 ## Workstreams
 
-Break the work into named workstreams. Each is a coherent, dispatchable chunk. Don't pre-decide which agent runs each; the Orchestrator dispatches. Amendments that emerge after planning live in the "Plan amendments" section below.
+Coherent, dispatchable chunks with checkable done-when criteria. Don't pre-assign agents.
 
-Multiple workstreams may be dispatched concurrently; agents executing this plan may encounter changes they didn't make, and that's expected, not broken state. A workstream's agent should treat in-tree state from a co-running workstream as an expected condition rather than a fault. When the expected state genuinely doesn't match the brief, the agent halts under mental-model rule 16 (`STOP and surface` with a `STATUS: BLOCKED` report) instead of self-recovering. See rule 16 for the full trigger taxonomy and anti-action enumeration.
+Multiple workstreams may dispatch concurrently. In-tree state from a co-running workstream is expected, not broken. When the state genuinely doesn't match the brief, halt under rule 9.
 
 ### Workstream A: <name>
 
 **Status:** not started | in progress | complete
 **Files:** <list>
-**Done when:** <criteria, usually "tests pass, doc renders, X behavior verified">
+**Done when:** <criteria>
 
 ### Workstream B: <name>
 
@@ -125,48 +110,46 @@ Multiple workstreams may be dispatched concurrently; agents executing this plan 
 
 ## Plan amendments
 
-Optional. Populated by the Orchestrator in amend-plan mode when post-impl critic findings or scope-changing decisions land mid-flight (see `mental-model` rule 14 for the routing). Each amendment is dated and triaged as Added workstream / In-scope tweak / Deferred follow-up — the same three buckets as rule 14's trigger taxonomy. Empty until amendments accrue.
+Populated by orchestrator in `amend-plan` mode when rule 14 triggers (post-impl critic `must-fix`/`should-fix`, or a scope-changing user ask). Three subsections matching rule 14's trigger taxonomy. Append-only; empty until amendments accrue.
 
-When the section is empty, leave this placeholder in place:
+Placeholder when empty:
 
 ```
 None yet. The Orchestrator will populate this section in amend-plan mode if
 emergent work surfaces (rule 14 trigger).
 ```
 
-When amendments accrue, use the subsection templates below. Each amendment names the trigger (which critic finding or user ask prompted it) and is dated:
-
 ### Added workstream <letter>: <name>
 
 **Date:** YYYY-MM-DD
-**Trigger:** <which critic finding or user ask prompted this — cite the plan section or the ask>
+**Trigger:** <which critic finding or user ask prompted this>
 **Status:** not started | in progress | complete
 **Files:** <list>
 **Done when:** <criteria>
 
-### In-scope tweak: <one-line summary>
+### In-scope tweak: <one-line>
 
 **Date:** YYYY-MM-DD
-**Trigger:** <which critic finding or user ask prompted this>
+**Trigger:** <which critic finding or user ask>
 **Workstream affected:** <letter and name>
-**Change:** old → new diff sketch (a few lines, enough to make the delta concrete)
+**Change:** old → new diff sketch
 
-### Deferred follow-up: <one-line summary>
+### Deferred follow-up: <one-line>
 
 **Date:** YYYY-MM-DD
-**Trigger:** <which critic finding or user ask prompted this>
+**Trigger:** <which critic finding or user ask>
 **Target:** <next plan / next release / left intentionally>
-**Rationale:** <one line on why this is deferred rather than added or tweaked in this plan>
+**Rationale:** <one line>
 
 ## Holdouts
 
-Optional. If the replace-and-sweep audit finds patterns we deliberately want to leave alone (e.g., a teaching moment in a foundations tutorial), list them here with a one-line reason each. The QA Engineer won't flag these post-execution.
+Optional. Patterns the replace-and-sweep audit should leave alone:
 
 - `<file:line>`: kept as `<old pattern>` because <reason>
 
 ## Implementation log
 
-Append-only. After each workstream completes, the executing agent writes one line here in the same turn:
+Append-only. After each workstream completes, one line in the same turn:
 
-- YYYY-MM-DD: Workstream A complete. <one-line summary of what landed>
+- YYYY-MM-DD: Workstream A complete. <one-line summary>
 - YYYY-MM-DD: ...

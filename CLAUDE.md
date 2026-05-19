@@ -1,76 +1,65 @@
 # hiveplotlib-agent-harness
 
-Source of truth for skills, agents, commands, and shared mental model used to develop hiveplotlib and run research against it. Lives at `hiveplotlib/agent-harness/` as a tracked git submodule of hiveplotlib (pinned to a specific commit; bumpable via `make bump-harness` from hiveplotlib). The harness also drives meta-work on itself and on the `hiveplotlib-llm-wiki` repo when needed (the orchestrator's "Consumer parameter" section names the three known consumers), but the agents and skills are tuned for hiveplotlib's stack (pytest with `-n 7`, ruff/ty, 100% coverage, optional-backend markers). Treat this as hiveplotlib's harness; the cross-consumer routing is for adjacent meta-work, not a portability claim.
+Skills, agents, commands, and shared mental model for developing hiveplotlib and running research against it. Mounted as a git submodule of hiveplotlib at `hiveplotlib/agent-harness/` (pinned per-consumer, bumpable via `make bump-harness`). Tuned for hiveplotlib's stack (pytest `-n 7`, ruff/ty, 100% coverage, optional-backend markers). Also drives meta-work on itself and on the wiki repo; the orchestrator's Consumer parameter section names the three known consumers.
 
-Distributed into the consumer's `.claude/` by `bash sync.sh` from the harness root; the script defaults to syncing into the parent directory when that parent looks like a consumer (has `pyproject.toml` or `.claude/`), otherwise pass the consumer path explicitly. Sync uses file copies because WSL symlinks aren't followed by Windows-side tools accessing via UNC paths.
+Distributed into the consumer's `.claude/` by `bash sync.sh`. Defaults to syncing into the parent directory when it looks like a consumer (has `pyproject.toml` or `.claude/`); pass the consumer path explicitly otherwise. Sync uses file copies because WSL symlinks aren't followed by Windows-side tools accessing via UNC paths.
 
-## Trip-wires (read first)
+## Trip-wires
 
-The conventions that catch real mistakes if missed. The harness's `mental-model` skill expands on these; what's below is what's worth knowing turn-1, before skills resolve.
-
-- **Halt on confusion; never run destructive ops.** When you encounter state that doesn't match your expectations (a file modified that you didn't modify, code that doesn't match the brief, a test failure with an unfamiliar shape, `pytest` output you can't classify as pass or fail, a plan claim that doesn't match source state, a sub-agent surface-back trigger), STOP and surface with a `STATUS: BLOCKED` report; do not normalize the state and do not self-recover. Multiple agents may be active in the same working tree, so finding unexpected state is an expected condition, not a broken one. Destructive operations are banned absolutely under any framing, as the most catastrophic flavor of self-recovery: no `git checkout -- <path>`, no `git restore` without `--source`, no `git reset --hard`, no `git clean`, no `git stash drop` / `git stash clear`, no `git switch --discard-changes`, no `--force` flag, no `rm -rf` on tracked files, no `>` redirection overwriting tracked files, no `Write` overwriting a file you have not just read. See mental-model rule 16 (upstream) and rule 9 (corollary) in the mental-model skill for the full enumeration and the absolute-ban phrasing.
-- **Test name = test body contract (and its siblings in docstrings, code comments, and notebook prose).** A shipped artifact must not carry rationalization prose bridging a substitution against the brief ('uses X rather than Y because...'). If an obstacle to the brief surfaced, STOP and surface per mental-model rule 16 (a).
+- **Halt on confusion; never self-recover or run destructive ops.** See `mental-model` rule 9 for the trigger taxonomy and the absolute ban on destructive operations (no `git checkout -- <path>`, no `git reset --hard`, no `Write` over an un-read file, no silent substitution, etc.).
+- **Test name = test body contract.** Shipped artifacts must not carry rationalization prose bridging a substitution against the brief. If an obstacle to the brief surfaces, halt under rule 9.
 
 ## Layout
 
-- `.claude/skills/mental-model/SKILL.md`: shared mental model loaded by every agent. Workflow rules, library invariants, prose voice. Points at the viz-quality-bar skill for viz work. **Start here.**
-- `.claude/skills/viz-quality-bar/SKILL.md`: foundational viz principles (Knaflic + Tufte + accessibility), polish-in-proportion-to-role rule, hive-plot-specific rules, datashader specifics, interactive backends, operational checks, empirical patterns from the hiveplotlib examples corpus. Loaded by viz-touching agents.
-- `.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md`: tutorial-style notebook conventions (long-form storytelling, motivation, rhetorical questions, real-data writeups). Loaded by Notebook Author when the workstream calls for a tutorial.
-- `.claude/skills/hiveplotlib-gallery-notebook/SKILL.md`: gallery-style notebook conventions (short, focused, single-feature reference). Loaded by Notebook Author when the workstream calls for a gallery example.
-- `.claude/agents/orchestrator.md`: produces plans from the template. Does not write code.
-- `.claude/agents/api-critic.md`: dual-role API ergonomics review. Planning mode edits the plan's "API Critic's take" subsection; post-impl mode produces a friction list.
-- `.claude/agents/research-liaison.md`: wires the dev loop to the research wiki (the `hiveplotlib-llm-wiki` repo, mounted as the consumer's `wiki/` submodule, with content under `wiki/wiki/`). Pre-task surfaces prior thinking and ADRs; post-task updates the wiki and owns ADR promotion.
-- `.claude/agents/code-engineer.md`: implements workstreams from accepted plans. Does not commit.
-- `.claude/agents/test-engineer.md`: writes pytest tests, mirrors source structure, applies optional-dep markers, maintains 100% coverage.
-- `.claude/agents/docs-engineer.md`: writes docstrings, autodoc rst, notebook index entries. Preserves user-friendly framing.
-- `.claude/agents/notebook-author.md`: creates or updates `examples/` notebooks. Delegates style to the harness's tutorial/gallery skills (`hiveplotlib-tutorial-notebook`, `hiveplotlib-gallery-notebook`). Applies polish-in-proportion-to-role.
-- `.claude/agents/viz-critic.md`: read-only review of rendered figures. Confidence-tagged proposal list.
-- `.claude/agents/qa-engineer.md`: runs tests/lint/type/doc-build, audits replace-and-sweep, checks the Implementation log and CHANGELOG, auto-fixes deterministic issues, switches to formal diagnostic mode on test-failure escalation, proposes taste-call concerns. Does not run git mutating commands.
-- `.claude/commands/`: user-typed slash-command entry points distributed by `sync.sh` to every consumer. Use this for shared, harness-generic commands. Currently empty. **Consumer-specific commands** (referencing project-specific paths or agents) belong in `<consumer>/.claude/commands/` directly, where they stay machine-local (gitignored) unless the consumer chooses to track them separately.
-- `.claude/templates/plan-template.md`: canonical plan template used by every plan in the consumer's plans directory (see the "Plans" section for path resolution).
-- `sync.sh`: copies the harness's skills and agents into a consumer repo's `.claude/`. Auto-discovers skills (directories) and agents (`.md` files). Run from inside the consumer repo, or with the consumer path as an argument.
+- `.claude/skills/mental-model/` — shared mental model loaded by every agent. **Start here.**
+- `.claude/skills/viz-quality-bar/` — viz principles, polish-in-proportion, hive-plot-specific rules, datashader specifics, empirical patterns.
+- `.claude/skills/hiveplotlib-tutorial-notebook/` — tutorial-style notebook conventions.
+- `.claude/skills/hiveplotlib-gallery-notebook/` — gallery-style notebook conventions.
+- `.claude/agents/orchestrator.md` — produces plans (`initial-plan` and `amend-plan` modes).
+- `.claude/agents/api-critic.md` — dual-role API ergonomics review (planning + post-impl).
+- `.claude/agents/research-liaison.md` — wires the dev loop to the research wiki; owns ADR promotion.
+- `.claude/agents/code-engineer.md` — implements workstreams.
+- `.claude/agents/test-engineer.md` — writes pytest tests, applies optional-dep markers, maintains 100% coverage.
+- `.claude/agents/docs-engineer.md` — writes docstrings, autodoc, notebook index entries.
+- `.claude/agents/notebook-author.md` — creates or updates `examples/` notebooks. Defers style to the tutorial/gallery skills.
+- `.claude/agents/viz-critic.md` — read-only review of rendered figures.
+- `.claude/agents/qa-engineer.md` — runs tests/lint/type/doc-build, audits replace-and-sweep, checks Implementation log + CHANGELOG.
+- `.claude/commands/` — harness-generic slash-command entry points distributed by `sync.sh`. Consumer-specific commands belong in `<consumer>/.claude/commands/`.
+- `.claude/templates/plan-template.md` — canonical plan template.
+- `sync.sh` — copies skills, agents, commands, and templates into a consumer's `.claude/`.
 
 ## The dispatching session
 
-The "dispatching session" is the consumer repo's main Claude Code conversation, the one Gary types into. It is not a sub-agent and has no agent definition. It dispatches the sub-agents listed in Layout, surfaces their reports back to Gary, and asks for confirmation between workstreams. This section consolidates the implicit role so the main session has somewhere to point at.
+The dispatching session is the consumer-repo Claude Code conversation Gary types into. Not a sub-agent, no agent definition. Dispatches sub-agents, surfaces their reports, asks for confirmation between workstreams.
 
 ### Invocation triggers
 
-Mapping from task phase to agent invocation:
+- **Task start (non-trivial).** Run research-liaison in pre-task mode, then invoke orchestrator in `initial-plan` mode with findings in the brief. The orchestrator writes the plan; surface the path and pause for review.
+- **Plan accepted.** Invoke the named specialist for each workstream as Gary green-lights it.
+- **Workstream that adds or modifies user-facing API.** Invoke api-critic in post-impl mode after the implementing specialist finishes. Applies to mechanical propagations to sibling classes (e.g., `HivePlotMatrix` mirroring `HivePlot`).
+- **Workstream that produces or changes a figure.** Invoke viz-critic in post-impl mode.
+- **Workstream complete.** Invoke qa-engineer for release-readiness verification. If a critic post-impl section is still `Pending`, qa flags `must-fix` and the dispatching session invokes the missing critic before proceeding.
+- **Mid-flight emergent work** (post-impl critic `must-fix` or `should-fix`, or any user ask that would change the workstream set per rule 14). Route to orchestrator in `amend-plan` mode before any other dispatch. The orchestrator edits the plan; the dispatching session does not edit the plan directly.
+- **All workstreams complete, plan non-trivial.** qa-engineer surfaces a `worth-discussing` ADR-promotion concern. When Gary green-lights, invoke research-liaison.
 
-- **Task start (non-trivial work).** Invoke research-liaison in pre-task mode to surface prior ADRs, then invoke the orchestrator in `initial-plan` mode with those findings included in the task brief. The orchestrator produces the plan at the consumer's plans directory (`hiveplotlib/wiki/wiki/plans/<topic>.md` for hiveplotlib work; see the "Plans" section below for other consumers). Surface the plan path to Gary and pause for review.
-- **Plan accepted.** Invoke the named specialist for each workstream as Gary green-lights it. The plan recommends which specialist owns each workstream; the dispatcher confirms and dispatches.
-- **Workstream that adds or modifies user-facing API.** Invoke api-critic in post-implementation mode after the implementing specialist (code-engineer and/or notebook-author) finishes. This applies even to mechanical propagations to sibling classes (e.g., `HivePlotMatrix` mirroring `HivePlot`). The api-critic fills the plan's "API Critic — post-implementation review" section.
-- **Workstream that produces or changes a figure.** Invoke viz-critic in post-implementation mode. Same shape as api-critic.
-- **Workstream complete.** Invoke qa-engineer for release-readiness verification. The qa-engineer runs tests/lint/type/docs, audits replace-and-sweep, verifies Implementation log + CHANGELOG currency, and (per rule 7) auto-fixes deterministic issues and proposes taste calls. If a critic post-impl review section is still `Pending — ...`, qa flags `must-fix` and the dispatching session invokes the missing critic before proceeding.
-- **Mid-flight emergent work** (post-impl critic finding tagged `must-fix` or `should-fix`, or any user ask that would change the workstream set). Route through the orchestrator in `amend-plan` mode per rule 14. The dispatching session reads the trigger, invokes orchestrator-amend-plan, and continues from the orchestrator's dispatch recommendation. The orchestrator edits the plan's "Plan amendments" section; the dispatching session does not edit the plan directly.
-- **All workstreams complete, plan non-trivial.** qa-engineer surfaces a `worth-discussing` proposed concern recommending ADR promotion. When Gary green-lights, the dispatching session invokes research-liaison for the promotion.
+### Sub-agent discipline
 
-### Sub-agent invocation discipline
+Sub-agents do not invoke other sub-agents. Every invocation comes from the dispatching session. This keeps each sub-agent's context clean, the topology simple, and preserves checkpoint moments between agent calls.
 
-Sub-agents do not invoke other sub-agents. Every agent invocation comes from the dispatching session. This keeps each sub-agent's context clean (no nested transcripts), keeps the topology of the harness simple (one caller, many leaves), and preserves natural human checkpoint moments between agent calls so Gary can review diffs, course-correct, or skip ahead.
+Apparent exception: the orchestrator's `initial-plan` step 2 references research-liaison's pre-task findings. The dispatching session runs research-liaison first and includes the findings in the orchestrator's brief; the orchestrator itself does not invoke anything.
 
-Apparent exception, handled by routing: the orchestrator's `initial-plan` workflow step 2 describes pulling prior ADRs "via research-liaison in pre-task mode". The orchestrator does not have access to the Agent tool and cannot invoke research-liaison itself. The dispatching session is the one that physically runs research-liaison BEFORE invoking the orchestrator, then includes the findings in the orchestrator's task brief. The orchestrator then surfaces relevant entries into the plan's "Prior ADRs / design docs" section.
+### Between workstreams
 
-### Checkpointing rhythm
-
-Between workstreams, the dispatching session:
-
-1. Surfaces the completing agent's report (status, files touched, open questions).
-2. Names the next dispatch (per the plan's workstream sequence or the orchestrator's amend-plan recommendation).
-3. Pauses for Gary's confirmation before invoking the next agent. Even in auto mode, between workstreams is a natural human checkpoint.
-
-The dispatching session does not implement work itself. It dispatches, summarizes, and checkpoints. Reading source files, editing code, or running `make` targets in the dispatching session for a plan-driven task is a process violation; those actions belong inside an agent.
+Surface the completing agent's report (status, files touched, open questions), name the next dispatch, pause for Gary's confirmation. The dispatching session does not implement work itself — reading source, editing code, or running `make` from the dispatching session for a plan-driven task is a process violation.
 
 ## Plans
 
-Plans for hiveplotlib work do not live here. They live in the research wiki submodule, at `hiveplotlib/wiki/wiki/plans/<topic>.md`. The wiki is its own git repo (`hiveplotlib-llm-wiki`); plans are tracked there so multi-day or multi-week structural work survives across machines and conversations. The harness owns the template; the wiki owns the plans for hiveplotlib's work.
+Hiveplotlib plans live in the wiki submodule at `hiveplotlib/wiki/wiki/plans/<topic>.md` (tracked in the wiki repo, survives across machines). Harness-self plans live at `agent-harness/.claude/plans/<topic>.md` (gitignored; the harness has no wiki dependency).
 
 Path resolution per consumer:
 
-- **`hiveplotlib`** → `hiveplotlib/wiki/wiki/plans/<topic>.md` (in the wiki submodule).
-- **`hiveplotlib-llm-wiki`** (the wiki itself, when planning a change to wiki structure) → `<wiki-repo>/wiki/plans/<topic>.md`. This is the same physical location as hiveplotlib's path above; the only difference is whether the consumer's working directory is hiveplotlib or the wiki repo itself.
-- **`agent-harness`** (planning a change to the harness) → `agent-harness/.claude/plans/<topic>.md`, gitignored. The harness has no wiki dependency, so plans for harness-self-work stay ephemeral. Same throw-away convention: durable knowledge gets promoted to an ADR in the wiki.
+- `hiveplotlib` → `hiveplotlib/wiki/wiki/plans/<topic>.md`
+- `hiveplotlib-llm-wiki` (planning a wiki-structure change) → `<wiki-repo>/wiki/plans/<topic>.md` (same physical file as hiveplotlib's path)
+- `agent-harness` (planning a harness change) → `agent-harness/.claude/plans/<topic>.md`
 
-Plans in the wiki are working scratch, not curated wiki content. The wiki's `wiki/wiki/plans/README.md` carries the "read at your own risk" disclaimer for human browsers. ADR promotion (per mental-model rule 10) distills a major plan into `wiki/wiki/adr/NNNN-topic.md` once the work ships; the plan stays in `plans/` as historical record.
-
+Plans are working scratch, not curated wiki content; `wiki/wiki/plans/README.md` carries the disclaimer for browsers. Major plans promote to ADRs at `wiki/wiki/adr/NNNN-topic.md` per `mental-model` rule 10. Harness-self plans don't promote; the harness CHANGELOG is their durable record.
