@@ -103,6 +103,7 @@ Tutorials read top-to-bottom but aren't essays. Prose explains the visualization
 - **Plain-English framing** of every code block, 1-2 sentences. Reader should follow the story without running the code, without needing three paragraphs per cell.
 - *Italics* for terms-of-art on first appearance (*hive plot*, *repeat axes*, *partition*).
 - Backticks for class names, methods, parameters.
+- When a parameter name collides with an English word (`graph`, `nodes`, `edges`, `backend`, `progress`), write "the `X` parameter" rather than bare `` `X` ``. The explicit "parameter" front-loads the disambiguation so the rest of the sentence reads cleanly. Pure-jargon names (`HivePlotMatrix`, `iter_populated_cells`) don't need this.
 
 ### Length discipline
 

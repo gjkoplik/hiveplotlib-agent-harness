@@ -88,6 +88,8 @@ Direct, instructional, first-person plural ("we will demonstrate", "below, we...
 
 *Italics* for terms-of-art on first appearance. Backticks for class names, methods, parameters.
 
+When a parameter name collides with an English word (`graph`, `nodes`, `edges`, `backend`, `progress`), write "the `X` parameter" rather than bare `` `X` ``. The explicit "parameter" front-loads the disambiguation so the rest of the sentence reads cleanly. Pure-jargon names (`HivePlotMatrix`, `iter_populated_cells`) don't need this.
+
 ### Human voice
 
 Read like Gary wrote it. No em-dashes. No AI filler ("delve", "moreover", "furthermore", "underscore", "in essence", "it's worth noting that", "let us consider", "as we can see"). No throat-clearing. Library helpers are tools, not characters — just use `flexitext`, `seaborn`, `numpy.random.default_rng`.
