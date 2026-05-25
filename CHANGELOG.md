@@ -4,9 +4,9 @@ A summary of major structural changes as the agentic harness evolves.
 
 Dated versioning, most recent release first.
 
-## [WIP]
+## 2026.05.25
 
-Some revisions after applying the harness on a few Hiveplotlib development tasks.
+Some revisions after applying and updating the harness over a single Hiveplotlib sprint.
 
 ### Added
 
