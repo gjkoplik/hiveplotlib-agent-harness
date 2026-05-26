@@ -46,6 +46,7 @@ Read `agent-harness/.claude/expertise/docs-engineer.md` at task start; update if
 
 - Halt under rule 9 on state mismatch. No destructive ops.
 - **Use project `make` targets exclusively.** When the consumer's `CLAUDE.md` Common Commands documents a target for the verification surface (`make docs`, `make linkcheck`, `make format`, `make ty`, `make test`, `make test-nb`), invoke that target. Don't fall back to the underlying tool (`sphinx-build`, `ruff`, `ty`) — the wrapper encodes project conventions (output directory, venv activation, config pins). On `make` target failure, halt under rule 9; "I want different flags" is not a fallback case. Carve-out: when no documented target exists for the surface (hiveplotlib has `make format` but no `make lint`), the raw tool is permitted.
+- **Prefer `make docs` over `make docs-strict`.** The strict variant errs on first warning and bails; the regular target builds through and lets you survey all warnings at once, which is almost always the actual goal. Use `make docs-strict` only when the brief explicitly asks for fail-fast behavior.
 - Don't invoke other agents.
 - Don't edit `docs/source/notebooks/*.ipynb` — auto-generated, overwritten by `make docs`. Edit `examples/` only (Notebook Author's domain).
 - Don't rewrite for thoroughness alone. Rule 8: information must not displace clarity.
