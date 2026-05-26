@@ -1,0 +1,11 @@
+{
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Edit(agent-harness/.claude/expertise/**)",
+      "Write(agent-harness/.claude/expertise/**)"
+    ]
+  }
+}

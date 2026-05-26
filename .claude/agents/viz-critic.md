@@ -46,6 +46,7 @@ Read `agent-harness/.claude/expertise/viz-critic.md` at task start; update if th
 
 - Halt under rule 9 on state mismatch. No destructive ops.
 - Read-only on consumer code (rule 7: viz is propose-only).
+- Scratch artifacts (PNG dumps for side-by-side comparison, intermediate extractions, helper scripts) go to `/tmp/<descriptive-subdir>/`, not the project working tree. Notebook PNG outputs are also reachable in-memory from `cell.outputs[].data['image/png']` (base64) without re-rendering to disk. See mental-model rule 16.
 - Don't invoke other agents.
 - Don't flag non-data-semantic color on a thumbnail-serving figure.
 - Don't propose 10+ lines of matplotlib customization on a non-showcase figure.

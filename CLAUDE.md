@@ -8,6 +8,7 @@ Distributed into the consumer's `.claude/` by `bash sync.sh`. Defaults to syncin
 
 - **Halt on confusion; never self-recover or run destructive ops.** See `mental-model` rule 9 for the trigger taxonomy and the absolute ban on destructive operations (no `git checkout -- <path>`, no `git reset --hard`, no `Write` over an un-read file, no silent substitution, etc.).
 - **Test name = test body contract.** Shipped artifacts must not carry rationalization prose bridging a substitution against the brief. If an obstacle to the brief surfaces, halt under rule 9.
+- **Scratch artifacts go to `/tmp/`, not the project tree.** See `mental-model` rule 16. The working tree is git-tracked space; even untracked PNG dumps, intermediate data exports, and helper scripts clutter `git status` and risk accidental commits during a `git add .`.
 
 ## Layout
 
@@ -25,8 +26,17 @@ Distributed into the consumer's `.claude/` by `bash sync.sh`. Defaults to syncin
 - `.claude/agents/viz-critic.md` — read-only review of rendered figures.
 - `.claude/agents/qa-engineer.md` — runs tests/lint/type/doc-build, audits replace-and-sweep, checks Implementation log + CHANGELOG.
 - `.claude/commands/` — harness-generic slash-command entry points distributed by `sync.sh`. Consumer-specific commands belong in `<consumer>/.claude/commands/`.
+- `.claude/settings.json` — harness-managed Claude Code settings (permissions, enabled plugins). Distributed by `sync.sh`; the consumer's copy is overwritten every sync. See "Settings ownership" below.
 - `.claude/templates/plan-template.md` — canonical plan template.
-- `sync.sh` — copies skills, agents, commands, and templates into a consumer's `.claude/`.
+- `sync.sh` — copies skills, agents, commands, and settings.json into a consumer's `.claude/`.
+
+## Settings ownership
+
+`<consumer>/.claude/settings.json` is harness-managed: `sync.sh` overwrites it from `agent-harness/.claude/settings.json` every run. Consumer overrides (additional `enabledPlugins`, extra `Bash`/`Read` permissions) live in `<consumer>/.claude/settings.local.json`, which `sync.sh` never touches.
+
+Currently shipped: `Edit`/`Write` on `agent-harness/.claude/expertise/**` (for rule-11 expertise updates), and `skill-creator@claude-plugins-official` enablement.
+
+Defensive backup: if the consumer's pre-existing `.claude/settings.json` differs from the harness template at sync time, it's copied to `.claude/settings.json.pre-harness-sync.bak` with a warning. Migrate content to `.claude/settings.local.json` and delete the `.bak`.
 
 ## The dispatching session
 

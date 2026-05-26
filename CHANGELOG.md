@@ -4,6 +4,23 @@ A summary of major structural changes as the agentic harness evolves.
 
 Dated versioning, most recent release first.
 
+## WIP
+
+### Changed
+
+- Revised mental model skill to more strictly encourage terser entries going forward.
+
+### Fixed
+
+- Auto-mode sometimes blocked agent from expertise writes on the harness. Resolved by adding harness-managed
+  `.claude/settings.json` shipped by `sync.sh`, ensuring agents have `Edit`/`Write` on
+  `agent-harness/.claude/expertise/**` (and including the Claude `skill-creator` plugin).
+- Version controlled test artifacts were being created. Added text requesting test artifacts to go to `/tmp/` (and
+  gitignored `hiveplotlib/tmp/` as an extra line of defense).
+- Docs were being built to default `sphinx` directory instead of the supported `make docs` location (`public`). Added
+  more language requiring docs build using `make` tools (and gitignored the `sphinx` default `docs/build` as an extra
+  line of defense).
+
 ## 2026.05.25
 
 Some revisions after applying and updating the harness over a single Hiveplotlib sprint.

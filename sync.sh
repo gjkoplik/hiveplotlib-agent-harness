@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Sync the harness's skills and agents into a consumer repo's .claude/.
+# Sync the harness's skills, agents, commands, and settings.json into a
+# consumer repo's .claude/.
 #
 # Layout: this script lives at the harness root. The harness is intended to
 # live at <consumer-repo>/agent-harness/ as a gitignored folder. Without an
@@ -80,6 +81,25 @@ if [ -d "$HARNESS_DIR/.claude/commands" ]; then
   done
 fi
 
+# Sync settings.json. Consumer overrides live in settings.local.json (sync
+# never touches that file). Defensive backup: if the consumer's existing
+# settings.json differs from the harness template, copy it aside first so
+# content is recoverable.
+
+if [ -f "$HARNESS_DIR/.claude/settings.json" ]; then
+  if [ -f "$CONSUMER/.claude/settings.json" ] && \
+     ! cmp -s "$HARNESS_DIR/.claude/settings.json" "$CONSUMER/.claude/settings.json"; then
+    BACKUP="$CONSUMER/.claude/settings.json.pre-harness-sync.bak"
+    cp "$CONSUMER/.claude/settings.json" "$BACKUP"
+    echo
+    echo "WARNING: $CONSUMER/.claude/settings.json differed from harness template; backed up to .pre-harness-sync.bak."
+    echo "         Migrate consumer-specific settings to .claude/settings.local.json, then delete the .bak."
+    echo
+  fi
+  cp "$HARNESS_DIR/.claude/settings.json" "$CONSUMER/.claude/settings.json"
+  echo "synced settings.json"
+fi
+
 # Prune orphans: items WE placed previously but no longer place. We track
 # what we placed via a manifest at $CONSUMER/.claude/.harness-managed.
 # Consumer-specific skills and agents (never in our manifest) are NEVER
@@ -116,6 +136,9 @@ if [ -d "$HARNESS_DIR/.claude/commands" ]; then
     [ -f "$command_file" ] || continue
     CURRENT_MANAGED+=("commands/$(basename "$command_file")")
   done
+fi
+if [ -f "$HARNESS_DIR/.claude/settings.json" ]; then
+  CURRENT_MANAGED+=("settings.json")
 fi
 
 # Remove items we managed before but no longer manage (renames or deletions).
