@@ -20,6 +20,8 @@ Dated versioning, most recent release first.
 - Docs were being built to default `sphinx` directory instead of the supported `make docs` location (`public`). Added
   more language requiring docs build using `make` tools (and gitignored the `sphinx` default `docs/build` as an extra
   line of defense).
+- Test engineer was writing test docstrings in the context of bugs (which becomes stale information after the
+  fix), instead of solely what the test is testing. Added anti-pattern note for `test-engineer` agent.
 
 ## 2026.05.25
 

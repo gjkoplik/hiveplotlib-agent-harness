@@ -10,7 +10,7 @@ Curated playbook of what this role has learned. **Not a log.** Edit existing ent
 
 ## Anti-patterns
 
-_Specific failure modes seen in this role, each tied to a real incident or repeated mistake. Empty until earned._
+- **No bug archaeology in regression-test docstrings.** Mechanism prose rots when the code refactors; the test's contract is the permanent thing. History lives in the commit message and git blame. Trigger: reaching for "Regression test for X" framing or paragraph-length "failing-before" prose.
 
 ## Gotchas
 
