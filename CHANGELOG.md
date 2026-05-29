@@ -26,6 +26,12 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
   line of defense).
 - Test engineer was writing test docstrings in the context of bugs (which becomes stale information after the
   fix), instead of solely what the test is testing. Added anti-pattern note for `test-engineer` agent.
+- Tests were also narrating harness internals in their docstrings (which plan item a critic flagged, what the user
+  resolved), which leaks process metadata into shipped code. Clarified in mental model skill and test engineer agent
+  files.
+- A test was checking a wrapper's name and docstring wording, but those only affect how the docs and `help()` read,
+  not what the code actually does. Added a rule: tests check behavior, and how things read in the docs is left to
+  docs review.
 
 ## 2026.05.25
 

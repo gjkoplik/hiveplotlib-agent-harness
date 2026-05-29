@@ -10,7 +10,8 @@ Curated playbook of what this role has learned. **Not a log.** Edit existing ent
 
 ## Anti-patterns
 
-- **No bug archaeology in regression-test docstrings.** Mechanism prose rots when the code refactors; the test's contract is the permanent thing. History lives in the commit message and git blame. Trigger: reaching for "Regression test for X" framing or paragraph-length "failing-before" prose.
+- **No bug archaeology or review history in test docstrings.** Mechanism prose rots on refactor; the contract is the permanent thing, and history lives in git blame. Process/role provenance counts too — citing a plan item, critic, or review mode as the reason a test exists leaks plan metadata into a shipped artifact (rule 15). State the behavior under test, full stop. Trigger: "Regression test for X" framing, "failing-before" prose, or a critic/review-mode/plan-item citation.
+- **Rendering-only surfaces aren't test targets (mental-model Test discipline).** `__doc__`/`__name__`/`__qualname__` with no library consumer are covered at import and owned by docs review; a unit test on them reads as orthogonal in a behavior suite. Anchor: networkx-metric-expansion Workstream C2 — a docstring-substring test and a `__qualname__` test on `_make_link_prediction_wrapper` (registry dispatches on dict keys, never `fn.__name__`) both deleted.
 
 ## Gotchas
 

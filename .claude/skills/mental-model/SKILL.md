@@ -109,7 +109,7 @@ Routine dispatch decisions (which specialist runs which workstream, sequencing w
 
 ### 15. No plan-internal scaffolding in shipped artifacts
 
-Workstream identifiers ("Workstream I"), phase numbers ("Phase 2"), references to plan sections, and "per Workstream X" provenance notes are plan-management metadata. They belong in the plan, the commit message, and the PR description, not in source, tests, notebooks, or docstrings. Name section dividers by topic. The git log captures provenance for anyone who needs it. QA Engineer greps for survivors as part of the audit; auto-strip (delete or rename to topic) is "objective wrongness", not a taste call.
+Plan-management metadata belongs in the plan, commit message, and PR description, not in source, tests, notebooks, or docstrings — test docstrings included, which state the behavior under test, not the review history that produced it. Banned in shipped artifacts: workstream identifiers ("Workstream I"), phase numbers, plan-section references, "per Workstream X" provenance, and **process/role provenance** (a harness role, a review mode, a plan item number, a "user resolution"). Name section dividers by topic; the git log captures provenance. QA Engineer greps for survivors; auto-strip (delete or rename to topic) is "objective wrongness", not a taste call.
 
 ### 16. Scratch artifacts go to system `/tmp/`, not the project tree
 
@@ -124,6 +124,8 @@ Diagnostic dumps (PNG renderings for side-by-side comparison, intermediate data 
 **Lightweight by design, optional extras for everything else.** Core: matplotlib + numpy + pandas. Optional extras: `hiveplotlib[networkx|bokeh|holoviews|plotly|datashader]`. Imports wrapped in try/except with helpful errors. Tests for optional-dep code are marker-gated (`@pytest.mark.networkx` etc.); CI verifies subset installs.
 
 **Test discipline.** 100% coverage (`--cov=src/hiveplotlib`). All warnings as errors. 7 parallel workers. `tests/foo_test.py` mirrors `src/hiveplotlib/foo.py`. Test name = test body contract: `test_<method>_<scenario>` must call `<method>` in its body. If the named entry point can't be tested as-is, halt under rule 9.
+
+**Test the programmatic consumer, not a rendering-only surface.** Before asserting on `__doc__`/`__name__`/`__qualname__`/introspection, ask who reads it. If library code does, test that consumer's output (the surface is covered transitively). If only rendering does (Sphinx, `help()`, tables), it's docs-engineer + human review, not pytest — and import usually already covers the lines, so the test adds nothing. Pinning docstring prose substrings protects nothing and fights rule-8 rewrites.
 
 ## Viz quality bar
 

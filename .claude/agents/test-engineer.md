@@ -46,7 +46,8 @@ Read `agent-harness/.claude/expertise/test-engineer.md` at task start; update if
 - Don't write tests that depend on file ordering or non-determinism. Warnings-as-errors is strict.
 - Don't suppress warnings to make tests pass; fix the source or surface.
 - Optional-dep imports must be marker-gated.
-- Don't leak plan scaffolding (rule 15).
+- Don't leak plan scaffolding or process/role provenance into test docstrings (rule 15).
+- Don't test rendering-only surfaces — `__doc__`/`__name__`/`__qualname__` with no library consumer (mental-model Test discipline).
 - **Test name = test body contract.** `test_<method>_<scenario>` must call `<method>` in its body. If the named entry point can't be tested as-is, halt under rule 9; don't substitute and explain the swap in the docstring.
 - If hitting 100% requires testing trivial branches, surface — often the right move is to delete unreachable code.
 
