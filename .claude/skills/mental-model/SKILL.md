@@ -69,7 +69,7 @@ The ban is absolute. User authorization to ship a workstream is not authorizatio
 
 ### 10. Promote major plans to wiki ADRs
 
-When a major plan finishes shipping (work complete, tests pass, user has reviewed), Research Liaison distills it into `wiki/wiki/adr/NNNN-topic.md`. Conventions: 4-digit sequential `NNNN`, kebab-case slug naming the decision, `Status: Proposed | Accepted | Superseded by NNNN`, append-only (supersede with a new record, link both directions), trim ruthlessly.
+When a major plan finishes shipping (work complete, tests pass, user has reviewed), Research Liaison distills it into `wiki/wiki/adr/NNNN-topic.md`. Conventions: 4-digit sequential `NNNN`, kebab-case slug naming the decision, `Status: Proposed | Accepted | Superseded by NNNN`, append-only (supersede with a new record, link both directions). Concision per rule 17 (ADR shape).
 
 **Scope:** hiveplotlib consumer-repo plans only. Harness-self plans use `agent-harness/CHANGELOG.md` as their durable record. Trivial plans skip.
 
@@ -119,6 +119,16 @@ Plan-management metadata belongs in the plan, commit message, and PR description
 
 Diagnostic dumps (PNG renderings for side-by-side comparison, intermediate data exports, helper scripts) go to `/tmp/<descriptive-subdir>/`, not under the consumer repo. The working tree is git-tracked space; even untracked artifacts there clutter `git status` and risk accidental commits during a `git add .`. `/tmp/` is OS-managed, outside git's view entirely. Notebook cell PNGs are also reachable in-memory from `cell.outputs[].data['image/png']` (base64) when the agent already has the `.ipynb` open; decoding from the notebook is usually faster than re-rendering anyway. When a working artifact legitimately belongs in the repo (a new test fixture, a new example image, a new dataset), name it under the canonical home (`tests/`, `examples/`, `docs/source/_static/`, `src/hiveplotlib/datasets/`); never under an ad-hoc top-level scratch directory. Applies to any agent with `Bash` or `Write` access — viz-critic, code-engineer, qa-engineer, notebook-author, anyone.
 
+### 17. Long-form authored artifacts are directly readable
+
+Plans, plan amendments, and ADRs are written to be read directly, not skimmed past in favor of a summary. One concision standard, cited from each authoring surface (the define-once-cite-everywhere mechanic of rule 11), with a shape per artifact:
+
+- **Plans:** readable without a summary crutch. Cut narration, hedging, and over-justification; say each thing once (a decision stated in Goal is not restated in Default justifications or the workstream block); each section earns its length; done-whens terse and checkable; lists or tables over prose where clearer.
+- **Amendments:** as tight as an expertise entry: delta, rationale, which done-whens it touches, the In-scope / Added / Deferred tag. Not a narration of how the ask arrived.
+- **ADRs:** a distilled record, not a narrative. Keep it short, single screen typically.
+
+Binds the Orchestrator (plans, amendments) and Research Liaison (ADRs) at authoring time.
+
 ## Library invariants
 
 **Hive plots have 3 axes, almost always.** Default mental model is 3 axes, often with repeat axes (karate club is canonical, 3 axes + repeats = 6 effective halves). 2 axes without repeats is essentially never useful (one toy pedagogical notebook). 4+ axes is a bug; use HivePlotMatrix instead. Partition design uses meaningful binary or ternary cuts, not numbered community-detection labels.
@@ -145,7 +155,7 @@ Applies to text the reader sees (notebook markdown, README/docs prose, PR descri
 - **No hedging meta-commentary.** "It is important to note that X" is just "X".
 - **Library helpers are tools, not characters.** Just use `flexitext`, `seaborn`, `numpy.random.default_rng`.
 - **Direct, slightly informal.** "Let's look at what happens when we sort by degree" beats "We shall now examine the consequences."
-- **Compression is the default.** Match or undershoot the length of sibling entries when adding to CHANGELOG, expertise, agent definitions, or in-place docs. Cut sentences that don't carry load-bearing information. The git log carries provenance, the wiki carries deep context, in-place prose carries only what the reader needs at hand. When in doubt, less.
+- **Compression is the default.** Match or undershoot the length of sibling entries when adding to CHANGELOG, expertise, agent definitions, or in-place docs. Cut sentences that don't carry load-bearing information. The git log carries provenance, the wiki carries deep context, in-place prose carries only what the reader needs at hand. When in doubt, less. Long-form authored artifacts (plans, amendments, ADRs) follow rule 17's per-shape standard.
 
 ## Pointers
 
