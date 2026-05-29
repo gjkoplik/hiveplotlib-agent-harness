@@ -1,6 +1,6 @@
 # Expertise: Notebook Author
 
-Curated playbook of what this role has learned. **Not a log.** Edit existing entries when a new observation refines or supersedes them; add new entries only when truly new ground is covered; remove entries that no longer earn their place. Every entry earns its line by tracing to a real failure or repeated success, and follows the entry shape (lead + body + anchor) in mental-model rule 11.
+Curated playbook of what this role has learned. **Not a log.** Edit existing entries when a new observation refines or supersedes them; add new entries only when truly new ground is covered; remove entries that no longer earn their place. Every entry earns its line by tracing to a real failure or repeated success, and follows the entry shape (lead + body + anchor) and stays lean (soft target ~60-90 words) per mental-model rule 11.
 
 ## Patterns to reach for
 

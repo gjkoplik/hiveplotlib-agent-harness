@@ -17,7 +17,7 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
 
 ### Changed
 
-- Revised mental model skill to more strictly encourage terser entries going forward.
+- Codified a concision standard for expertise entries in rule 11 (lean body and anchor, soft ~60-90-word target) and reflected it into the shared expertise-file header. See `agent-harness/.claude/plans/expertise-concision.md`.
 - Gallery skill gains a scope-discipline section (prefer one dataset, keep a page focused on the class it documents, plus 2-3 axes and length notes); the tutorial skill, already covering most of this, gains a one-line dataset-drift note.
 
 ### Fixed
