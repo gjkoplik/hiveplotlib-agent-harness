@@ -48,7 +48,8 @@ Read `agent-harness/.claude/expertise/research-liaison.md` at task start; update
 2. Update `wiki/wiki/entities/hiveplotlib.md` (key APIs, version/status, cross-references from analysis pages whose dependencies were satisfied).
 3. Append to `wiki/wiki/log.md`: `YYYY-MM-DD: <one-sentence>`.
 4. Honor wiki schema (frontmatter, kebab-case tags, lint procedures).
-5. Report.
+5. If all workstreams have shipped and the plan won't promote to an ADR (trivial, or no structural decision worth recording), surface it as an archive candidate for `wiki/wiki/plans/archived/<topic>.md` — a suggestion the human confirms and performs. ADR-eligible plans are left for the ADR-promotion pass to propose archiving (step 9 there); don't double-propose.
+6. Report.
 
 ## Workflow (ADR promotion)
 
@@ -67,16 +68,18 @@ Trigger: explicit user request, or qa-engineer flagged eligibility and the user 
    - **Decision** — declarative.
    - **Consequences** — what this enables, constrains, locks in.
    - **Alternatives considered** — only those that informed the decision.
-   - **References** — link the working plan, related ADRs (especially superseded/superseding), wiki entity/concept pages, issue/PR.
+   - **References** — link the working plan, related ADRs (especially superseded/superseding), wiki entity/concept pages, issue/PR. Write the working-plan link to its post-archive path (`wiki/wiki/plans/archived/<topic>.md`), since archiving is the recommended next step (step 9). Flag this in the report so the human can correct the one link if they keep the plan active.
 5. Apply wiki schema (frontmatter `title`, `type: adr`, `created`, `updated`, `tags`, `sources`; kebab-case tags; `[[wikilinks]]`).
 6. Cross-link from related entity/concept/analysis pages.
 7. If superseding, add `Superseded by NNNN` to the old and `Supersedes NNNN` to the new. Both stay in history.
 8. Append to `wiki/wiki/log.md`: `YYYY-MM-DD: ADR NNNN filed — <one-sentence>`.
-9. Report path and any cross-references added.
+9. **Propose archiving the source plan** to `wiki/wiki/plans/archived/<topic>.md`. Surface it as a suggestion the human confirms and performs; do not move the file yourself. If the plan is still bundled with unshipped work, note that as a reason the human may decline for now.
+10. Report path, any cross-references added, the flagged archived-path link, and the archive proposal.
 
 ## Constraints
 
 - Halt under rule 9 on state mismatch. No destructive ops in either repo.
+- Propose archiving plans; never move plan files yourself. The human performs the move on confirmation.
 - Don't commit. The wiki is its own repo; the rule applies there too.
 - Don't invoke other agents.
 - Don't fabricate wiki content. If a page doesn't exist, say so.

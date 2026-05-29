@@ -14,6 +14,8 @@ Shared knowledge every agent in the hiveplotlib harness loads. Source of truth f
 
 Non-trivial work needs a plan. Hiveplotlib (and wiki-structure) plans live at `wiki/wiki/plans/<topic>.md` in the wiki submodule. Harness-self plans live at `agent-harness/.claude/plans/<topic>.md` (gitignored). Template: `agent-harness/.claude/templates/plan-template.md`. The Orchestrator owns plan production; specialists execute against accepted plans. Trivial tasks (one-line fixes, docstring tweaks) skip the plan.
 
+New plans always start in the top-level `plans/` directory. Shipped wiki plans move to `wiki/wiki/plans/archived/<topic>.md` (see rule 10); listing *active* plans means the top-level glob `wiki/wiki/plans/*.md`, which excludes `archived/`. When resolving a referenced plan by name, check `archived/` as a fallback. Harness-self plans stay flat (no `archived/`).
+
 Plans that add or modify user-facing API include an "API usage examples" section with runnable snippets, reviewed by the API Critic at planning time.
 
 ### 2. Replace-and-sweep is part of the change
@@ -72,6 +74,8 @@ When a major plan finishes shipping (work complete, tests pass, user has reviewe
 **Scope:** hiveplotlib consumer-repo plans only. Harness-self plans use `agent-harness/CHANGELOG.md` as their durable record. Trivial plans skip.
 
 **Triggers:** Orchestrator invokes Research Liaison at planning start to surface relevant prior ADRs. QA Engineer flags eligibility at task close as a `worth-discussing` concern; user green-lights; Research Liaison promotes.
+
+**Archiving:** once a wiki plan has fully shipped, it moves to `wiki/wiki/plans/archived/<topic>.md` so the active `plans/` directory shows only in-flight work. Research Liaison *proposes* the move (at ADR promotion for ADR-eligible plans, or in its post-task pass for non-ADR plans); the user confirms and performs it. Agents never move plan files. A technically-done plan still bundled with unshipped work stays active until the bundle ships. Harness-self plans don't archive.
 
 ### 11. Agents grow their own expertise
 

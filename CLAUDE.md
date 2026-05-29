@@ -75,3 +75,5 @@ Path resolution per consumer:
 - `agent-harness` (planning a harness change) → `agent-harness/.claude/plans/<topic>.md`
 
 Plans are working scratch, not curated wiki content; `wiki/wiki/plans/README.md` carries the disclaimer for browsers. Major plans promote to ADRs at `wiki/wiki/adr/NNNN-topic.md` per `mental-model` rule 10. Harness-self plans don't promote; the harness CHANGELOG is their durable record.
+
+**Active vs. archived (wiki plans only).** New plans start in `wiki/wiki/plans/`. Once a plan's work has fully shipped, it moves to `wiki/wiki/plans/archived/<topic>.md`, so the active directory shows only in-flight work. Listing active plans uses the top-level glob `wiki/wiki/plans/*.md` (excludes `archived/`); resolving a referenced plan checks `archived/` as a fallback. Research Liaison proposes the move; the user confirms and performs it (agents never move plan files). Harness-self plans stay flat.

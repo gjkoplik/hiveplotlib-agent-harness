@@ -3,8 +3,9 @@
 <!--
 Hiveplotlib and wiki-structure plans go to wiki/wiki/plans/<topic>.md (tracked
 in the wiki submodule). Harness-self plans go to agent-harness/.claude/plans/
-<topic>.md (gitignored). The plan is the canonical reference; the conversation
-transcript is not.
+<topic>.md (gitignored). New plans start in plans/; once the work ships, wiki
+plans move to plans/archived/<topic>.md (see plans/README.md). The plan is the
+canonical reference; the conversation transcript is not.
 -->
 
 ## Goal

@@ -23,6 +23,8 @@ Orthogonal to mode. One of `hiveplotlib`, `agent-harness`, `hiveplotlib-llm-wiki
 - `hiveplotlib-llm-wiki` → `wiki/plans/<topic>.md` (same physical file, different working directory)
 - `agent-harness` → `.claude/plans/<topic>.md` inside the harness repo (gitignored)
 
+`initial-plan` always writes the new plan to the top-level `plans/` directory, never to `plans/archived/` (that holds shipped plans). In `amend-plan`, if the named plan isn't at its top-level path, check `wiki/wiki/plans/archived/<topic>.md` — amending an archived plan usually means the work reopened, so flag it for the human rather than silently editing in place.
+
 ## Inputs
 
 - A task description naming the consumer (or amendable from context). In `amend-plan` mode: the existing plan path and the delta source.
