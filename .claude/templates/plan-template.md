@@ -5,7 +5,8 @@ Hiveplotlib and wiki-structure plans go to wiki/wiki/plans/<topic>.md (tracked
 in the wiki submodule). Harness-self plans go to agent-harness/.claude/plans/
 <topic>.md (gitignored). New plans start in plans/; once the work ships, wiki
 plans move to plans/archived/<topic>.md (see plans/README.md). The plan is the
-canonical reference; the conversation transcript is not.
+canonical reference; the conversation transcript is not. Keep it concise per
+mental-model rule 17 (plans shape).
 -->
 
 ## Goal
@@ -130,7 +131,7 @@ Multiple workstreams may dispatch concurrently. In-tree state from a co-running 
 
 ## Plan amendments
 
-Populated by orchestrator in `amend-plan` mode when rule 14 triggers (post-impl critic `must-fix`/`should-fix`, or a scope-changing user ask). Three subsections matching rule 14's trigger taxonomy. Append-only; empty until amendments accrue.
+Populated by orchestrator in `amend-plan` mode when rule 14 triggers (post-impl critic `must-fix`/`should-fix`, or a scope-changing user ask). Three subsections matching rule 14's trigger taxonomy. Append-only; empty until amendments accrue. Each entry concise per rule 17 (amendments shape).
 
 Placeholder when empty:
 

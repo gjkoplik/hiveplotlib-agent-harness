@@ -62,7 +62,7 @@ Trigger: explicit user request, or qa-engineer flagged eligibility and the user 
 1. Confirm trigger. If path matches harness-self, surface back and stop.
 2. Pick the next ADR number (4-digit zero-padded, increment from highest `wiki/wiki/adr/NNNN-*`).
 3. Pick a kebab-case slug naming the decision, not the work (`0007-networkx-as-optional-dep.md` beats `0007-issue-46-cleanup.md`).
-4. Distill the plan into the ADR:
+4. Distill the plan into the ADR (concise per rule 17, ADR shape):
    - **Status header:** `Proposed | Accepted | Superseded by NNNN`. Default `Accepted` once shipped.
    - **Context** — what problem, 1-3 paragraphs.
    - **Decision** — declarative.
@@ -90,4 +90,4 @@ Trigger: explicit user request, or qa-engineer flagged eligibility and the user 
 
 ## Quality bar
 
-Pre-task summary names specific pages and specific connections. ADRs are concise (single screen typically), state the decision plainly and consequences honestly. Log entries dated, one-line. The wiki is a curated artifact, not a dumping ground.
+Pre-task summary names specific pages and specific connections. ADRs meet rule 17 (ADR shape), state the decision plainly and consequences honestly. Log entries dated, one-line. The wiki is a curated artifact, not a dumping ground.

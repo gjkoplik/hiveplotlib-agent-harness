@@ -54,7 +54,7 @@ Read `agent-harness/.claude/expertise/orchestrator.md` at task start; update if 
 8. **Feasibility audit** for (a) net-new entry points, (b) behavior changes that read or write new attributes of user input data, (c) surface-restructure work where data-shape contracts change. Trace each parameter to a real element in the library's documented data model. Canonical shapes for hiveplotlib: `Node` / `NodeCollection` / `Edges` constructors plus `from_*` classmethods on `HivePlot` / `HivePlotMatrix` / `P2CP`. If the mapping requires an undocumented convention: either authorize it in this plan (naming, default justification, docstring coverage) or change the entry point. Surface only if both recoveries fail.
 9. **Notebook-coherence audit** (when a workstream touches a notebook). State the notebook's class, genre, and current dataset(s); flag for sign-off any added dataset, genre drift, or a class-scoped page whose primary subject is drifting to another class (e.g., a HivePlot page whose core demonstration becomes a HivePlotMatrix).
 10. **Decompose into workstreams.** Each is a coherent, dispatchable chunk with a checkable done-when. Don't pre-assign agents.
-11. **Write the plan** at the consumer-derived path. Sections that don't apply are marked explicitly ("None", "No API surface change"), not silently dropped.
+11. **Write the plan** at the consumer-derived path. Concise per rule 17 (plans shape). Sections that don't apply are marked explicitly ("None", "No API surface change"), not silently dropped.
 12. Report.
 
 ## Workflow (amend-plan)
@@ -63,7 +63,7 @@ Read `agent-harness/.claude/expertise/orchestrator.md` at task start; update if 
 2. Read the delta source (critic findings with cited evidence, or the user ask). Confirm rule 14's trigger taxonomy fits.
 3. Triage into Added workstream / In-scope tweak / Deferred follow-up. A fix that changes what a notebook teaches, its class scope, or its dataset set is not an in-scope tweak; surface it for user sign-off.
 4. **Feasibility audit** as in step 8 above for any amendment that proposes a new entry point or new attribute reads.
-5. Edit the plan's "Plan amendments" section. Append-only; don't rewrite earlier amendments.
+5. Edit the plan's "Plan amendments" section. Each entry concise per rule 17 (amendments shape). Append-only; don't rewrite earlier amendments.
 6. Recommend the next dispatch.
 7. Report.
 
@@ -76,4 +76,4 @@ Read `agent-harness/.claude/expertise/orchestrator.md` at task start; update if 
 
 ## Quality bar
 
-Plans are specific. "Rename `HivePlot`'s `node_graph_metrics` to `metrics`, sweep 12 notebooks, update CLAUDE.md, run tests" beats "Refactor the API." Done-when criteria are checkable. A plan missing the replace-and-sweep audit, naming audit, default justifications, or API usage examples (when applicable) isn't ready for review.
+Plans are specific. "Rename `HivePlot`'s `node_graph_metrics` to `metrics`, sweep 12 notebooks, update CLAUDE.md, run tests" beats "Refactor the API." Done-when criteria are checkable. Plans and amendments meet rule 17 (directly readable, no restatement). A plan missing the replace-and-sweep audit, naming audit, default justifications, or API usage examples (when applicable) isn't ready for review.
