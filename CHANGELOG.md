@@ -17,7 +17,7 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
 
 ### Changed
 
-- Codified a concision standard for expertise entries in rule 11 (lean body and anchor, soft ~60-90-word target) and reflected it into the shared expertise-file header. See `agent-harness/.claude/plans/expertise-concision.md`.
+- Expertise entries are kept leaner and no longer carry a provenance pointer to the plan or workstream a lesson came from. Reflected in the shared expertise-file header.
 - Gallery skill gains a scope-discipline section (prefer one dataset, keep a page focused on the class it documents, plus 2-3 axes and length notes); the tutorial skill, already covering most of this, gains a one-line dataset-drift note.
 
 ### Fixed
