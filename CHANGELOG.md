@@ -6,6 +6,10 @@ Dated versioning, most recent release first.
 
 ## WIP
 
+### Model Compatibility
+
+Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found already-aligned; no rule changes needed.
+
 ### Changed
 
 - Revised mental model skill to more strictly encourage terser entries going forward.
