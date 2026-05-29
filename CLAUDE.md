@@ -24,6 +24,7 @@ Distributed into the consumer's `.claude/` by `bash sync.sh`. Defaults to syncin
 - `.claude/agents/docs-engineer.md` — writes docstrings, autodoc, notebook index entries.
 - `.claude/agents/notebook-author.md` — creates or updates `examples/` notebooks. Defers style to the tutorial/gallery skills.
 - `.claude/agents/viz-critic.md` — read-only review of rendered figures.
+- `.claude/agents/editorial-critic.md` — read-only review of a notebook's structure, scope, dataset coherence, and genre against the notebook skills.
 - `.claude/agents/qa-engineer.md` — runs tests/lint/type/doc-build, audits replace-and-sweep, checks Implementation log + CHANGELOG.
 - `.claude/commands/` — harness-generic slash-command entry points distributed by `sync.sh`. Consumer-specific commands belong in `<consumer>/.claude/commands/`.
 - `.claude/settings.json` — harness-managed Claude Code settings (permissions, enabled plugins). Distributed by `sync.sh`; the consumer's copy is overwritten every sync. See "Settings ownership" below.
@@ -48,6 +49,7 @@ The dispatching session is the consumer-repo Claude Code conversation Gary types
 - **Plan accepted.** Invoke the named specialist for each workstream as Gary green-lights it.
 - **Workstream that adds or modifies user-facing API.** Invoke api-critic in post-impl mode after the implementing specialist finishes. Applies to mechanical propagations to sibling classes (e.g., `HivePlotMatrix` mirroring `HivePlot`).
 - **Workstream that produces or changes a figure.** Invoke viz-critic in post-impl mode.
+- **Workstream that adds or restructures a notebook.** Invoke editorial-critic in post-impl mode after the notebook-author finishes. It reviews the notebook's structure and scope (right notebook, dataset coherence, genre, section-worth); viz-critic covers the figures in the same notebook.
 - **Workstream complete.** Invoke qa-engineer for release-readiness verification. If a critic post-impl section is still `Pending`, qa flags `must-fix` and the dispatching session invokes the missing critic before proceeding.
 - **Mid-flight emergent work** (post-impl critic `must-fix` or `should-fix`, or any user ask that would change the workstream set per rule 14). Route to orchestrator in `amend-plan` mode before any other dispatch. The orchestrator edits the plan; the dispatching session does not edit the plan directly.
 - **All workstreams complete, plan non-trivial.** qa-engineer surfaces a `worth-discussing` ADR-promotion concern. When Gary green-lights, invoke research-liaison.

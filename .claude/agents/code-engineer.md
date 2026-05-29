@@ -48,4 +48,4 @@ Read `agent-harness/.claude/expertise/code-engineer.md` at task start; update if
 
 ## Quality bar
 
-Code matches existing style. Tests cover what changed. Implementation log entries reconstructable: "added `from_networkx(node_graph_metrics=...)` shorthand, parametrized 4 new tests, updated `__init__.py` export" beats "done."
+Code matches existing style. Tests cover what changed. Implementation log entries reconstructable: "added `HivePlot(graph=..., node_graph_metrics=...)` support, parametrized 4 new tests, updated `__init__.py` export" beats "done."

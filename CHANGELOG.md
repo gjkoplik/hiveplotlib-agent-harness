@@ -10,9 +10,15 @@ Dated versioning, most recent release first.
 
 Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found already-aligned; no rule changes needed.
 
+### Added
+
+- `editorial-critic` agent: read-only review of a notebook as a whole artifact (right notebook for the content, dataset coherence, genre fit, section-worth), parallel to viz-critic's figure pass. Closes the gap where no agent owned notebook structure and scope.
+- Orchestrator notebook-coherence audit at planning time, and an amend-plan check that surfaces scope-crossing notebook fixes (wrong notebook, changed dataset set) for sign-off rather than applying them silently.
+
 ### Changed
 
 - Revised mental model skill to more strictly encourage terser entries going forward.
+- Gallery skill gains a scope-discipline section (prefer one dataset, keep a page focused on the class it documents, plus 2-3 axes and length notes); the tutorial skill, already covering most of this, gains a one-line dataset-drift note.
 
 ### Fixed
 
@@ -32,6 +38,7 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
 - A test was checking a wrapper's name and docstring wording, but those only affect how the docs and `help()` read,
   not what the code actually does. Added a rule: tests check behavior, and how things read in the docs is left to
   docs review.
+- Removed discussion of never-shipped `HivePlot.from_networkx` classmethod; updated to the shipped `HivePlot(graph=...)` surface across the notebook skills, notebook-author, orchestrator, and code-engineer.
 
 ## 2026.05.25
 

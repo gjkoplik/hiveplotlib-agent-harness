@@ -106,10 +106,17 @@ Read like Gary wrote it. No em-dashes. No AI filler ("delve", "moreover", "furth
 ### Use the library; don't reinvent it
 
 - **Derive a partition from a continuous variable:** `NodeCollection.create_partition_variable(...)`. Don't hand-roll `pd.cut` + merge.
-- **Build from a `networkx` graph plus computed metrics:** prefer `HivePlot.from_networkx(..., node_graph_metrics=...)` where available over `networkx_to_nodes_edges()` + manual merge.
+- **Build from a `networkx` graph plus computed metrics:** prefer `HivePlot(graph=..., node_graph_metrics=...)` over `networkx_to_nodes_edges()` + manual merge.
 - **Per-group edge styling:** `update_edges(partition_id_1=..., partition_id_2=...)`. Don't loop.
 
 A gallery page wrapping a feature in 10 lines of pandas plumbing teaches the wrong lesson.
+
+### Scope discipline
+
+- **Prefer one dataset; switch only for a real reason.** Reaching for a second usually means the first was the wrong pick: choose one that carries the whole notebook rather than defaulting to a familiar small graph and patching its gaps. A warranted switch gets named in the prose; the failure to avoid is silent drift between an intro promising one dataset and a body using several.
+- **Keep a class-scoped page on its class.** A page documenting one class keeps that class as its primary subject, but showing the sibling class for contrast or drill-down is fine and often expected (the HPM pages deliberately drill into a single hive plot). The tell to catch is accidental drift: a primitive swapped mid-page to dodge the 2-3 axis rule, so the main demonstration migrates to another class to escape a constraint rather than by design.
+- **Stay on 2-3 axes.** More than three groups is a HivePlotMatrix, not extra axes (see the rule above).
+- **Length discipline.** A gallery page much longer than its closest sibling for comparable scope is too long; cut prose, or split if it has outgrown one feature.
 
 ### Figure-quality checks before shipping
 

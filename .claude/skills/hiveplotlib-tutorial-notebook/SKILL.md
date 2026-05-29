@@ -47,6 +47,8 @@ Lives in `examples/`. Never edit `docs/source/notebooks/` copies — overwritten
 
 Tutorials usually don't lean on `hiveplotlib.datasets.example_*` (that's gallery territory). Instead build a **purpose-built synthetic dataset** that supports the narrative (stochastic block models with tuned probabilities, contrived employee-seniority data, Gaussian blobs at cube corners), or **load a real dataset** via `networkx`, `hiveplotlib.datasets`, or a CSV.
 
+Stay on the dataset you set up here; if a later section genuinely needs another, say why and keep the lead-in honest.
+
 State the relationships in plain English before the visualization. Reader needs to know what to look for. From `quick_hive_plots.ipynb`:
 
 > Above, we have generated 3 cliques of equal size (10 per clique) with the following properties:
@@ -135,7 +137,7 @@ Read like Gary wrote it. No em-dashes. No AI filler ("delve", "moreover", "furth
 ### Use the library; don't reinvent it
 
 - **Derive a partition from a continuous variable:** `NodeCollection.create_partition_variable(data_column=..., cutoffs=..., labels=...)`. Don't hand-roll `pd.cut` + manual merge.
-- **Build from a `networkx` graph plus computed metrics:** check whether the current API supports a single call (e.g. `HivePlot.from_networkx(..., node_graph_metrics=["degree"], ...)`). Use it where available. The older `networkx_to_nodes_edges()` + `pd.DataFrame(G.degree).merge(...)` still works; new tutorials prefer the streamlined call.
+- **Build from a `networkx` graph plus computed metrics:** pass the graph straight to the constructor with the metrics you want (e.g. `HivePlot(graph=..., node_graph_metrics=["degree"], ...)`). The older `networkx_to_nodes_edges()` + `pd.DataFrame(G.degree).merge(...)` still works; new tutorials prefer the streamlined call.
 - **Per-group edge styling:** `update_edges(partition_id_1=..., partition_id_2=..., ...)`. Don't loop over `edges.data`.
 - **Multi-tag edges:** build the dict-of-DataFrames input and let `Edges` handle it.
 

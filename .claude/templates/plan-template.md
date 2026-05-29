@@ -92,6 +92,25 @@ Concerns:
 
 If no user-facing API change, state "No API surface change" and skip all three subsections.
 
+## Notebook review
+
+Filled by editorial-critic after each workstream that adds or restructures a notebook; it reviews the notebook as an artifact (right notebook, dataset coherence, genre fit, section-worth). Figures in the same notebook are viz-critic's post-impl pass, not this one. Until filled:
+
+```
+Pending — invoke editorial-critic in post-implementation mode after Workstream <X> ships.
+```
+
+Once filled:
+
+```
+Status: clean | propose
+Notebook reviewed: <file>, genre (gallery | tutorial), class documented
+Concerns:
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<cell>
+```
+
+If the plan touches no notebooks, state "No notebook change" and skip this section.
+
 ## Workstreams
 
 Coherent, dispatchable chunks with checkable done-when criteria. Don't pre-assign agents.
