@@ -41,6 +41,7 @@ When porting the whole setup to a new machine, re-register each task once with `
 - Tasks run only while the desktop app is open. If it was closed when a task was due, it runs on next launch.
 - Each run is a fresh session with no memory of prior runs or of the conversation that created it. The prompt body must be fully self-contained.
 - Routines never commit. They leave edits in the working tree for the user to review (`git diff`) and commit.
+- **Run mode must be set in the desktop UI, per task, per machine.** For a routine to run unattended it needs auto / bypass-permissions mode; otherwise it stalls on "allow once" prompts mid-run. This mode is app-local state, not captured in these files and not settable via the `scheduled-tasks` MCP tools, so it does not travel with the harness. Set it in the app's Scheduled section after registering each task (and again when porting to a new machine). The alternative, allowlisting the needed tools in `settings.json` / `settings.local.json`, is version-controlled and portable but a broader permission grant.
 
 ## Tasks
 
