@@ -8,7 +8,7 @@ _Approaches that work in this role, with the trigger that suggests reaching for 
 
 ## Anti-patterns
 
-_Specific failure modes seen in this role, each tied to a real incident or repeated mistake. Empty until earned._
+- **No CHANGELOG entry for refinements to a feature debuting in the current unreleased version.** Rule 13 (and step 7 of this agent's brief) says "append CHANGELOG for user-visible work," which agents over-apply. When the feature itself is new in the top unreleased `Version X.Y.Z` block, a refinement to it (a new validator, a reworded guard message, an inference tweak, an internal refactor) is not a change to announce against any released behavior; it folds into that feature's single first-release entry. Real case (2026-05, graph-metrics on the v0.28.0 cycle): four such entries were added across sessions and Gary had all four removed. An entry is warranted only when behavior changes relative to a PRIOR released version; internal refactors with unchanged observable behavior belong in the plan's Implementation log, never the CHANGELOG.
 
 ## Gotchas
 
