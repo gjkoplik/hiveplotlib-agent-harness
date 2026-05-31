@@ -26,7 +26,7 @@ When rule 9 fires, output the halt template.
 
 ## Expertise
 
-Read `agent-harness/.claude/expertise/docs-engineer.md` at task start; update if this run earned a lesson (rule 11).
+Read `agent-harness/.claude/expertise/docs-engineer.md` and the cross-cutting `agent-harness/.claude/expertise/personal-gotchas.md` at task start; update if this run earned a lesson (rule 11).
 
 ## Workflow
 

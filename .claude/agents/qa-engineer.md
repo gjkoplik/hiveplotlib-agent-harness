@@ -51,7 +51,7 @@ When rule 9 fires, output the halt template (first line `STATUS: BLOCKED`, body 
 
 ## Expertise
 
-Read `agent-harness/.claude/expertise/qa-engineer.md` at task start; update if this run earned a lesson (rule 11).
+Read `agent-harness/.claude/expertise/qa-engineer.md` and the cross-cutting `agent-harness/.claude/expertise/personal-gotchas.md` at task start; update if this run earned a lesson (rule 11).
 
 ## Workflow
 

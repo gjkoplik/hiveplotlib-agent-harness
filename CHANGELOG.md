@@ -12,8 +12,23 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
 
 ### Added
 
-- `editorial-critic` agent: read-only review of a notebook as a whole artifact (right notebook for the content, dataset coherence, genre fit, section-worth), parallel to viz-critic's figure pass. Closes the gap where no agent owned notebook structure and scope.
-- Orchestrator notebook-coherence audit at planning time, and an amend-plan check that surfaces scope-crossing notebook fixes (wrong notebook, changed dataset set) for sign-off rather than applying them silently.
+- Version-controlled scheduled routines: a new `.claude/scheduled-tasks/` directory holds canonical,
+  machine-agnostic `SKILL.md` definitions plus a README documenting the source-of-truth and how to deploy routines.
+  This way, the routines are reviewable and portable instead of living only in the desktop app's store.
+  - `harness-reflection`: weekly "dreaming" run that mines the past week's session transcripts for
+    recurring mistakes and leaves uncommitted edits to the expertise gotchas (plus a memory-consolidation
+    pass) for review. A local reproduction of Anthropic's Dreams; no data leaves the machine.
+  - `wiki-update`: a weekly wiki run that updates against code changes plus a quick web search for anything new with
+    hive plots; writes a digest and notifies on completion.
+- `personal-gotchas.md` expertise file: a home for cross-cutting gotchas not owned by a single role
+  (environment, shell, working-style), with an explicit fallback-not-default routing rule so the per-role
+  playbooks stay the preferred target. Wired so every agent and the dispatching session read it at task
+  start in addition to any role file.
+- `editorial-critic` agent: read-only review of a notebook as a whole artifact (right notebook for the content,
+  dataset coherence, genre fit, section-worth), parallel to viz-critic's figure pass. Closes the gap where no agent
+  owned notebook structure and scope.
+- Orchestrator notebook-coherence audit at planning time, and an amend-plan check that surfaces scope-crossing notebook
+  fixes (wrong notebook, changed dataset set) for sign-off rather than applying them silently.
 
 ### Changed
 

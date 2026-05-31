@@ -40,7 +40,7 @@ When rule 9 fires, output the halt template instead (first line `STATUS: BLOCKED
 
 ## Expertise
 
-Read `agent-harness/.claude/expertise/orchestrator.md` at task start; update if this run earned a lesson (rule 11).
+Read `agent-harness/.claude/expertise/orchestrator.md` and the cross-cutting `agent-harness/.claude/expertise/personal-gotchas.md` at task start; update if this run earned a lesson (rule 11).
 
 ## Workflow (initial-plan)
 
