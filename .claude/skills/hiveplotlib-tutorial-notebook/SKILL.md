@@ -120,7 +120,7 @@ If you're above 2x the closest existing notebook's word count for comparable sco
 
 ### Human voice
 
-Read like Gary wrote it. No em-dashes. No AI filler ("delve", "moreover", "furthermore", "underscore", "in essence", "it's worth noting that", "let us consider", "as we can see"). No throat-clearing ("First, let's discuss" — just discuss). No hedging ("It is important to note that X" → "X"). Direct, slightly informal — "Let's look at what happens when we sort by degree" beats "We shall now examine the consequences." Calibrate against `karate_club.ipynb` and `comparing_network_subgroups.ipynb`. Avoid heavy bullet lists in the body; save them for dataset properties or wrap-up takeaways.
+Read like the maintainer wrote it. No em-dashes. No AI filler ("delve", "moreover", "furthermore", "underscore", "in essence", "it's worth noting that", "let us consider", "as we can see"). No throat-clearing ("First, let's discuss" — just discuss). No hedging ("It is important to note that X" → "X"). Direct, slightly informal — "Let's look at what happens when we sort by degree" beats "We shall now examine the consequences." Calibrate against `karate_club.ipynb` and `comparing_network_subgroups.ipynb`. Avoid heavy bullet lists in the body; save them for dataset properties or wrap-up takeaways.
 
 ## Idioms
 

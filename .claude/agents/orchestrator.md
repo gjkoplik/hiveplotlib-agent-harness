@@ -32,9 +32,9 @@ Orthogonal to mode. One of `hiveplotlib`, `agent-harness`, `hiveplotlib-llm-wiki
 
 ## Output
 
-**`initial-plan`:** a plan file at the consumer's plans path, plus a report with the plan path, a one-paragraph summary, a flag for any Critic input still needed, and `Status: ready-for-review`.
+**`initial-plan`:** a plan file at the consumer's plans path, plus a report with the plan path, a one-paragraph summary, a flag for any Critic input still needed, and `Status: ready-for-review`. The report's next-step line recommends a grill-me alignment pass before dispatch for major plans (the maintainer may skip it), pointing at the plan's `## Alignment (grill)` gate.
 
-**`amend-plan`:** the same plan file edited in place with the "Plan amendments" section populated, plus a report listing each amendment (tagged Added workstream / In-scope tweak / Deferred follow-up), a dispatch recommendation, and `Status: ready-for-execution`.
+**`amend-plan`:** the same plan file edited in place with the "Plan amendments" section populated, plus a report listing each amendment (tagged Added workstream / In-scope tweak / Deferred follow-up), a dispatch recommendation, and `Status: ready-for-execution`. When an amendment changes the workstream set or a load-bearing decision, recommend a fresh grill-me pass on the delta before dispatch.
 
 When rule 9 fires, output the halt template instead (first line `STATUS: BLOCKED`, body describes the confusion).
 
@@ -54,7 +54,7 @@ Read `agent-harness/.claude/expertise/orchestrator.md` and the cross-cutting `ag
 8. **Feasibility audit** for (a) net-new entry points, (b) behavior changes that read or write new attributes of user input data, (c) surface-restructure work where data-shape contracts change. Trace each parameter to a real element in the library's documented data model. Canonical shapes for hiveplotlib: `Node` / `NodeCollection` / `Edges` constructors plus `from_*` classmethods on `HivePlot` / `HivePlotMatrix` / `P2CP`. If the mapping requires an undocumented convention: either authorize it in this plan (naming, default justification, docstring coverage) or change the entry point. Surface only if both recoveries fail.
 9. **Notebook-coherence audit** (when a workstream touches a notebook). State the notebook's class, genre, and current dataset(s); flag for sign-off any added dataset, genre drift, or a class-scoped page whose primary subject is drifting to another class (e.g., a HivePlot page whose core demonstration becomes a HivePlotMatrix).
 10. **Decompose into workstreams.** Each is a coherent, dispatchable chunk with a checkable done-when. Don't pre-assign agents.
-11. **Write the plan** at the consumer-derived path. Concise per rule 17 (plans shape). Sections that don't apply are marked explicitly ("None", "No API surface change"), not silently dropped.
+11. **Write the plan** at the consumer-derived path. Concise per rule 17 (plans shape). Sections that don't apply are marked explicitly ("None", "No API surface change"), not silently dropped. Write the `## Alignment (grill)` section with its `Not yet run` placeholder (or "Not warranted — <why>" for a trivial plan), so the pre-dispatch alignment gate is a visible slot rather than an omission.
 12. Report.
 
 ## Workflow (amend-plan)

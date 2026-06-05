@@ -6,9 +6,14 @@ Dated versioning, most recent release first.
 
 ## WIP
 
+Changes after running on several additional Hiveplotlib implementation plans. Notable additions: added a weekly dreaming
+routine, a /grill-me skill invocation confirming human-agent alignment before dispatch on major plans, a new editorial
+critic, and a file to store agent-agnostic and personal feedback.
+
 ### Model Compatibility
 
-Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found already-aligned; no rule changes needed.
+Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found already-aligned; no additional rule
+changes needed.
 
 ### Added
 
@@ -29,12 +34,18 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
   owned notebook structure and scope.
 - Orchestrator notebook-coherence audit at planning time, and an amend-plan check that surfaces scope-crossing notebook
   fixes (wrong notebook, changed dataset set) for sign-off rather than applying them silently.
+- `grill-me` skill: a Socratic alignment pass the dispatching session runs inline over a plan or task before dispatch,
+  confirming human-agent alignment.
 
 ### Changed
 
-- Expertise entries are kept leaner and no longer carry a provenance pointer to the plan or workstream a lesson came from. Reflected in the shared expertise-file header.
-- Plans, plan amendments, and ADRs now have a per-artifact concision standard so each reads directly instead of being skimmed past for a summary.
-- Gallery skill gains a scope-discipline section (prefer one dataset, keep a page focused on the class it documents, plus 2-3 axes and length notes); the tutorial skill, already covering most of this, gains a one-line dataset-drift note.
+- Expertise entries are kept leaner and no longer carry a provenance pointer to the plan or workstream a lesson came
+  from. Reflected in the shared expertise-file header.
+- Plans, plan amendments, and ADRs now have a per-artifact concision standard so each reads directly instead of being
+  skimmed past for a summary.
+- Gallery skill gains a scope-discipline section (prefer one dataset, keep a page focused on the class it documents,
+  plus 2-3 axes and length notes); the tutorial skill, already covering most of this, gains a one-line dataset-drift
+  note.
 
 ### Fixed
 
@@ -54,7 +65,8 @@ Reviewed the harness against Claude Opus 4.8 (in contrast to Opus 4.7). Found al
 - A test was checking a wrapper's name and docstring wording, but those only affect how the docs and `help()` read,
   not what the code actually does. Added a rule: tests check behavior, and how things read in the docs is left to
   docs review.
-- Removed discussion of never-shipped `HivePlot.from_networkx` classmethod; updated to the shipped `HivePlot(graph=...)` surface across the notebook skills, notebook-author, orchestrator, and code-engineer.
+- Removed discussion of never-shipped `HivePlot.from_networkx` classmethod; updated to the shipped `HivePlot(graph=...)`
+  surface across the notebook skills, notebook-author, orchestrator, and code-engineer.
 
 ## 2026.05.25
 
@@ -62,7 +74,8 @@ Some revisions after applying and updating the harness over a single Hiveplotlib
 
 ### Added
 
-- Halt-on-confusion discipline that prevents agents from self-recovering on unexpected state, with an absolute ban on destructive git and filesystem operations. Enables safe concurrent agent dispatch.
+- Halt-on-confusion discipline that prevents agents from self-recovering on unexpected state, with an absolute ban on
+  destructive git and filesystem operations. Enables safe concurrent agent dispatch.
 - Mid-flight scope changes route back through the plan owner rather than being applied ad-hoc.
 - ADR promotion: major plans distill into durable architecture decision records once the work ships.
 - Audits that prevent silent substitution of one entry point for another in shipped artifacts.
@@ -80,7 +93,9 @@ Some revisions after applying and updating the harness over a single Hiveplotlib
 
 First pass at creating an agent harness for hiveplotlib. **Not yet tested on real work.**
 
-Includes the `mental-model`, `viz-quality-bar`, `hiveplotlib-tutorial-notebook`, and `hiveplotlib-gallery-notebook` skills, the plan template, the `sync.sh` distributor (with manifest-based orphan tracking so consumer-specific files in `.claude/` are never touched), per-agent expertise files (curated playbooks, not logs), and the agents listed below:
+Includes the `mental-model`, `viz-quality-bar`, `hiveplotlib-tutorial-notebook`, and `hiveplotlib-gallery-notebook`
+skills, the plan template, the `sync.sh` distributor (with manifest-based orphan tracking so consumer-specific files in
+`.claude/` are never touched), per-agent expertise files (curated playbooks, not logs), and the agents listed below:
 
 - `orchestrator` — produces plans
 - `api-critic` — dual-role API ergonomics review (planning + post-impl)
@@ -90,6 +105,7 @@ Includes the `mental-model`, `viz-quality-bar`, `hiveplotlib-tutorial-notebook`,
 - `docs-engineer` — writes docstrings and prose docs
 - `notebook-author` — creates or updates Jupyter notebooks
 - `viz-critic` — read-only review of rendered figures
-- `qa-engineer` — runs tests/lint/type/doc-build, checks release-readiness, switches to formal diagnostic mode on test-failure escalation
+- `qa-engineer` — runs tests/lint/type/doc-build, checks release-readiness, switches to formal diagnostic mode on
+  test-failure escalation
 
 Full inventory and conventions in [`CLAUDE.md`](CLAUDE.md).

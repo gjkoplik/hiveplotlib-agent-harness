@@ -92,7 +92,7 @@ When a parameter name collides with an English word (`graph`, `nodes`, `edges`, 
 
 ### Human voice
 
-Read like Gary wrote it. No em-dashes. No AI filler ("delve", "moreover", "furthermore", "underscore", "in essence", "it's worth noting that", "let us consider", "as we can see"). No throat-clearing. Library helpers are tools, not characters — just use `flexitext`, `seaborn`, `numpy.random.default_rng`.
+Read like the maintainer wrote it. No em-dashes. No AI filler ("delve", "moreover", "furthermore", "underscore", "in essence", "it's worth noting that", "let us consider", "as we can see"). No throat-clearing. Library helpers are tools, not characters — just use `flexitext`, `seaborn`, `numpy.random.default_rng`.
 
 ## Idioms
 

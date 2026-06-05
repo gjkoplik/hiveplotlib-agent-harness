@@ -41,18 +41,19 @@ Defensive backup: if the consumer's pre-existing `.claude/settings.json` differs
 
 ## The dispatching session
 
-The dispatching session is the consumer-repo Claude Code conversation Gary types into. Not a sub-agent, no agent definition. Dispatches sub-agents, surfaces their reports, asks for confirmation between workstreams.
+The dispatching session is the consumer-repo Claude Code conversation the maintainer types into. Not a sub-agent, no agent definition. Dispatches sub-agents, surfaces their reports, asks for confirmation between workstreams.
 
 ### Invocation triggers
 
 - **Task start (non-trivial).** Run research-liaison in pre-task mode, then invoke orchestrator in `initial-plan` mode with findings in the brief. The orchestrator writes the plan; surface the path and pause for review.
-- **Plan accepted.** Invoke the named specialist for each workstream as Gary green-lights it.
+- **Plan produced or substantially amended (non-trivial).** After the orchestrator writes (`initial-plan`) or materially amends (`amend-plan`) a plan, and before dispatching any workstream, offer the maintainer a grill-me alignment pass (recommended for major/long plans). Record each wave in the plan's `## Alignment (grill)` section; route any resulting change to orchestrator `amend-plan`. When recommending the next dispatch, surface an unfilled `## Alignment (grill)` gate so the maintainer can run it or knowingly skip it.
+- **Plan accepted.** Invoke the named specialist for each workstream as the maintainer green-lights it.
 - **Workstream that adds or modifies user-facing API.** Invoke api-critic in post-impl mode after the implementing specialist finishes. Applies to mechanical propagations to sibling classes (e.g., `HivePlotMatrix` mirroring `HivePlot`).
 - **Workstream that produces or changes a figure.** Invoke viz-critic in post-impl mode.
 - **Workstream that adds or restructures a notebook.** Invoke editorial-critic in post-impl mode after the notebook-author finishes. It reviews the notebook's structure and scope (right notebook, dataset coherence, genre, section-worth); viz-critic covers the figures in the same notebook.
 - **Workstream complete.** Invoke qa-engineer for release-readiness verification. If a critic post-impl section is still `Pending`, qa flags `must-fix` and the dispatching session invokes the missing critic before proceeding.
 - **Mid-flight emergent work** (post-impl critic `must-fix` or `should-fix`, or any user ask that would change the workstream set per rule 14). Route to orchestrator in `amend-plan` mode before any other dispatch. The orchestrator edits the plan; the dispatching session does not edit the plan directly.
-- **All workstreams complete, plan non-trivial.** qa-engineer surfaces a `worth-discussing` ADR-promotion concern. When Gary green-lights, invoke research-liaison.
+- **All workstreams complete, plan non-trivial.** qa-engineer surfaces a `worth-discussing` ADR-promotion concern. When the maintainer green-lights, invoke research-liaison.
 
 ### Sub-agent discipline
 
@@ -62,7 +63,7 @@ Apparent exception: the orchestrator's `initial-plan` step 2 references research
 
 ### Between workstreams
 
-Surface the completing agent's report (status, files touched, open questions), name the next dispatch, pause for Gary's confirmation. The dispatching session does not implement work itself — reading source, editing code, or running `make` from the dispatching session for a plan-driven task is a process violation.
+Surface the completing agent's report (status, files touched, open questions), name the next dispatch, pause for the maintainer's confirmation. The dispatching session does not implement work itself — reading source, editing code, or running `make` from the dispatching session for a plan-driven task is a process violation.
 
 ## Plans
 

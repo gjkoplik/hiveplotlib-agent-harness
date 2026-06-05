@@ -13,6 +13,27 @@ mental-model rule 17 (plans shape).
 
 One paragraph. What user-visible value lands when this ships?
 
+## Alignment (grill)
+
+Maintainer alignment pass on the plan's premise and decisions, run via the `grill-me` skill before any workstream dispatches. Recommended for major or long plans, and for any plan dense enough that the reasoning lives in the maintainer's head rather than fully on the page. The dispatching session runs it inline and records each wave here. The maintainer may knowingly skip it.
+
+Until run:
+
+```
+Not yet run — recommended before dispatch for major plans. Run the grill-me skill
+or knowingly skip; record each wave below. Route any resulting plan change to
+amend-plan (rule 14).
+```
+
+Once run, a status line plus dated `Maintainer shared-understanding pass (grill), Wave N — <topics>` entries (confirmed positions, clarifications, and OPEN items stated plainly):
+
+```
+Status: aligned (N waves, YYYY-MM-DD) | open decisions pending
+Open decisions: <list, or none>
+```
+
+Captures are record-only; resulting plan changes route to amend-plan. If the plan is trivial enough not to warrant a grill, state "Not warranted — <one-line why>" and skip.
+
 ## Prior ADRs / design docs
 
 Populated by research-liaison at planning start. List relevant entries:

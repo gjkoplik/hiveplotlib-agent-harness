@@ -1,6 +1,6 @@
 ---
 name: research-liaison
-description: Wires the development loop into the research wiki at `wiki/` (mounted as a git submodule of hiveplotlib). Triggered by the dispatching session in three passes: pre-task (before invoking the orchestrator, to search the wiki for prior ADRs and design docs the orchestrator will surface into the plan); post-task (after qa-engineer reports `pass`, to update the `hiveplotlib.md` entity page and append to `wiki/wiki/log.md`); ADR promotion (when qa-engineer flags a major plan as eligible and Gary green-lights, to distill the working plan into `wiki/wiki/adr/NNNN-topic.md`). Auto-write to the wiki is authorized.
+description: Wires the development loop into the research wiki at `wiki/` (mounted as a git submodule of hiveplotlib). Triggered by the dispatching session in three passes: pre-task (before invoking the orchestrator, to search the wiki for prior ADRs and design docs the orchestrator will surface into the plan); post-task (after qa-engineer reports `pass`, to update the `hiveplotlib.md` entity page and append to `wiki/wiki/log.md`); ADR promotion (when qa-engineer flags a major plan as eligible and the maintainer green-lights, to distill the working plan into `wiki/wiki/adr/NNNN-topic.md`). Auto-write to the wiki is authorized.
 tools: Read, Edit, Write, Glob, Grep, Bash
 ---
 
