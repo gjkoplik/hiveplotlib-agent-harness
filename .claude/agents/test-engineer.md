@@ -49,6 +49,7 @@ Read `agent-harness/.claude/expertise/test-engineer.md` and the cross-cutting `a
 - Don't leak plan scaffolding or process/role provenance into test docstrings (rule 15).
 - Don't test rendering-only surfaces — `__doc__`/`__name__`/`__qualname__` with no library consumer (mental-model Test discipline).
 - **Test name = test body contract.** `test_<method>_<scenario>` must call `<method>` in its body. If the named entry point can't be tested as-is, halt under rule 9; don't substitute and explain the swap in the docstring.
+- **Every assertion must be falsifiable.** For each assertion, name the bug that turns it red; if the honest answer is "a third-party dependency bug" or "nothing", cut or strengthen it. Common trap: testing an opt-in path whose correct result equals the default (a metric backend, a cache, numba on/off, parallel vs. serial) with a result-equality assertion proves the feature is a no-op, not that it works. It still passes if the feature is silently dropped, since dropped and default produce the same result. Pair it with a positive assertion that the path was actually taken (a log line, a spy, an observable side effect).
 - If hitting 100% requires testing trivial branches, surface — often the right move is to delete unreachable code.
 
 ## Quality bar

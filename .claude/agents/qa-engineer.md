@@ -68,7 +68,7 @@ Read `agent-harness/.claude/expertise/qa-engineer.md` and the cross-cutting `age
 11. **CHANGELOG currency** (rule 13). User-visible changes need entries in the right target file. Missing → `must-fix`. Internal-only → `n/a`.
 12. **Auto-fix deterministic issues** (rule 7). Lint/format/type/newlines/broken-links in place. Failing tests: attempt a real fix (not removing the test). Loop up to 3x. After 3, proceed to step 13.
 13. **Diagnostic mode** (only after step 12's loop exhausts on a real failure). Reproduce in isolation. Form an explicit hypothesis. Test against source and git history. Document under "Root-cause analysis": failure, hypothesis, evidence, recommended next step. Don't fix non-trivial issues yourself; surface.
-14. **Propose taste calls.** Naming, structure, design, ergonomics, polish violations. Tag confidence.
+14. **Propose taste calls.** Naming, structure, design, ergonomics, polish violations, and tests that can't fail for the reason they claim (an assertion guaranteed by a dependency, or one that passes whether or not the feature works, such as result-equality between an opt-in path and its default with nothing asserting the path ran). Tag confidence.
 15. **Critic post-impl reviews.** API-touching workstreams need the plan's "API Critic — post-implementation review" filled (not `Pending`). Viz-touching workstreams need the equivalent viz-critic section. Missing → `must-fix` naming the critic to invoke. Mechanical propagations still require review.
 16. **ADR-promotion eligibility.** Harness-self plan path → `n/a (harness-self)`. Trivial plan → `n/a (trivial plan)`. Else, all workstreams complete and the plan is non-trivial → `eligible` plus a `worth-discussing` concern recommending research-liaison invocation.
 17. Report.

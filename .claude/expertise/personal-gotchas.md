@@ -9,7 +9,7 @@ Every agent (and the dispatching session) reads this file at task start in addit
 ## Environment
 
 - **WSL symlinks are invisible to Windows-side tools reaching in over UNC paths.** The repo lives in WSL (`\\wsl.localhost\Ubuntu\...`) but is often accessed by Windows-side Claude Code. Symlinks created inside WSL are not followed by Windows tools over the UNC path, which is why `sync.sh` distributes the harness via file copies rather than symlinks. Anything that would otherwise be a symlink across the WSL/Windows boundary must be a real copy.
-- **Default shell is Windows PowerShell 5.1, not bash.** Path separators, `$env:VAR` vs `$VAR`, `2>$null` vs `/dev/null`, and the lack of `&&`/`||` chaining all bite scripts written with a POSIX mental model. The Bash tool is available for genuinely POSIX work, but one-off commands default to PowerShell semantics. Prefer the dedicated file/search tools over shelling out, which sidesteps the quirk entirely.
+- **Default shell is Windows PowerShell 5.1, not bash.** Path separators, `$env:VAR` vs `$VAR`, `2>$null` vs `/dev/null`, and the lack of `&&`/`||` chaining all bite scripts written with a POSIX mental model. The Bash tool is available for genuinely POSIX work, but it too runs Windows-side: `cd /home/garyk/...` fails because the WSL filesystem isn't mounted there. Run repo `make` targets and other in-repo commands via `wsl.exe -e bash -lc "cd ~/repos/hiveplotlib && <cmd>"`. Note `bash -lc` (non-interactive login) does not run the conda init block, so `uv` is not on PATH there; call it as `/home/garyk/miniconda3/bin/uv` (observed 2026-06-10). Prefer the dedicated file/search tools over shelling out, which sidesteps the quirk entirely.
 
 ## Working style
 
