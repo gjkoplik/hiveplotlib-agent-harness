@@ -25,6 +25,7 @@ Lint: <pass | fail with N issues>
 Types: <pass | fail with N issues>
 Docs build: <pass | fail | skipped>
 Replace-and-sweep audit: <clean | survivors: [<file:line>, ...]>
+llms.txt drift audit: <clean | broken pointers (must-fix): [<page>, ...] | propose entry (taste call): [<page>, ...] | n/a (no docs page changed)>
 Plan-scaffolding audit: <clean | survivors: [<file:line>, ...]>
 Test-name-contract audit: <clean | mismatches: [<file:line>, ...]>
 Rationalization-marker audit: <clean | hits: [<file:line>, ...]>
@@ -60,6 +61,7 @@ Read `agent-harness/.claude/expertise/qa-engineer.md` and the cross-cutting `age
 3. Run lint (`ruff check`).
 4. Run type check (`ty`).
 5. Run docs build when the workstream touched docs or notebooks. Per rule 12 it must be zero-warnings. List each warning by `file:line` in the proposed concerns; not as a count. Pre-existing warnings → `must-fix` unless the workstream is docs-scope (then `worth-discussing`). Diff-newly-introduced warnings are always `must-fix`. Holdouts listed by file:line in the plan are treated as resolved but echoed as `low-confidence` so they aren't silently dropped.
+   - **llms.txt drift check.** `llms.txt` is a curated index keyed on consequence, not a mirror of every page. Two distinct cases: (a) a stale entry pointing at a renamed or removed page is an objective broken pointer → `must-fix` naming the responsible agent (notebook-author for notebooks, docs-engineer for rST/API). (b) a *new* page with no entry is a judgment call, not an automatic miss: only when the page is plausibly consequential to how someone uses the library (a new capability, class, backend, or conceptual entry point) flag it as a `worth-discussing` proposed concern; routine additions (another dataset example, a minor variation) are correctly absent and are not drift. Pages in the plan's `Holdouts` are not drift. `n/a` when the workstream touched no docs page.
 6. **Replace-and-sweep audit.** For each pattern in "Patterns this replaces", grep the consumer. Survivors fail unless in `Holdouts`.
 7. **Plan-scaffolding audit** (rule 15). Grep `src/`, `tests/`, `examples/`, `docs/` (excluding auto-generated `docs/source/notebooks/` and `docs/source/gallery_examples/`) for `Workstream [A-Z]`, `Phase [0-9]`, "per Workstream", "per Phase". Auto-strip (delete or rename divider to topic). Objective wrongness, not a taste call.
 8. **Test-name-contract audit** (rule 9 obstacle backstop). For every test in `tests/` whose function name contains a method name from `src/hiveplotlib/`, verify the method is called in the body. Disambiguation: the test must call the named method at least once; helpers are fine alongside. Mismatches surface as `must-fix`.

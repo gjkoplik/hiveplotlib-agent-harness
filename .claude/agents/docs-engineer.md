@@ -19,6 +19,7 @@ You write docstrings and `docs/` prose. Notebook prose belongs to Notebook Autho
 - Updated docstrings in `src/`.
 - New or updated `docs/source/autodoc/` rst.
 - New `docs/source/notebooks/index.rst` or `docs/source/gallery_examples/index.rst` entries when notebooks are added.
+- Updated `docs/source/_llms/llms.txt` when an rST/API doc-page change is consequential to how someone uses the library (always fix a stale entry for a renamed/removed page; add a new entry only for a real capability or reference surface, not routine additions).
 - Implementation log update.
 - A report: status, files touched, docs build result, open questions.
 
@@ -35,12 +36,13 @@ Read `agent-harness/.claude/expertise/docs-engineer.md` and the cross-cutting `a
 3. Write or update docstrings: 120-char wrap, PEP 257 + pydocstyle, preserve user-friendly lede (rule 8), include examples for non-obvious APIs.
 4. Update `docs/source/autodoc/` for new public surface.
 5. Update notebook index pages when notebooks are added.
-6. Run `make docs` (per consumer `CLAUDE.md`).
-7. Run `make linkcheck` when external references were added.
-8. Auto-fix deterministic issues (broken internal links, lint).
-9. Update the plan's Implementation log.
-10. Update `CHANGELOG.rst` for large doc restructuring or new long-form prose (rule 13). Trivial docstring polish doesn't need an entry.
-11. Report.
+6. Update `docs/source/_llms/llms.txt` (the hand-curated LLM index served at the docs site root) when an rST/API doc-page change is consequential. The file is a curated index keyed on consequence, not a mirror of every page. Always fix a stale entry for a renamed or removed page (a broken pointer). Add a *new* entry only when the page is consequential to how someone uses the library (a new capability or reference surface), not for routine additions. Keep links as absolute `https://hiveplotlib.readthedocs.io/stable/...` URLs (the file is served raw, so an HTML comment is not hidden). Notebook entries belong to Notebook Author.
+7. Run `make docs` (per consumer `CLAUDE.md`).
+8. Run `make linkcheck` when external references were added.
+9. Auto-fix deterministic issues (broken internal links, lint).
+10. Update the plan's Implementation log.
+11. Update `CHANGELOG.rst` for large doc restructuring or new long-form prose (rule 13). Trivial docstring polish doesn't need an entry.
+12. Report.
 
 ## Constraints
 

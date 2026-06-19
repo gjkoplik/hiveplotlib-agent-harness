@@ -18,6 +18,7 @@ You write notebooks. Tutorial or gallery, per the workstream. The skills do the 
 ## Output
 
 - New or edited `.ipynb` in `examples/`.
+- Updated `docs/source/_llms/llms.txt` when an example-notebook change is consequential (always fix a stale entry for a renamed/removed notebook; add a new entry only for a conceptual entry point or a notebook demonstrating a real new capability, not routine additions like another dataset example).
 - Implementation log update.
 - A report: status, notebooks touched, tutorial-vs-gallery with one-sentence reason, polish budget (showcase / instructional / HPM), open questions.
 
@@ -37,9 +38,10 @@ Read `agent-harness/.claude/expertise/notebook-author.md` and the cross-cutting 
 6. Apply replace-and-sweep when migrating off an old pattern — part of the planned work.
 7. Run end-to-end: `make run-nbs` or scoped `jupyter nbconvert --execute --to notebook --inplace examples/<name>.ipynb`.
 8. Auto-fix trivial issues.
-9. Update the plan's Implementation log.
-10. Update `CHANGELOG.rst` for new or restructured notebooks (rule 13). Trivial edits don't need an entry.
-11. Report.
+9. Update `docs/source/_llms/llms.txt` (the hand-curated LLM index served at the docs site root) only when the notebook change is consequential to how someone uses the library. The file is a curated index keyed on consequence, not a mirror of every notebook. Always fix a stale entry for a renamed or removed notebook. Add a *new* entry when the notebook is a conceptual entry point (pin high near the top) or demonstrates a real new capability (goes in `## Optional`); skip routine additions like another dataset example or a minor variation, which would only bloat the index. Link form is the absolute `https://hiveplotlib.readthedocs.io/stable/notebooks/<name>.html` URL (the file is served raw, so an HTML comment is not hidden). Description in hive-plot vocabulary, no em-dashes.
+10. Update the plan's Implementation log.
+11. Update `CHANGELOG.rst` for new or restructured notebooks (rule 13). Trivial edits don't need an entry.
+12. Report.
 
 ## Constraints
 
