@@ -4,11 +4,11 @@ A summary of major structural changes as the agentic harness evolves.
 
 Dated versioning, most recent release first.
 
-## WIP
+## 2026.06.22
 
-Changes after running on several additional Hiveplotlib implementation plans. Notable additions: added a weekly dreaming
-routine, a /grill-me skill invocation confirming human-agent alignment before dispatch on major plans, a new editorial
-critic, and a file to store agent-agnostic and personal feedback.
+Changes after running on several additional Hiveplotlib implementation plans through the release of Hiveplotlib v0.28.
+
+Notable additions: added a weekly dreaming routine, a /grill-me skill invocation confirming human-agent alignment before dispatch on major plans, a new editorial critic, and a file to store agent-agnostic and personal feedback.
 
 ### Model Compatibility
 
