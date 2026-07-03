@@ -101,7 +101,7 @@ Two things must match for small multiples to be comparable, and they are control
 
 Verify you unified both where it makes sense: panels can line up positionally while their colors still disagree.
 
-For single plots that must match an external reference, pin ranges at construction through `axis_kwargs` (there is no `unify_axes` on `HivePlot`).
+For single plots that must match an external reference, pin each axis's range explicitly with `vmin` / `vmax`: pass `axis_kwargs={axis_id: {"vmin": ..., "vmax": ...}}` at construction, or call `plot.update_axis(axis_id, vmin=..., vmax=...)` afterward. Don't hand-recompute node coordinates or drop to the base-class layer to force a range (there is no `unify_axes` on `HivePlot`).
 
 ### Don't fight the good defaults
 

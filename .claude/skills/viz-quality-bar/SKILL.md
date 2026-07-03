@@ -50,6 +50,7 @@ Rendering choice for dense edge sets, not a stylistic preference. Hive-plot edge
 - **Log colormaps default on.** Turn off only when rasterization is genuinely uniform.
 - **Multi-tag requires `tag=`.** Without it, a tag is silently chosen and the figure misleads.
 - **Cross-plot comparison requires pinning** `dpi`, `pixel_spread_nodes`, `pixel_spread_edges`, `vmax_nodes`, `vmax_edges`. Canonical: `bitcoin_user_ratings.ipynb` (pins `vmax_edges=800`, `vmax_nodes=200` across years).
+- **Hand-rolling a datashader path? Spread the aggregate, then shade once; never `tf.spread(tf.shade(agg))`.** Shading first and spreading the *colored* image composites with "over", so a lighter (less dense) line paints over a denser crossing: the "impossible for counts" artifact where light overwhelms dark at overlaps. hiveplotlib's own backend spreads the count array and shades once at the very end (matplotlib `imshow` cmap), which is why a hand-rolled path looks wrong beside it. Prefer the `datashade_*` functions; if you must hand-roll, spread the aggregate first.
 
 ## Interactive backends (Bokeh, HoloViews, Plotly)
 
