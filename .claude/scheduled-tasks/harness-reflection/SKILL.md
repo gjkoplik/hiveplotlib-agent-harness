@@ -1,6 +1,6 @@
 ---
 name: harness-reflection
-description: "Weekly local dream: mine the week's hiveplotlib sessions for recurring mistakes and update the harness gotchas. No commits."
+description: "Weekly local dream: mine the week's sessions for recurring mistakes; update the harness gotchas plus the hiveplotlib-api-usage skill and llms docs. No commits."
 schedule: "7 3 * * 6"
 notifyOnCompletion: true
 ---
