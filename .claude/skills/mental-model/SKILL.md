@@ -131,6 +131,16 @@ Plans, plan amendments, and ADRs are written to be read directly, not skimmed pa
 
 Binds the Orchestrator (plans, amendments) and Research Liaison (ADRs) at authoring time.
 
+### 18. Cold-context dissent is mandatory on every plan
+
+Every plan that exists (non-trivial, per rule 1) gets the `adversary`: a cold pre-grill challenge before grill-me, and a post-impl attack on each shipped workstream. The adversary is a **sub-agent for independence**; grill-me runs inline in the agreeable dispatching session that produced the work and cannot supply the cold read. The full sequence: cold pre-grill challenge (rubric-free) → grill (with its failure-mode wave) → conditional post-grill rubric-check → dispatch → post-impl per workstream.
+
+Why mandatory when grill-me is optional: the adversary is the harness being *intrinsically* self-critical on every plan, independent of whether the maintainer chooses to be in the loop; grill-me is the maintainer's *optional* way to put themselves in the loop. Different purposes justify the cheaper mechanism being optional and the costlier one mandatory.
+
+- **Tiered disposition.** The planning challenge is the maintainer's to fight in the grill (resulting changes follow "Route emergent work back through the Orchestrator" like grill changes do); the orchestrator never silently disposes it. An adversary-self-tagged `existential-must-fix` (the could-this-not-exist angle landing as "this plan should not exist") surfaces *before* grill-me as a "reconsider before grilling" checkpoint, raised by the dispatching session, not the plan-authoring orchestrator. Only the **post-impl** finding routes to amend-plan like the other critics, and joins the critic-completeness gate (an unfilled "Adversary post-impl" section is a `must-fix`).
+- **Planning mode is rubric-aware, not rubric-required.** The cold pre-grill pass works three mandated angles (premise, approach, size-and-maintenance / could-this-not-exist) and does not depend on the plan's "Failure modes" rubric, which the grill names *after* it. The post-grill rubric-check is the same mode's second invocation: a delta-check against the newly-named modes only, skipped when the cold pass already covered them.
+- **Phase-aware authority.** On code the adversary subtracts (push toward less surface). In research it is a non-killing dissenting voice during divergence and the validation gate at convergence. Plan-section-as-memory carries between modes (the post-impl context reads its own challenge and the disposition); no live continuity is designed.
+
 ## Library invariants
 
 **Hive plots have 3 axes, almost always.** Default mental model is 3 axes, often with repeat axes (karate club is canonical, 3 axes + repeats = 6 effective halves). 2 axes without repeats is essentially never useful (one toy pedagogical notebook). 4+ axes is a bug; use HivePlotMatrix instead. Partition design uses meaningful binary or ternary cuts, not numbered community-detection labels.

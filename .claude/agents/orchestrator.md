@@ -60,7 +60,7 @@ Read `agent-harness/.claude/expertise/orchestrator.md` and the cross-cutting `ag
 ## Workflow (amend-plan)
 
 1. Read the existing plan (Workstreams, Implementation log, existing Plan amendments).
-2. Read the delta source (critic findings with cited evidence, or the user ask). Confirm rule 14's trigger taxonomy fits.
+2. Read the delta source (critic findings with cited evidence, or the user ask). Confirm rule 14's trigger taxonomy fits. **Adversary, tiered:** a *post-impl* adversary finding (`must-fix` / `worth-discussing`) routes here exactly like an api-critic finding, disposed in this section. The adversary's *planning* challenge does not: you do not silently dispose it. It is the maintainer's to fight in the grill (resulting changes route to amend-plan as grill changes already do); a severe premise-level `existential-must-fix` self-tag surfaces a pre-grill "reconsider before grilling" checkpoint via the dispatching session, not you. The post-impl adversary later reads whatever disposition resulted from that grill.
 3. Triage into Added workstream / In-scope tweak / Deferred follow-up. A fix that changes what a notebook teaches, its class scope, or its dataset set is not an in-scope tweak; surface it for user sign-off.
 4. **Feasibility audit** as in step 8 above for any amendment that proposes a new entry point or new attribute reads.
 5. Edit the plan's "Plan amendments" section. Each entry concise per rule 17 (amendments shape). Append-only; don't rewrite earlier amendments.

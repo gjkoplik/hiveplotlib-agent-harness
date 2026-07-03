@@ -34,6 +34,26 @@ Open decisions: <list, or none>
 
 Captures are record-only; resulting plan changes route to amend-plan. If the plan is trivial enough not to warrant a grill, state "Not warranted — <one-line why>" and skip.
 
+## Failure modes
+
+The ways this work could be hollow, wrong, or fake even if every test passes (a feature no user needs, a default that silently corrupts a common case, a result that is an artifact of how it was measured). Seeded by grill-me's failure-mode wave (the maintainer names them, in their words), so the rubric is the maintainer's standard, not the model's. This rubric is **living**: seeded here at planning, appended by implementers when they hit a weeds-level mode mid-task, and consumed by the adversary (its post-grill rubric-check maps the plan against these modes; its post-impl pass attacks the shipped artifact against them).
+
+Until the wave runs:
+
+```
+Not yet named — grill-me's failure-mode wave populates this. Each mode one line,
+in the maintainer's words.
+```
+
+Once named:
+
+```
+- <failure mode, one line>: <what makes it hollow / wrong / fake>
+- ...
+```
+
+If the plan is trivial enough not to warrant a grill, state "Not warranted — <one-line why>" and skip (the same call as the grill itself).
+
 ## Prior ADRs / design docs
 
 Populated by research-liaison at planning start. List relevant entries:
@@ -133,6 +153,48 @@ Concerns:
 ```
 
 If the plan touches no notebooks, state "No notebook change" and skip this section.
+
+## Adversary review
+
+Cold-context dissent against the plan and the artifact it ships (the structural fix for model sycophancy). Both subsections are **mandatory on every plan** (rides rule 1: a plan exists iff the work is non-trivial, which is itself the signal it deserves cold criticism). The challenge is written by the adversary in planning mode, before grill-me; the post-impl section after the artifact ships. See `agent-harness/.claude/agents/adversary.md`.
+
+### Adversary's challenge (planning mode)
+
+Written by the adversary on a cold read of this plan, before grill-me, working the three mandated angles (premise, approach, size-and-maintenance / could-this-not-exist). A light conditional post-grill rubric-check may append to it after the failure-mode wave names the modes. Until filled:
+
+```
+Pending — invoke the adversary in planning mode (cold, before grill-me).
+```
+
+Once filled:
+
+```
+Status: challenge (<n> items) | clean | clean — no new modes to check
+Plan reviewed: <plan path> (cold | cold, post-grill rubric-check)
+Items:
+  - [must-fix | worth-discussing | low-confidence | existential-must-fix] <one-line challenge> — at <plan section>
+    Rubric: <"Failure modes" entry it maps to | "no entry — flagging anyway" | "no rubric yet — pre-grill">
+    Push: <the change or the question the maintainer must answer>
+```
+
+### Adversary post-impl
+
+Filled by the adversary after each workstream ships: a fresh context reads its own planning challenge plus the orchestrator's disposition (plan-section-as-memory) and attacks the shipped artifact against the living `## Failure modes` rubric, checking whether each disposition held or scope quietly ballooned. Until filled:
+
+```
+Pending — invoke the adversary in post-impl mode after Workstream <X> ships.
+```
+
+Once filled:
+
+```
+Status: clean | propose
+Artifact reviewed: <workstream / diff>
+Dispositions held: <yes | scope ballooned: ...>
+Concerns:
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<line>
+    Rubric: <"Failure modes" entry, or "no entry">
+```
 
 ## Workstreams
 

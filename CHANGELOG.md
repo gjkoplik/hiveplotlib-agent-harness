@@ -4,6 +4,16 @@ A summary of major structural changes as the agentic harness evolves.
 
 Dated versioning, most recent release first.
 
+## 2026.07.03
+
+### Added
+
+- `adversary` agent: cold-context dissent, the structural fix for model sycophancy (grill-me is inline and run by the
+  agreeable dispatching session; the orchestrator cannot attack its own premise). Dual-mode (a cold planning challenge
+  before grill-me, a post-impl attack on the shipped artifact), read-only, propose-only, and mandatory on every plan
+  (`mental-model` rule 18). Anchored on a maintainer-authored `## Failure modes` rubric that a new grill-me elicitation
+  wave populates, so the standard is the maintainer's rather than the model's.
+
 ## 2026.06.22
 
 Changes after running on several additional Hiveplotlib implementation plans through the release of Hiveplotlib v0.28.
