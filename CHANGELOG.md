@@ -6,6 +6,9 @@ Dated versioning, most recent release first.
 
 ## 2026.07.03
 
+First pass at adding an adversarial component to the harness, plus formalizing regularly-updated support for Hiveplotlib
+usage by LLMs.
+
 ### Added
 
 - `adversary` agent: cold-context dissent, the structural fix for model sycophancy (grill-me is inline and run by the
@@ -13,6 +16,10 @@ Dated versioning, most recent release first.
   before grill-me, a post-impl attack on the shipped artifact), read-only, propose-only, and mandatory on every plan
   (`mental-model` rule 18). Anchored on a maintainer-authored `## Failure modes` rubric that a new grill-me elicitation
   wave populates, so the standard is the maintainer's rather than the model's.
+- `hiveplotlib-api-usage` skill: how to drive the published API from downstream/research repos, so agents stop
+  reconstructing it wrong from source. Synced into consumer repos only, never the library itself (where it would fight
+  in-flight API changes). The `harness-reflection` dream now maintains it alongside the docs'
+  `llms.txt` / `llms-full.txt`.
 
 ## 2026.06.22
 

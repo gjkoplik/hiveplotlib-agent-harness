@@ -43,9 +43,9 @@ A figure's polish budget matches its role. The corpus splits cleanly:
 
 ## Datashader specifics
 
-Rendering choice for large networks (low thousands of nodes/edges and up), not a stylistic preference. Backend-specific overrides on the universal principles:
+Rendering choice for dense edge sets, not a stylistic preference. Hive-plot edges bundle through shared angular corridors, so they occlude earlier than a raw scatter would; the trigger is qualitative, and it fires sooner than most expect (often a few hundred edges, not thousands). Backend-specific overrides on the universal principles:
 
-- **Trigger by size, not preference.** Default to matplotlib for small/medium. Reach for datashader when alpha tuning has become trial-and-error.
+- **Trigger by density, not preference.** Default to matplotlib for sparse plots. Reach for datashader once lowering `alpha` has stopped separating structure, i.e. alpha tuning has become trial-and-error.
 - **Color via `cmap_nodes` / `cmap_edges` only.** `color=` and `node_kwargs={"color": ...}` raise `AttributeError`. Defaults: `cmap_nodes="copper"`, `cmap_edges` set to a seaborn cubehelix-like palette (similar to `"Blues"`), `log_cmap_nodes=True`, `log_cmap_edges=True`. Accept defaults; don't reach for `magma`/`cividis` (those are the matplotlib-path convention).
 - **Log colormaps default on.** Turn off only when rasterization is genuinely uniform.
 - **Multi-tag requires `tag=`.** Without it, a tag is silently chosen and the figure misleads.
@@ -61,7 +61,7 @@ Default to matplotlib for static, datashader at scale. Reach for interactive whe
 - **Title placement:** minimize whitespace between top-of-plot and title. Hive plots leave empty space (especially 3-axis), so default matplotlib placement looks too far. Tune `y` upward. Typical landings `y=1.05` to `y=1.15`; longer or multi-line titles tend higher. The value isn't load-bearing; closing the gap is.
 - Alpha 0.4-0.6 for moderately dense (100+ edges); drop to 0.1-0.2 as density scales 10x. Alpha is not a substitute for filtering or backend choice.
 - Linewidth: thicker for sparse, thinner for dense.
-- **Pick the backend for the scale.** Matplotlib up to a few hundred edges; switch to datashader as counts climb into low thousands.
+- **Pick the backend for the density.** Matplotlib for sparse plots; because hive-plot edges bundle, reach for datashader once lowering `alpha` stops separating structure (often just a few hundred edges), not only at thousands.
 - Color distinction must hold in grayscale.
 - When a section is *about* a metric, color by that metric.
 

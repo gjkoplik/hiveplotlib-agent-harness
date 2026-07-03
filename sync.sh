@@ -35,6 +35,31 @@ if [ ! -d "$CONSUMER" ]; then
   exit 1
 fi
 
+# Skills that document how to USE the installed hiveplotlib package. They must
+# NOT sync into the hiveplotlib library repo itself: inside the library the
+# source tree is the source of truth, and a usage skill (which lags in-flight
+# API changes and mirrors the possibly-stale llms.txt files) would fight active
+# API development. They DO sync into downstream consumer repos (research /
+# analysis / notebook repos that depend on the published package).
+DOWNSTREAM_ONLY_SKILLS=("hiveplotlib-api-usage")
+
+# Detect the library repo itself by its source package.
+IS_LIBRARY_REPO=0
+if [ -d "$CONSUMER/src/hiveplotlib" ]; then
+  IS_LIBRARY_REPO=1
+fi
+
+# Is a skill excluded for this consumer? (Only ever excluded in the library repo.)
+skill_excluded() {
+  [ "$IS_LIBRARY_REPO" -eq 1 ] || return 1
+  local name="$1"
+  local s
+  for s in "${DOWNSTREAM_ONLY_SKILLS[@]}"; do
+    [ "$s" = "$name" ] && return 0
+  done
+  return 1
+}
+
 mkdir -p "$CONSUMER/.claude/skills" "$CONSUMER/.claude/agents" "$CONSUMER/.claude/commands"
 # Note: .claude/plans/ is no longer auto-created here. Plans for hiveplotlib
 # (and for the wiki itself) live in the wiki submodule at wiki/wiki/plans/.
@@ -55,6 +80,11 @@ if [ -d "$HARNESS_DIR/.claude/skills" ]; then
   for skill_dir in "$HARNESS_DIR/.claude/skills"/*/; do
     [ -d "$skill_dir" ] || continue
     skill=$(basename "$skill_dir")
+    if skill_excluded "$skill"; then
+      rm -rf "$CONSUMER/.claude/skills/$skill"   # remove any prior copy
+      echo "skipped skill (downstream-only, not for library repo): $skill"
+      continue
+    fi
     rm -rf "$CONSUMER/.claude/skills/$skill"
     cp -r "$skill_dir" "$CONSUMER/.claude/skills/"
     echo "synced skill: $skill"
@@ -122,7 +152,9 @@ CURRENT_MANAGED=()
 if [ -d "$HARNESS_DIR/.claude/skills" ]; then
   for skill_dir in "$HARNESS_DIR/.claude/skills"/*/; do
     [ -d "$skill_dir" ] || continue
-    CURRENT_MANAGED+=("skills/$(basename "$skill_dir")")
+    skill_name=$(basename "$skill_dir")
+    skill_excluded "$skill_name" && continue
+    CURRENT_MANAGED+=("skills/$skill_name")
   done
 fi
 if [ -d "$HARNESS_DIR/.claude/agents" ]; then
