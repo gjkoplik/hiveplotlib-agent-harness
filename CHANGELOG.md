@@ -20,6 +20,9 @@ adversarial-review hardening, a security audit, a pre-plan interview, opt-in aut
   each plan records whether we bothered.
 - Security audit in `qa-engineer`: dependencies get audited and security-relevant changes get a sanity check before
   code is recommended to the maintainer.
+- Performance check in `qa-engineer`: touching library source now gets the consumer's perf/equivalence suite run, plus
+  the heavier benchmark sanity pass at plan end; regressions block unless the maintainer has recorded the trade.
+  Placed as a trip-wire plus a qa step, not a mental-model rule, the same call as the security audit.
 - Excuse+rebuttal ratchet in `mental-model`: caught rationalizations get written down next to the rule they dodged,
   so the same excuse doesn't work twice.
 - Opt-in **auto-dispatch mode**: approve a plan once ("run it through") and it runs gate-to-gate, with no
