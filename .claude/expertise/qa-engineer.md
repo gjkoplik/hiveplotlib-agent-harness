@@ -4,7 +4,7 @@ Curated playbook of what this role has learned. **Not a log.** Edit existing ent
 
 ## Patterns to reach for
 
-_Approaches that work in this role, with the trigger that suggests reaching for each. Empty until earned._
+- **When a deterministic auto-fix target sits in uncommitted co-running work, propose instead of editing.** The CHANGELOG cap check (or any in-place compression) can fire on an entry another in-flight branch just added; that text's only copy is the working tree, so editing it silently rewrites sibling work with no recoverable original. Check provenance with `git diff <file>` first: committed over-cap entries get compressed in place, uncommitted co-running ones get a ready-made compression in the proposed concerns.
 
 ## Anti-patterns
 

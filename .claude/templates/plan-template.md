@@ -13,6 +13,8 @@ mental-model rule 17 (plans shape).
 
 One paragraph. What user-visible value lands when this ships?
 
+Brief-mode gate: <ran (interview record folded into Goal/non-goals above) | knowingly skipped>. One line, written at plan creation from the dispatch brief, so the gate outcome survives the conversation transcript.
+
 ## Alignment (grill)
 
 Maintainer alignment pass on the plan's premise and decisions, run via the `grill-me` skill before any workstream dispatches. Recommended for major or long plans, and for any plan dense enough that the reasoning lives in the maintainer's head rather than fully on the page. The dispatching session runs it inline and records each wave here. The maintainer may knowingly skip it.
@@ -179,7 +181,7 @@ Items:
 
 ### Adversary post-impl
 
-Filled by the adversary after each workstream ships: a fresh context reads its own planning challenge plus the orchestrator's disposition (plan-section-as-memory) and attacks the shipped artifact against the living `## Failure modes` rubric, checking whether each disposition held or scope quietly ballooned. Until filled:
+Filled by the adversary after each workstream ships: a fresh context attacks the shipped artifact blind first, against the workstream's done-whens and the living `## Failure modes` rubric, then reads its own planning challenge plus the orchestrator's disposition (plan-section-as-memory) and reconciles, checking whether each disposition held or scope quietly ballooned. Until filled:
 
 ```
 Pending — invoke the adversary in post-impl mode after Workstream <X> ships.
@@ -214,7 +216,7 @@ Multiple workstreams may dispatch concurrently. In-tree state from a co-running 
 
 ## Plan amendments
 
-Populated by orchestrator in `amend-plan` mode when rule 14 triggers (post-impl critic `must-fix`/`should-fix`, or a scope-changing user ask). Three subsections matching rule 14's trigger taxonomy. Append-only; empty until amendments accrue. Each entry concise per rule 17 (amendments shape).
+Populated by orchestrator in `amend-plan` mode when rule 14 triggers (post-impl critic `must-fix`/`worth-discussing`, or a scope-changing user ask). Three subsections matching the orchestrator's amendment triage (Added workstream / In-scope tweak / Deferred follow-up). Append-only; empty until amendments accrue. Each entry concise per rule 17 (amendments shape).
 
 Placeholder when empty:
 
@@ -257,3 +259,48 @@ Append-only. After each workstream completes, one line in the same turn:
 
 - YYYY-MM-DD: Workstream A complete. <one-line summary>
 - YYYY-MM-DD: ...
+
+---
+
+# Research-plan shape (the `research-plan` orchestrator mode emits this, NOT the sections above)
+
+A research task (research **for** a consumer, landing in that consumer's wiki `analyses/`) uses this shape instead of the code-plan structure above. It is **deliberately light**: no workstream-style done-when ceremony, no replace-and-sweep / naming / API-usage audits. That lightness is a design choice, not an omission. Workstream-style done-whens suit code; imposed on research they **strangle the divergence** the run needs to explore. A future editor should not "fix" this by adding ceremony. Conventions (shallow-panel dispatch, the two standing lenses, bounds, grounding, durable landing) live in the `research-track` skill, not here; this shape carries only the per-plan fill-in.
+
+The mandatory-adversary sections (`## Adversary review`, both subsections) and grill-me's failure-mode wave (`## Failure modes`, its research branch) apply to this shape too. The shared spine covers research; they are not code-plan-only.
+
+## Question
+
+The refined research question. One or two sentences.
+
+## Candidate stories / hypotheses
+
+The competing explanations the run weighs (e.g. "the two-cluster structure is real" vs. "it is a layout artifact"). A short list.
+
+## Failure-mode rubric
+
+Populated by grill-me's failure-mode wave (research branch): the domain failure modes for this question, structure-is-artifact first, then already-known / n-too-small / uncontrolled-comparison / grounding failures. Named as the *kinds* of modes to elicit, not a fixed checklist. Consumed by the adversary at convergence.
+
+## Lenses + bound
+
+The N disjoint lenses the run fires, and the hard **20-agent cap**. Two lenses are **standing seats floored on every run** before the orthogonality count fills the rest (they are obligations, not optional angles):
+
+- a **prior-art / counterfactual lens** ("how do people normally do this, what are the alternatives, has anyone already published this"),
+- a **counter-evidence lens** (searches for what would falsify the emerging story).
+
+The remaining N−2 are set by orthogonality (genuinely disjoint slices), capped by the ceiling. See the `research-track` skill for the shallow-panel dispatch and the addable agent-count model.
+
+## Validation criteria
+
+What a validated finding must clear (grounded, independently verified, adversary-convergence-cleared). The run classifies its terminal outcome honestly into **one of three legitimate outcomes** (a validated-inconclusive and a nothing-cohered are terminal verdicts, not failed runs):
+
+- **validated finding**: a confident, grounded conclusion; lands the full page.
+- **validated inconclusive**: pursued to a negative ("the evidence does not support a confident answer"); a first-class outcome that still lands the full page as a "do not re-research this dead end" reference.
+- **nothing-cohered**: the degenerate low-yield case, the panel ran but nothing of interest cohered, distinct from inconclusive (a positive determination). Lands only a minimal breadcrumb (ran-this / nothing-cohered / consumption reported), never a thin finding-shaped page.
+
+## Destination artifact
+
+`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive; a minimal breadcrumb for a nothing-cohered run. Landed via research-liaison's producer path under maintainer approval.
+
+## Minor pivots vs. amend-plan
+
+Iteration lives **inside** the bounded run: minor pivots (refining a lens, dropping a dead angle) do not force an amend-plan. Only a **fundamental change of the research question** mid-run is an amend-plan. The mode is a minimal frame so exploration is not gated per pivot.

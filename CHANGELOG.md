@@ -4,6 +4,40 @@ A summary of major structural changes as the agentic harness evolves.
 
 Dated versioning, most recent release first.
 
+## Unreleased
+
+This cycle extends the harness beyond building code into also supporting *doing research*: a bounded, adversarially
+validated research capability that rides the same spine as a code plan, with a focus on keeping a run cheap, staying
+scientifically honest, and durably saving what it finds instead of burning the budget for nothing.
+
+The cycle also adapts ideas from reviewing the harness against
+[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (reviewed at version `0.6.3`, July 2026):
+adversarial-review hardening, a security audit, a pre-plan interview, opt-in auto-dispatch, and changelog discipline.
+
+### Added
+
+- `grill-me` **brief mode**: the harness can now interview the maintainer before planning when the ask is fuzzy, and
+  each plan records whether we bothered.
+- Security audit in `qa-engineer`: dependencies get audited and security-relevant changes get a sanity check before
+  code is recommended to the maintainer.
+- Excuse+rebuttal ratchet in `mental-model`: caught rationalizations get written down next to the rule they dodged,
+  so the same excuse doesn't work twice.
+- Opt-in **auto-dispatch mode**: approve a plan once ("run it through") and it runs gate-to-gate, with no
+  between-workstream stops unless something actually needs the maintainer.
+- **`research-track`**: the harness can now do research, not just build code; runs stay bounded and cheap, get
+  adversarially checked, and land durable wiki pages.
+
+### Changed
+
+- The adversary's post-impl pass now reads the shipped diff before it reads the plan's justifications, so its attack
+  starts from the artifact rather than the author's framing.
+- CHANGELOG entries are now hard-capped at a few lines and written at maintainer altitude; `qa-engineer` compresses
+  offenders, and natural phrasing beats abbreviation soup.
+
+### Fixed
+
+- Routing vocabulary now matches the tags critics actually emit; a phantom tag no one ever used is retired.
+
 ## 2026.07.03
 
 First pass at adding an adversarial component to the harness, plus formalizing regularly-updated support for Hiveplotlib
