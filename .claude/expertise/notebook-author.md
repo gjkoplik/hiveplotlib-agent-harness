@@ -13,6 +13,8 @@ _Approaches that work in this role, with the trigger that suggests reaching for 
 
 _Specific failure modes seen in this role, each tied to a real incident or repeated mistake. Empty until earned._
 
+- **Standing bookkeeping defaults (CHANGELOG, Implementation log) lose to a dispatch brief's edit-ONLY file list.** Authoring the polars gallery page (2026-07-04), the brief enumerated exactly three editable paths; the role's rule-13 reflex still added a CHANGELOG entry, which then had to be hand-reverted in a working tree full of other agents' uncommitted edits (safe only because the edit was just made and the exact prior text restored). Check every planned write against the enumerated list before touching the file; hand excluded entries back in the report as ready-to-paste text. Trigger: any dispatch brief with an explicit "edit ONLY" constraint.
+
 ## Gotchas
 
 _Surprises not obvious from reading the code, docs, or other agents' definitions._
