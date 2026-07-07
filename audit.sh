@@ -7,13 +7,21 @@
 # the script never decides severity.
 #
 # Usage:
-#   bash audit.sh [consumer-path] [audit ...]
+#   bash audit.sh [consumer-path] [--base <ref>] [audit ...]
 #
-# audits: scaffolding | test-contract | rationalization | changelog-cap | all
+# audits: scaffolding | test-contract | rationalization | changelog-cap
+#         | surface | all
 # Default consumer-path is the current directory; default audit is "all".
+# --base <ref> sets the diff base for the `surface` audit (default HEAD, i.e.
+# staged + unstaged changes vs the last commit).
 # Output: one "== <audit> ==" block per audit, each "clean", "skipped (...)",
 # or file:line hits. Exit code is always 0 (findings are qa's to interpret,
 # not a build failure); a genuinely broken run prints "ERROR:" lines.
+#
+# The `surface` audit classifies the diff into security-relevant and
+# performance-relevant buckets so qa's "must this audit fire?" decision is
+# deterministic (it does NOT run any tool — running uv audit / the perf make
+# targets stays with qa, which keeps this script consumer-agnostic).
 
 set -u
 
@@ -22,7 +30,17 @@ if [ $# -gt 0 ] && [ -d "$1" ]; then
   CONSUMER="$1"
   shift
 fi
-AUDITS=("$@")
+
+BASE="HEAD"
+POS=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --base) BASE="$2"; shift 2 ;;
+    --base=*) BASE="${1#--base=}"; shift ;;
+    *) POS+=("$1"); shift ;;
+  esac
+done
+AUDITS=("${POS[@]}")
 [ ${#AUDITS[@]} -eq 0 ] && AUDITS=(all)
 
 want() {
@@ -235,5 +253,69 @@ else:
 PYEOF
   else
     echo "ERROR: python3 not found; run the CHANGELOG cap check manually"
+  fi
+fi
+
+# --- Surface audit: which qa gates MUST fire (security checklist, perf) ------
+#
+# Classifies the diff (vs BASE) into security-relevant and perf-relevant
+# buckets. This makes the "must this audit fire vs. report n/a?" decision
+# deterministic — the exact judgment the security and performance trip-wires
+# exist to catch. It reports surfaces and MUST-fire verdicts; it does NOT run
+# uv audit or the perf make targets (those stay with qa, per the qa spec, so
+# this script has no consumer-specific tool coupling).
+
+if want surface; then
+  echo "== surface =="
+  if [ ! -d "$CONSUMER/.git" ] && [ ! -f "$CONSUMER/.git" ]; then
+    echo "skipped (consumer is not a git repo; cannot diff)"
+  else
+    # Changed files vs BASE (staged + unstaged). Renames/deletes included.
+    changed=$(git -C "$CONSUMER" diff --name-only "$BASE" 2>/dev/null; git -C "$CONSUMER" diff --name-only --cached "$BASE" 2>/dev/null)
+    changed=$(printf '%s\n' "$changed" | sort -u | sed '/^$/d')
+    if [ -z "$changed" ]; then
+      echo "no changes vs $BASE"
+      echo "=> no security-relevant surface; no library source touched"
+    else
+      # Added lines in Python files only, for the content probes (the
+      # deserialization / subprocess surfaces are Python-level concerns; scoping
+      # to *.py keeps a non-Python file's own text — e.g. this script's grep
+      # patterns — from matching itself).
+      added_py=$(git -C "$CONSUMER" diff "$BASE" -- '*.py' 2>/dev/null; git -C "$CONSUMER" diff --cached "$BASE" -- '*.py' 2>/dev/null)
+      added_py=$(printf '%s\n' "$added_py" | grep '^+' | grep -v '^+++' || true)
+
+      match_files() { printf '%s\n' "$changed" | grep -iE "$1" || true; }
+
+      ci_config=$(match_files '(^|/)\.gitlab-ci\.yml$|(^|/)\.github/workflows/|(^|/)ci/|(^|/)\.circleci/|azure-pipelines')
+      publishing=$(match_files '(^|/)pyproject\.toml$|(^|/)setup\.(py|cfg)$|(^|/)MANIFEST\.in$|(^|/)\.pypirc$|publish|release')
+      dependencies=$(match_files '(^|/)pyproject\.toml$|(^|/)uv\.lock$|(^|/)poetry\.lock$|requirements.*\.txt$|(^|/)setup\.(py|cfg)$|environment.*\.ya?ml$|(^|/)asv\.conf\.json$')
+      data_paths=$(match_files '(^|/)datasets?/|loader')
+      data_content=$(printf '%s\n' "$added_py" | grep -nE 'pickle\.(load|loads)|\.read_pickle|joblib\.load|urlopen|requests\.(get|post)|urllib|np\.load|np\.fromfile' || true)
+      subprocess=$(printf '%s\n' "$added_py" | grep -nE 'subprocess\.|os\.system|shell\s*=\s*True|Popen\(' || true)
+      # Perf: changed .py under a src package tree (qa makes the docstring-only call from the diff).
+      libsrc=$(match_files '(^|/)src/.+\.py$')
+
+      emit() { if [ -n "$2" ]; then echo "$1: $(printf '%s' "$2" | paste -sd',' - | sed 's/,/, /g')"; else echo "$1: none"; fi; }
+      emit "security.ci_config" "$ci_config"
+      emit "security.publishing" "$publishing"
+      emit "security.dependencies" "$dependencies"
+      emit "security.data_deser (paths)" "$data_paths"
+      emit "security.data_deser (added calls)" "$data_content"
+      emit "security.subprocess (added calls)" "$subprocess"
+      emit "perf.library_source" "$libsrc"
+
+      sec_fire=""
+      [ -n "$ci_config$publishing$dependencies$data_paths$data_content$subprocess" ] && sec_fire=1
+      if [ -n "$sec_fire" ]; then
+        echo "=> security checklist MUST fire (a checklist n/a here is wrong)"
+      else
+        echo "=> no security-relevant surface touched (checklist n/a is honest)"
+      fi
+      if [ -n "$libsrc" ]; then
+        echo "=> performance check MUST fire unless the src diff is verifiably docstring/comment-only"
+      else
+        echo "=> no library source touched (perf n/a (no executable change) is honest)"
+      fi
+    fi
   fi
 fi

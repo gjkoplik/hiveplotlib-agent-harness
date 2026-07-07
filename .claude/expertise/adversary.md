@@ -19,7 +19,7 @@ Read the cross-cutting `agent-harness/.claude/expertise/personal-gotchas.md` at 
 
 ## Anti-patterns
 
-_Specific failure modes seen in this role, each tied to a real incident or repeated mistake. Empty until earned._
+- **When you file "no equals-in-memory anchor" as a coverage must-fix, do NOT then reason the untested path is correct anyway; the missing anchor IS the tell the two paths were never proven equal.** On a lazy/eager dual path I flagged the absent completeness test as a must-fix, then in the same block cleared "composition correctness holds" by asserting the broad seed made membership "trivially true for every in-tag edge" — a claim I read off the code instead of tracing by construction. It was false (in-memory resolves the expression to endpoint NODES then closes; the lazy literal filter kept only literally-matching edges: 54 vs 40 edges). The coverage gap was hiding a live divergence, not an untested-but-correct path. When one branch is unpinned, treat "it still matches" as unproven, not as a thing to argue sound; downgrade any equals-the-other-path verdict to low-confidence until an in-tree equality anchor exists. Trigger: your own report filing a missing cross-path equality test.
 
 ## Gotchas
 

@@ -113,13 +113,15 @@ Per-role authorship: the executing specialist files the entry. QA Engineer verif
 
 Scope-changing decisions surfacing mid-flight route to the Orchestrator in `amend-plan` mode, not directly to the user, not ad-hoc to the dispatching session.
 
-**Triggers:** (a) any post-impl critic finding tagged `must-fix` or `worth-discussing` (the tags critics actually emit; a `low-confidence` observation surfaces in the report but does not trigger an amendment); (b) any user ask that would add a new workstream, modify an existing workstream's done-when, or defer an item to a follow-up.
+**Triggers:** (a) a post-impl critic finding tagged `must-fix` always routes to amend-plan. A `worth-discussing` finding is **maintainer-gated, not auto-routing**: at the between-workstream checkpoint the dispatching session surfaces it with a recommendation (amend now / defer to a follow-up / decline), and routes to amend-plan only on the maintainer's call — with one override, a `worth-discussing` that bears on a downstream not-yet-run workstream routes regardless, so that workstream ships correct the first time. A `low-confidence` observation surfaces in the report but never triggers an amendment. (b) any user ask that would add a new workstream, modify an existing workstream's done-when, or defer an item to a follow-up.
+
+The gate keeps the reflexive amend-plan round-trip off minor taste calls (the maintainer waves most through in a word) while never letting a downstream-relevant finding slip. It also makes default and auto-dispatch modes symmetric: same downstream-relevance filter, the only difference is who disposes a no-downstream-bearing `worth-discussing` — the maintainer at the checkpoint in default mode, an auto-batch to plan-end qa when the maintainer opted out of the pauses.
 
 **Chain:** critic writes finding into the plan → dispatching session sees the trigger during routine dispatch → dispatching session invokes Orchestrator in `amend-plan` mode → Orchestrator edits the plan's "Plan amendments" section and returns a dispatch recommendation. QA Engineer's check that post-impl sections are filled is the gate; it is not a hop in the chain.
 
 Routine dispatch decisions (which specialist runs which workstream, sequencing within the plan, retry on transient failures) stay with the dispatching session.
 
-Under a plan's opt-in auto-dispatch mode (harness CLAUDE.md, "Between workstreams"), a `worth-discussing` finding with no bearing on downstream not-yet-run workstreams batches to plan-end qa instead of routing immediately; `must-fix` always routes. Default-mode routing is unchanged.
+Under a plan's opt-in auto-dispatch mode (harness CLAUDE.md, "Between workstreams"), the maintainer is not at the checkpoint to dispose a `worth-discussing`, so the same downstream-relevance filter runs unattended: no downstream bearing → batches to plan-end qa; downstream bearing → routes immediately. `must-fix` always routes. This is the maintainer-out-of-the-loop shape of trigger (a) above, not a separate rule.
 
 ### 15. No plan-internal scaffolding in shipped artifacts
 

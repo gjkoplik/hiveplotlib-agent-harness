@@ -40,6 +40,8 @@ gaps left by the recent adversary and research additions.
   from prose.
 - Plan template gains a `## Viz review` post-impl section, closing a gap where qa checked for a viz-critic section
   that had no home in the template.
+- The security and performance checks now read the diff to decide whether they apply, so qa can't mistakenly skip
+  either on a change that needed it.
 
 ### Changed
 
@@ -57,10 +59,13 @@ gaps left by the recent adversary and research additions.
   its memory pass, so per-task writes don't bloat them indefinitely.
 - Plan files get an explicit section-ownership convention: each agent writes only its own sections, and the
   dispatching session serializes shared appends under concurrent dispatch.
+- A minor review nit no longer forces a re-planning round-trip in default mode; the maintainer just says amend,
+  defer, or skip at the checkpoint (nits that affect later work still route automatically). `must-fix` is unchanged.
 
 ### Fixed
 
 - Routing vocabulary now matches the tags critics actually emit; a phantom tag no one ever used is retired.
+- Agents can reliably write their own expertise files regardless of which repo the session was opened from.
 
 ## 2026.07.03
 

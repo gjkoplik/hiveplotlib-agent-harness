@@ -5,7 +5,9 @@
   "permissions": {
     "allow": [
       "Edit(agent-harness/.claude/expertise/**)",
-      "Write(agent-harness/.claude/expertise/**)"
+      "Write(agent-harness/.claude/expertise/**)",
+      "Edit(.claude/expertise/**)",
+      "Write(.claude/expertise/**)"
     ]
   }
 }
