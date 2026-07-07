@@ -14,6 +14,12 @@ The cycle also adapts ideas from reviewing the harness against
 [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (reviewed at version `0.6.3`, July 2026):
 adversarial-review hardening, a security audit, a pre-plan interview, opt-in auto-dispatch, and changelog discipline.
 
+### Model Compatibility
+
+Reviewed the harness against Claude Fable 5 (in contrast to Opus 4.8). Implemented some suggested changes: moving the
+deterministic qa audits into a script, hardening a few gates against silent failure and lost work, and filling small
+gaps left by the recent adversary and research additions.
+
 ### Added
 
 - `grill-me` **brief mode**: the harness can now interview the maintainer before planning when the ask is fuzzy, and
@@ -29,6 +35,11 @@ adversarial-review hardening, a security audit, a pre-plan interview, opt-in aut
   between-workstream stops unless something actually needs the maintainer.
 - **`research-track`**: the harness can now do research, not just build code; runs stay bounded and cheap, get
   adversarially checked, and land durable wiki pages.
+- `audit.sh`: qa-engineer's deterministic audits (plan scaffolding, test-name contract, rationalization markers,
+  CHANGELOG cap) now run as a script qa interprets, so every pass runs the same checks instead of re-deriving greps
+  from prose.
+- Plan template gains a `## Viz review` post-impl section, closing a gap where qa checked for a viz-critic section
+  that had no home in the template.
 
 ### Changed
 
@@ -36,6 +47,16 @@ adversarial-review hardening, a security audit, a pre-plan interview, opt-in aut
   starts from the artifact rather than the author's framing.
 - CHANGELOG entries are now hard-capped at a few lines and written at maintainer altitude; `qa-engineer` compresses
   offenders, and natural phrasing beats abbreviation soup.
+- In-place prose auto-fixes carry a provenance guard as a rule-7 invariant: committed text may be fixed in place,
+  uncommitted text gets a ready-made proposed fix instead. Hoisted from qa expertise after a real loss.
+- The adversary's post-impl blind-first read is now structural: a two-message dispatch hands a scratch extract first
+  and the plan path only after the raw findings land.
+- `research-track` names the selection rule when claims outgrow the verify-voucher pool; unverified claims are
+  labeled and treated as ungrounded at convergence.
+- The weekly harness-reflection dream also consolidates the expertise files (merge, compress, prune), parallel to
+  its memory pass, so per-task writes don't bloat them indefinitely.
+- Plan files get an explicit section-ownership convention: each agent writes only its own sections, and the
+  dispatching session serializes shared appends under concurrent dispatch.
 
 ### Fixed
 

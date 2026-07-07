@@ -156,6 +156,26 @@ Concerns:
 
 If the plan touches no notebooks, state "No notebook change" and skip this section.
 
+## Viz review
+
+Filled by viz-critic after each workstream that produces or changes a figure (rendered figures and notebook viz cells, reviewed against the viz-quality-bar skill). Until filled:
+
+```
+Pending — invoke viz-critic in post-implementation mode after Workstream <X> ships.
+```
+
+Once filled:
+
+```
+Status: clean | propose
+Figures reviewed: [<file>:<cell> or <file>:<line>, ...]
+Polish budget: [showcase | instructional | HPM] per figure
+Concerns:
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<location>
+```
+
+If the plan touches no figures, state "No figure change" and skip this section.
+
 ## Adversary review
 
 Cold-context dissent against the plan and the artifact it ships (the structural fix for model sycophancy). Both subsections are **mandatory on every plan** (rides rule 1: a plan exists iff the work is non-trivial, which is itself the signal it deserves cold criticism). The challenge is written by the adversary in planning mode, before grill-me; the post-impl section after the artifact ships. See `agent-harness/.claude/agents/adversary.md`.
@@ -203,6 +223,8 @@ Concerns:
 Coherent, dispatchable chunks with checkable done-when criteria. Don't pre-assign agents.
 
 Multiple workstreams may dispatch concurrently. In-tree state from a co-running workstream is expected, not broken. When the state genuinely doesn't match the brief, halt under rule 9.
+
+**Section ownership (this file has many writers).** Each agent writes only its own named section(s): critics their review blocks, the adversary its two subsections, implementers their Implementation log line and any `## Failure modes` append, the orchestrator the rest. Never rewrite another agent's section. The dispatching session avoids concurrently dispatching two agents that write the same section, and serializes Implementation-log appends when workstreams run concurrently.
 
 ### Workstream A: <name>
 

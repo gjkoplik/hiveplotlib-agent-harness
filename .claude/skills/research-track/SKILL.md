@@ -87,6 +87,8 @@ This is **not** the engine's flat model. The engine spends `1 scope + 5 search +
 
 **How the second vote is scheduled.** It is **not** a convergence-time decision (nothing at convergence can see quote-vs-source fidelity). It is scheduled by the **generation-time self-flag** above: the lens agent that read the source, while it still holds it, flags a load-bearing single-quote claim as wanting re-verification, and the bounds convention turns that flag into an **independent second voucher at verify** for exactly the flagged claims. The trigger owner is the lens agent, upstream, where the observable is still in context; the second-vote apparatus is fireable because the flag, not a convergence guess, drives it.
 
+**When claims outgrow the voucher pool.** Lens returns can produce more claims than the voucher share holds (the addable model caps vouchers at 12). Selection is explicit, never silent: load-bearing claims verify first, generation-flagged second votes are honored before breadth of coverage, and every claim that goes unverified is labeled `unverified` in the run summary and treated as ungrounded at the convergence gate (the adversary kills on it like any other missing grounding). A claim set too large to verify within the pool surfaces to the maintainer like a breaching pre-flight estimate; the run does not silently triage.
+
 ### Who holds the count
 
 A skill is instruction to a dispatching session, not code with a guard, so "the cap is enforced" needs an owner. The **dispatching session fires the N parallel Agent calls** (per the shallow panel above), so it is the role that **holds the running count and stops at the cap**; it surfaces at the boundary rather than silently proceeding. Three gates sit in order:

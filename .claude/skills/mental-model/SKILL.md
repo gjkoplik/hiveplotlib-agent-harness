@@ -42,6 +42,8 @@ After each workstream, the executing agent writes one line to the plan's Impleme
 
 Auto-fix without asking: lint, format, type, broken links, missing newlines, failing tests (with a real fix attempt, not removal). Propose only, with confidence tag (`must-fix` / `worth-discussing` / `low-confidence`): design choices, ergonomic suggestions, structural preferences, after-the-fact naming. When in doubt, propose.
 
+**Provenance guard on in-place prose auto-fixes.** Before auto-fixing prose in place (a CHANGELOG entry, a docstring, notebook markdown), check `git diff` on the target: committed text may be fixed in place; uncommitted text the fixer did not author (the maintainer's or a co-running agent's, whose only copy is the working tree) is never edited — supply the ready-made fix as a proposed concern instead. Born of a real loss: an in-place compression of an uncommitted maintainer-written entry destroyed the only copy.
+
 Critics participate in **both** planning and post-implementation review whenever a workstream touches their domain. Mechanical propagation of an existing surface to a sibling class still requires post-impl review — the propagation framing does not exempt the new surface from a user walkthrough.
 
 ### 8. Preserve user-friendly framing in rewrites
