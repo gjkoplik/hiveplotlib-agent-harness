@@ -12,6 +12,10 @@ For agents *writing code against* an installed hiveplotlib, in a downstream cons
 
 This skill documents how to *use* the published hiveplotlib package. Do not apply it when working inside the hiveplotlib library repo itself (the one containing `src/hiveplotlib/`). There, the code you are reading or changing is the source of truth, and this skill (plus the `llms.txt` / `llms-full.txt` files it mirrors) can lag behind in-flight API changes, so it would fight active development. The harness deliberately does not sync this skill into the library repo; if you somehow see it there, ignore it and trust the source.
 
+## Match the installed version
+
+This skill tracks the latest API, so a consumer repo pinned to an older release can be missing features documented here. The `unify_axes` and `graph_multigraph` keyword arguments, for example, are recent additions absent from `hiveplotlib==0.27.0`: a call this skill presents as normal raises `TypeError: HivePlot.__init__() got an unexpected keyword argument 'graph_multigraph'` there. When a kwarg or constructor documented here raises `TypeError` or `AttributeError`, confirm it against the installed build with `inspect.signature(...)` before assuming a typo, then bump the pin or fall back to the older signature. Guessing a fix (hand-rolling what the missing kwarg would have done) reintroduces the low-level scaffolding this skill exists to steer you off of. (Observed against a 0.27.0-pinned satellite repo, 2026-07-06.)
+
 ## The rules (read first)
 
 1. Build with `HivePlot(...)`. Never hand-wire `Axis` / `add_nodes` / `place_nodes_on_axis` / `connect_axes`; that low-level `BaseHivePlot` path renders but does not transfer.
@@ -37,20 +41,20 @@ edges = Edges(data=edge_df)  # edge_df has "from" / "to" columns
 hp = HivePlot(
     nodes=nodes,
     edges=edges,
-    partition_variable="group",        # a node column: which axis each node lands on
-    sorting_variables="score",         # a node column: position along the axis
+    partition_variable="group",  # a node column: which axis each node lands on
+    sorting_variables="score",  # a node column: position along the axis
 )
-hp.plot()   # renders on the default matplotlib backend
+hp.plot()  # renders on the default matplotlib backend
 ```
 
 **From a NetworkX graph** (pass it as the `graph=` keyword):
 
 ```python
 hp = HivePlot(
-    graph=g,                           # networkx Graph/DiGraph/MultiGraph/MultiDiGraph
-    partition_variable="group",        # a node attribute on g
+    graph=g,  # networkx Graph/DiGraph/MultiGraph/MultiDiGraph
+    partition_variable="group",  # a node attribute on g
     sorting_variables="score",
-    node_graph_metrics=["degree"],     # optional: compute metrics during ingestion
+    node_graph_metrics=["degree"],  # optional: compute metrics during ingestion
 )
 ```
 
@@ -82,12 +86,18 @@ A single hive plot targets **two or three axes**. Putting a 4+-group partition o
 
 Do not write a helper that returns a `HivePlot` or a `HivePlotMatrix` depending on group count; they are different objects with different call sites.
 
+### Two axes: you are probably in the wrong library
+
+The lower bound bites harder than the upper one. A hive plot with only two axes and no repeat axes wastes the polar layout: nothing occupies the third sector, so it is two spokes with edges between them. Switching to a P2CP is **not** the fix, because a two-axis P2CP is still polar and polar buys nothing at two axes; the honest form of two parallel axes is a plain Cartesian parallel coordinates plot, drawn outside this library. If a task lands you at two axes (for example a pairwise "how do these two node types connect" view), add a meaningful third axis or reach for a different tool; do not ship the two-axis figure. Three axes, often with repeat axes, is the load-bearing hive-plot shape.
+
+The library's own two-axis figures are not a counterexample. They exist to show that the mechanics work, and in the P2CP documentation to teach how to read a single pair of axes before more are added. Neither is a recommendation to plot two axes for real work. (Observed on a knowledge-graph pairwise view, 2026-07-06.)
+
 ### Dense / bundled edges: the datashader backend
 
 Hive-plot edges are curves bundled through shared angular corridors, so they occlude into a hairball earlier than a raw scatter would. The trigger is qualitative: once lowering `alpha` has stopped separating structure, you are past due for datashader. In practice that can be as few as a few hundred edges, so don't wait for thousands.
 
 ```python
-hp = HivePlot(..., backend="datashader")   # needs the hiveplotlib[datashader] extra
+hp = HivePlot(..., backend="datashader")  # needs the hiveplotlib[datashader] extra
 ```
 
 On the datashader backend, color goes through `cmap_edges` / `cmap_nodes`; `color=` and `node_kwargs={"color": ...}` raise on this backend. When you still want crisp colored nodes on top of datashaded edges, compose datashader edges under matplotlib axis lines and nodes on one shared `ax` (see the Datashader example notebook). Keep in mind: `graph_multigraph=False` (the default for tabular input) collapses duplicate same-direction edges, which is the very density datashader is meant to show, so keep duplicates when overlap *is* the signal.
@@ -133,16 +143,26 @@ Don't invent top-level `edge_color=` / `edge_style=` kwargs; they don't exist.
 If the metric comes from a graph, one call computes it and partitions on it in the right order:
 
 ```python
-hp = HivePlot(graph=g, node_graph_metrics=["degree"],
-              partition_variable="degree", sorting_variables="degree")
+hp = HivePlot(
+    graph=g,
+    node_graph_metrics=["degree"],
+    partition_variable="degree",
+    sorting_variables="degree",
+)
 ```
 
 For tabular data, the metric must already be a column *before* you partition on it (`create_partition_variable` requires `data_column` to already exist in the node data):
 
 ```python
-nodes = NodeCollection(data=node_df, unique_id_column="id")  # node_df already has a "degree" column
-col = nodes.create_partition_variable(data_column="degree", cutoffs=3)  # bins it into a new column
-hp = HivePlot(nodes=nodes, edges=edges, partition_variable=col, sorting_variables="degree")
+nodes = NodeCollection(
+    data=node_df, unique_id_column="id"
+)  # node_df already has a "degree" column
+col = nodes.create_partition_variable(
+    data_column="degree", cutoffs=3
+)  # bins it into a new column
+hp = HivePlot(
+    nodes=nodes, edges=edges, partition_variable=col, sorting_variables="degree"
+)
 ```
 
 Use `create_partition_variable` rather than hand-rolling `pd.cut` plus a label dict.

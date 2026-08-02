@@ -44,6 +44,14 @@ The first half is borderline (it disambiguates parameters, already covered in th
 
 If the underlying friction is real (a naming collision that genuinely confuses users), the fix is upstream (rename the parameter) or in a `:param:` line that does real disambiguation, not a lead-section apology.
 
+### Guide and troubleshooting prose inside `:param:` descriptions
+
+A parameter description carries what the value does and what a caller cannot infer. Project status, issue links, hardware caveats, logging recipes, and internal routing mechanism are guide material; they belong in a notebook or a narrative doc page.
+
+**Real incident.** `compute_graph_metrics`'s `graph_metric_backend` param ran fourteen lines carrying CI testing status, a GPU note, a file-an-issue link, and a `logging.basicConfig` recipe. The maintainer flagged it as "conversation for the notebook, not for a parameter description." Its neighbor `node_metric_kwargs` spent most of its words on where the `"backend"` key gets popped and which internal path it shares. Both trimmed, the backend param from fourteen lines to five.
+
+**How to apply.** Keep only what a caller setting this param cannot infer: the default, version floors, registered-name-vs-package-name traps, fallback behavior, opt-out sentinels. Cut mechanism ("popped here and routed through"), project status, and how-to. If a fact is already carried by a `:raises:` entry, it does not need restating in the param.
+
 ## Gotchas
 
 _Surprises not obvious from reading the code, docs, or other agents' definitions. Empty until earned._
