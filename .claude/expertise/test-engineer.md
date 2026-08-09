@@ -15,6 +15,7 @@ Curated playbook of what this role has learned. **Not a log.** Edit existing ent
 ## Anti-patterns
 
 - **No bug archaeology or review history in test docstrings.** Mechanism prose rots on refactor and history lives in git blame; state the behavior under test, full stop. Process/role provenance counts too: citing a plan item, critic, or review mode as the reason a test exists leaks plan metadata into a shipped artifact (rule 15). Trigger: "Regression test for X" framing, "failing-before" prose, or a critic/review-mode/plan-item citation.
+- **Keep a marker or test-layout invariant note to a sentence or two.** When a selection rule earns a written record (a `pytest.ini` marker description, a backend module's docstring), that prose competes with the tests for the reader's attention. Both landed long on 2026-08-02 and both came back the same day: the `pytest.ini` note was "long winded, considering how we've been doing things," and the module-docstring additions "correct but unnecessarily wordy." State the invariant and what breaks when it is violated; leave out the derivation, the collection counts, and the CI-selector history.
 - **Rendering-only surfaces aren't test targets (mental-model Test discipline).** `__doc__`/`__name__`/`__qualname__` with no library consumer are covered at import and owned by docs review; a unit test on them is orthogonal in a behavior suite.
 
 ## Gotchas
