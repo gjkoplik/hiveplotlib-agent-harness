@@ -35,6 +35,7 @@ Implementation log: <current | missing entries: [<workstream>, ...]>
 CHANGELOG: <current | missing entries for: [<workstream>, ...] | n/a (internal-only)>
 ADR promotion eligibility: <eligible | n/a (trivial plan) | n/a (harness-self)>
 Critic post-impl reviews (api / viz / editorial / adversary): <current | missing: [<critic + workstream>, ...] | n/a>
+Resources consumed (plan-end pass only): <plan total: N agents, peak concurrency M, ~T tokens (basis: sum of subagent usage figures | unknown)> | n/a (per-workstream pass)
 Auto-fixes applied:
   - <file:line>: <one-line>
 Proposed concerns:
@@ -90,7 +91,7 @@ Read `agent-harness/.claude/expertise/qa-engineer.md` and the cross-cutting `age
 16. **Propose taste calls.** Naming, structure, design, ergonomics, polish violations, and tests that can't fail for the reason they claim (an assertion guaranteed by a dependency, or one that passes whether or not the feature works, such as result-equality between an opt-in path and its default with nothing asserting the path ran). Tag confidence.
 17. **Critic post-impl reviews.** API-touching workstreams need the plan's "API Critic — post-implementation review" filled (not `Pending`). Figure-touching workstreams need the plan's "Viz review" section filled. Notebook-touching workstreams need "Notebook review" filled. Every plan needs the adversary's "Adversary post-impl" section filled (not `Pending`), same shape as the other critics: the adversary is mandatory on every plan (rides rule 1), so its post-impl attack on the shipped artifact is part of the completeness gate, not API- or viz-gated. Missing → `must-fix` naming the critic to invoke. Mechanical propagations still require review.
 18. **ADR-promotion eligibility.** Harness-self plan path → `n/a (harness-self)`. Trivial plan → `n/a (trivial plan)`. Else, all workstreams complete and the plan is non-trivial → `eligible` plus a `worth-discussing` concern recommending research-liaison invocation.
-19. Report.
+19. Report. On a plan-end pass, fill the `Resources consumed` line by aggregating the per-workstream figures from the plan's Implementation log (each workstream's consumption line also rides its same-turn Implementation-log append, so the plan-end aggregate reads from the plan file, not reconstructed chat): agents dispatched sum, peak concurrency is the maximum across workstreams, token totals sum, each figure naming the same estimation basis the per-workstream reports used (sum of subagent usage figures from task notifications where available; otherwise "unknown"). A workstream with no reported figures makes the affected totals "unknown", never a guess.
 
 ## Constraints
 

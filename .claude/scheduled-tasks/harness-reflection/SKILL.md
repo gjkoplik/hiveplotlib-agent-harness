@@ -44,10 +44,14 @@ Work inside `REPO`.
    - `REPO/docs/source/_llms/llms-full.txt` (the full usage reference).
    When you add a newly-observed trap, add it to whichever of the three fit and keep the wording consistent across them. **Higher bar for the two llms files:** they are public shipped docs, not internal notes, so only touch them for a genuinely recurring, verified trap, and verify the corrected API against current source before writing it (the transcript may show the wrong call *and* a wrong fix). Every claim in these files must be a real call signature, not a plausible guess.
 
+## Adoption-usage watch (report-only)
+While mining Input 1, also watch whether these harness mechanisms are being reached for, in the transcripts and in the week's plan files: `clarify` invocations; `## Not yet plannable` sections holding real entries; `## Maintainer questionnaire` items parked and answered; slicing arguments made at delivery-shape time and how the maintainer decided; and whether skill edits show the three Skill authoring principles (harness `CLAUDE.md`) being consulted or violated. Adoption events do not look like corrections, so grep the transcripts for adoption-shaped tokens directly ("clarify", "questionnaire", "Not yet plannable", "delivery shape", "sliced") rather than relying on Input 1's correction signals. This produces summary lines, not edits: an unused mechanism or feedback the maintainer has learned to ignore is itself the finding, so name the silence rather than padding a gotcha from it.
+
 ## Summary + notification
 Write a summary markdown to BOTH `REFLECTIONS_OUT/latest.md` (overwrite) and `REFLECTIONS_OUT/<YYYY-MM-DD>.md` (run `date` for the stamp). The summary must contain:
 - The window reviewed and how many recent transcripts you examined.
 - The recurring themes you found (or "quiet week, no durable patterns").
+- The adoption-usage watch: which mechanisms saw use, which stayed silent, any sign of feedback being ignored.
 - A bullet per edit you made: `file -> one-line description`.
 - Anything you noticed but were NOT confident enough to write (flagged for the user's judgment).
 - A closing line telling the user where the uncommitted edits live: `Review harness edits with: git -C "<REPO>/agent-harness" diff  and library-usage doc edits with: git -C "<REPO>" diff -- docs/source/_llms  (then commit what you want).` (substitute the resolved REPO path).

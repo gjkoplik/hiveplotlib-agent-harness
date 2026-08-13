@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Socratic passes the dispatching session runs inline (not a sub-agent), in two modes. Brief mode is pre-plan extraction, run BEFORE the orchestrator is invoked when a non-trivial brief underdetermines plan-shaping choices, interviewing the maintainer one question at a time; its record sharpens the orchestrator's brief and lands in the plan's Goal/non-goals. The post-plan grill is the alignment gate, interrogating the maintainer wave by wave, high level to low, over a written plan or task, accepting being grilled back, and running the failure-mode-elicitation wave. Use brief mode when the maintainer invokes it or the dispatching session offers it on an underdetermined brief (a surfaced gate, on every non-trivial brief name that it ran or was knowingly skipped). Use the post-plan grill before sending the harness off on a long-horizon or autonomous workflow, when reviewing an existing plan in `wiki/wiki/plans/`, when the maintainer says "grill me" / "let's align on this" / "stress-test this plan" / "am I missing anything", or any time intent is consequential and only partly written down. The point is confirmed alignment, not a quiz.
+description: Socratic passes the dispatching session runs inline (not a sub-agent), in two modes. Brief mode is pre-plan extraction, run BEFORE the orchestrator is invoked when a non-trivial brief underdetermines plan-shaping choices, interviewing the maintainer one question at a time; its record sharpens the orchestrator's brief and lands in the plan's Goal/non-goals. The post-plan grill is the alignment gate, interrogating the maintainer wave by wave, high level to low, over a written plan or task, accepting being grilled back, running the failure-mode-elicitation wave, and settling the plan's delivery shape before dispatch. Use brief mode when the maintainer invokes it or the dispatching session offers it on an underdetermined brief (a surfaced gate, on every non-trivial brief name that it ran or was knowingly skipped). Use the post-plan grill before sending the harness off on a long-horizon or autonomous workflow, when reviewing an existing plan in `wiki/wiki/plans/`, when the maintainer says "grill me" / "let's align on this" / "stress-test this plan" / "am I missing anything", or any time intent is consequential and only partly written down. Open decisions that cannot be grilled live park in the plan's maintainer-questionnaire section (defined template-side; this skill points at it). The point is confirmed alignment, not a quiz.
 type: skill
 ---
 
@@ -30,7 +30,7 @@ The `adversary`'s cold pre-grill challenge runs **before** the post-plan grill (
 **Method.** An interview, not a review; there is no plan yet.
 
 1. **One question at a time.** Each answer steers the next question. No wave batching (waves are the post-plan grill's shape, sized for reviewing a document; extraction works fork by fork).
-2. **Ask only what the brief underdetermines.** Where the brief already settles a question, don't ask it. Pre-fill your read where a partial answer exists and ask the maintainer to confirm or correct.
+2. **Ask only what the brief underdetermines.** Where the brief already settles a question, don't ask it. Every question you do ask leads with a recommended answer; the maintainer confirms or corrects rather than composing an answer from scratch.
 3. **Target plan-shaping forks.** Scope ambition (ship-all vs ship-the-core), what is explicitly out, the deliverable the maintainer is assuming but has not written, anything the orchestrator would otherwise decide by default.
 4. **Stop** when the brief determines the plan-shaping choices, or the maintainer signals enough.
 
@@ -43,7 +43,7 @@ The remaining sections describe this mode.
 ### Method
 
 1. **Read first, then grill.** Read the target plan (`wiki/wiki/plans/<topic>.md`) or the task brief in full, and skim the code it names. Grill from the full picture, not half of it.
-2. **Pre-fill your read.** Where the plan or code already settles a question, state your answer and ask the maintainer to confirm or correct. Do not quiz them on things already written down. This is the repo-aware + recommended-answer discipline; it keeps the grill on genuine forks and respects the maintainer's time.
+2. **Recommended answer first, across the interrogation waves.** Each question in the high-to-low waves ships with your recommended answer attached, whether or not the plan or code already leans one way; the maintainer confirms or corrects. Do not quiz them on things already written down. This keeps the grill on genuine forks and respects the maintainer's time. The failure-mode wave is the exception: there the maintainer names the modes, since leading with model-authored candidate modes reproduces the model's blind spots.
 3. **Waves, high to low.** Wave 1: premise, scope, the irreversible commitments (core deps, public API defaults). Later waves: subtle correctness claims, the memory/perf model, the things most likely to bite. Keep each wave small (roughly 3-5, then 2-4, then 1-3 questions). Each wave's answers steer the next; don't dump everything at once.
 4. **Target the high-leverage forks.** The load-bearing "why now" premise; scope ambition (ship-all vs ship-the-core); anything close to irreversible (a core dependency, a public default that needs a deprecation to change); the subtlest correctness risk in the chain; and anything the maintainer admits to skimming.
 5. **Accept being grilled back.** When the maintainer pushes, find the real argument or concede. Update toward them when they are right. The goal is alignment, not winning the point. A grill that only ever ratifies the plan did nothing.
@@ -66,6 +66,10 @@ This wave is what makes the adversary's light post-grill rubric-check possible. 
 
 Like the rest of the grill, this wave is **record-only**: it names the modes into the plan, it does not act on them. A mode that implies a plan change is emergent work, routed to orchestrator `amend-plan`, never hand-edited from the grill.
 
+### Delivery shape
+
+Before the grill closes, settle how the work ships: a single MR, or sliced MRs under a milestone with the slice boundaries named. Record the decision in the plan's `Delivery shape:` slot under `## Alignment (grill)`; when the grill is skipped or the question never comes up, the default is a single MR. The decision is always the maintainer's. Slicing composes with the plan's `## Not yet plannable` section: a later slice may sit there, realigned before its branch is cut.
+
 ### Capture (keep the record in one place)
 
 After each wave resolves, append a dated entry to the plan's `## Alignment (grill)` section, titled `Maintainer shared-understanding pass (grill), Wave N — <topics>`. Record the confirmed positions, the clarifications, and any **OPEN** items with the divergence stated plainly (do not fabricate consensus). This fills the plan's pre-dispatch alignment gate and turns "what the maintainer actually thinks" from implicit into durable. (Plans predating the `## Alignment (grill)` section may carry their captures under `## Plan amendments`; new plans use the dedicated gate.)
@@ -78,10 +82,19 @@ Capture is **record-only**. Do not edit workstream done-whens, naming audits, or
 
 A grill commonly surfaces a real change: a flipped or removed API decision, a new deliverable, a scope shift. That is emergent work. Per `mental-model` rule 14, route it to the orchestrator's `amend-plan` mode rather than hand-editing the workstream set. The grill records the decision and recommends the routing; the orchestrator (with the api-critic where the surface changes) makes the edit. Mark the item OPEN in the capture until the maintainer gives the final call, then bundle the amend-plan dispatch.
 
+## Parked maintainer decisions
+
+Not every open decision gets a live answer. When the posture is async and a maintainer gate parks mid-run or at review, record it in the plan's `## Maintainer questionnaire` section; the plan template owns that section's shape and close mechanics, this skill just points at it. Parking beats guessing, and beats stalling the run until the next live session.
+
+## Invariants (both modes)
+
+- **Facts are the agents' job, never the maintainer's.** Never ask the maintainer something an agent or a repo read could answer; dispatch the fact-find and ask only decisions.
+- **Never answer your own grilling.** A grilling pass that answers its own questions has broken; the recommended answer is an offer, and only the maintainer's confirmation is the answer.
+
 ## Voice (both modes)
 
-Follow the maintainer's prose rules: no em-dashes, no AI filler, direct and slightly informal. One sharp question per genuine fork, with your pre-filled read attached. Not interrogation theater, every question should be one whose answer changes what happens next.
+Follow the maintainer's prose rules: no em-dashes, no AI filler, direct and slightly informal. One sharp question per genuine fork, with your recommended answer attached. Not interrogation theater, every question should be one whose answer changes what happens next.
 
 ## Stopping (post-plan grill)
 
-Stop when a wave stops surfacing divergence, or the maintainer signals they are aligned. Then state the open decisions still on them, and name the next dispatch (orchestrator `initial-plan` / `amend-plan`, or the first workstream). Offer, do not assume, the next step. (Brief mode's stopping condition is in its Method above.)
+Stop when a wave stops surfacing divergence, or the maintainer signals they are aligned. Then state the open decisions still on them, and name the next dispatch (orchestrator `initial-plan` / `amend-plan`, or the first workstream). Offer, do not assume, the next step. The close is an act-gate: no workstream dispatches until the maintainer explicitly confirms shared understanding, and a wave going quiet is not confirmation. (Brief mode's stopping condition is in its Method above.)

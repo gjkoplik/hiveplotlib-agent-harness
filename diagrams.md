@@ -43,9 +43,9 @@ Simplifications in the diagram: finding-routing from the three critics, the adve
 
 ```mermaid
 flowchart TD
-    ask(["Maintainer: 'research whether X'<br/>(conversational, no slash command)"]) --> orch["orchestrator: research-plan mode<br/>light plan: Question, candidate stories,<br/>lenses, bound, validation criteria,<br/>destination"]
+    ask(["Maintainer: 'research whether X'<br/>(conversational, no slash command)"]) --> orch["orchestrator: research-plan mode<br/>light plan: Question, candidate stories,<br/>lenses, bounds, validation criteria,<br/>destination"]
     orch --> spine["Shared adversary/grill spine:<br/>adversary cold challenge, then<br/>grill-me's research<br/>failure-mode branch"]
-    spine --> preflight["Pre-flight per research-track skill:<br/>hard agent cap + consumption estimate"]
+    spine --> preflight["Pre-flight per research-track skill:<br/>binding agent estimate + concurrency ceiling"]
     preflight --> panel["Shallow panel:<br/>N disjoint lenses fired as<br/>parallel Agent calls (no Workflow)"]
     panel --> l1["Lens 1"]
     panel --> ln["Lens ... N"]

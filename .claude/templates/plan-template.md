@@ -32,9 +32,10 @@ Once run, a status line plus dated `Maintainer shared-understanding pass (grill)
 ```
 Status: aligned (N waves, YYYY-MM-DD) | open decisions pending
 Open decisions: <list, or none>
+Delivery shape: single MR | sliced MRs with named slice boundaries
 ```
 
-Captures are record-only; resulting plan changes route to amend-plan. If the plan is trivial enough not to warrant a grill, state "Not warranted — <one-line why>" and skip.
+Captures are record-only; resulting plan changes route to amend-plan. The `Delivery shape:` line records the grill's call on whether the work ships as one MR or as sliced MRs under a milestone; when the grill is skipped or silent on it, the default is a single MR. If the plan is trivial enough not to warrant a grill, state "Not warranted: <one-line why>" and skip.
 
 ## Failure modes
 
@@ -54,7 +55,7 @@ Once named:
 - ...
 ```
 
-If the plan is trivial enough not to warrant a grill, state "Not warranted — <one-line why>" and skip (the same call as the grill itself).
+If the plan is trivial enough not to warrant a grill, state "Not warranted: <one-line why>" and skip (the same call as the grill itself).
 
 ## Prior ADRs / design docs
 
@@ -85,7 +86,7 @@ Check user-facing names against the vocabulary users would use (often the domina
 - New methods/classes: `<list>`. Same check.
 - Prose-only terms: `<list>`
 
-Internal module/package names are out of scope.
+Names settled here are the shared vocabulary later sessions must reuse. Internal module/package names are out of scope.
 
 ## API usage examples
 
@@ -224,7 +225,7 @@ Coherent, dispatchable chunks with checkable done-when criteria. Don't pre-assig
 
 Multiple workstreams may dispatch concurrently. In-tree state from a co-running workstream is expected, not broken. When the state genuinely doesn't match the brief, halt under rule 9.
 
-**Section ownership (this file has many writers).** Each agent writes only its own named section(s): critics their review blocks, the adversary its two subsections, implementers their Implementation log line and any `## Failure modes` append, the orchestrator the rest. Never rewrite another agent's section. The dispatching session avoids concurrently dispatching two agents that write the same section, and serializes Implementation-log appends when workstreams run concurrently.
+**Section ownership (this file has many writers).** Each agent writes only its own named section(s): critics their review blocks, the adversary its two subsections, implementers their Implementation log line and any `## Failure modes` append, the orchestrator the rest (`## Not yet plannable` included). `## Maintainer questionnaire` items are appendable by any implementing agent with Edit; editorial-critic and viz-critic, which carry no Edit, record items through the same recording hop their review blocks already use; transcribing the maintainer's answer on close belongs to the agent running the amendment. Never rewrite another agent's section. The dispatching session avoids concurrently dispatching two agents that write the same section, and serializes Implementation-log appends when workstreams run concurrently.
 
 ### Workstream A: <name>
 
@@ -235,6 +236,31 @@ Multiple workstreams may dispatch concurrently. In-tree state from a co-running 
 ### Workstream B: <name>
 
 ...
+
+## Not yet plannable
+
+Work the plan can see but cannot spec yet. Entries are commitment markers: deliberately fuzzy and less committed than a workstream. An executing agent that reaches one realigns first (amend-plan, or the maintainer directly) rather than acting on it as written.
+
+Entry gate: in if the question cannot be stated precisely yet, with a note on what would clear it; out if statable (statable questions belong in a grill or an open-decisions list). The section also lets a plan scope short on purpose and record what was left uncharted.
+
+- <item>: <what is unclear, and what would clear it>
+
+Or "None." (the common case).
+
+## Maintainer questionnaire
+
+Parked maintainer gates in decision-ticket shape. Any agent may append an item when a decision needs the maintainer and the maintainer is not present (a gate parked mid-run or at review). Items are numbered; each states its context and leads with a recommended answer, so a one-word reply can close it.
+
+Close mechanics: the maintainer answers in chat; the agent running the amendment transcribes the answer into the item on close, and the answer is never edited after. The maintainer never edits the plan file; the section accrues an append-only decision log.
+
+```
+1. <decision needed, one line>
+   Context: <what the decision gates, one or two lines>
+   Recommended answer: <the recommendation, stated first>
+   Answer (on close): <transcribed from the maintainer's chat reply; never edited after>
+```
+
+Or "None."
 
 ## Plan amendments
 
@@ -302,14 +328,14 @@ The competing explanations the run weighs (e.g. "the two-cluster structure is re
 
 Populated by grill-me's failure-mode wave (research branch): the domain failure modes for this question, structure-is-artifact first, then already-known / n-too-small / uncontrolled-comparison / grounding failures. Named as the *kinds* of modes to elicit, not a fixed checklist. Consumed by the adversary at convergence.
 
-## Lenses + bound
+## Lenses + bounds
 
-The N disjoint lenses the run fires, and the hard **20-agent cap**. Two lenses are **standing seats floored on every run** before the orthogonality count fills the rest (they are obligations, not optional angles):
+The N disjoint lenses the run fires, and the run's bounds: the **binding pre-flight estimate** (exceeded only by surfacing a revised estimate first) and the **concurrency ceiling of 8**. Two lenses are **standing seats floored on every run** before the orthogonality count fills the rest (they are obligations, not optional angles):
 
 - a **prior-art / counterfactual lens** ("how do people normally do this, what are the alternatives, has anyone already published this"),
 - a **counter-evidence lens** (searches for what would falsify the emerging story).
 
-The remaining N−2 are set by orthogonality (genuinely disjoint slices), capped by the ceiling. See the `research-track` skill for the shallow-panel dispatch and the addable agent-count model.
+The remaining N−2 are set by orthogonality (genuinely disjoint slices), counted in the pre-flight estimate. See the `research-track` skill for the shallow-panel dispatch and the addable agent-count model the estimate derives from.
 
 ## Validation criteria
 

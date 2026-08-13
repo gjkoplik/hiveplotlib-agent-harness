@@ -14,6 +14,13 @@ The cycle also adapts ideas from reviewing the harness against
 [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (reviewed at version `0.6.3`, July 2026):
 adversarial-review hardening, a security audit, a pre-plan interview, opt-in auto-dispatch, and changelog discipline.
 
+A second review, against [mattpocock/skills](https://github.com/mattpocock/skills) (August 2026), shaped several of the
+entries below: `grilling` sharpened how `grill-me` asks, `wait-what` became the `clarify` skill, `to-questionnaire` and
+`wayfinder` gave the plan template its `## Maintainer questionnaire` and `## Not yet plannable` sections, `wizard` was
+pared down to a point-don't-describe rule (its bash-script form deliberately rejected), and that repo's skill-writing
+principles became the harness's own. The delivery-shape convention was prompted by `wayfinder`'s map-above-tickets
+framing.
+
 ### Model Compatibility
 
 Reviewed the harness against Claude Fable 5 (in contrast to Opus 4.8). Implemented some suggested changes: moving the
@@ -42,6 +49,16 @@ gaps left by the recent adversary and research additions.
   that had no home in the template.
 - The security and performance checks now read the diff to decide whether they apply, so qa can't mistakenly skip
   either on a change that needed it.
+- Plan template: `## Not yet plannable` parks work too foggy to spec, and `## Maintainer questionnaire` parks decisions
+  waiting on the maintainer (answered in chat, transcribed by an agent, surfaced in every workstream report). Settled
+  names carry forward as the vocabulary later sessions reuse.
+- The dispatching session argues the sliced-MR case when a plan outgrows one reviewable MR (the call stays the
+  maintainer's, recorded in the plan); a user-invoked `clarify` skill restates a message that didn't land; agents hand
+  the exact link and steps for maintainer-only actions; and unrequested work that looks wrong pauses for clarification.
+- Skill authoring gets three standing principles: a description names when the skill applies, model-invocable vs
+  user-only is chosen explicitly, and every skill edit is checked against growth.
+- Multi-agent executions now report agents dispatched, peak concurrency, and approximate tokens (basis named, "unknown"
+  when unmeasurable), with a plan total at plan end; the weekly dream watches whether the new mechanisms get used.
 
 ### Changed
 
@@ -61,6 +78,10 @@ gaps left by the recent adversary and research additions.
   dispatching session serializes shared appends under concurrent dispatch.
 - A minor review nit no longer forces a re-planning round-trip in default mode; the maintainer just says amend,
   defer, or skip at the checkpoint (nits that affect later work still route automatically). `must-fix` is unchanged.
+- `grill-me` leads its questions with a recommended answer, sends agents to dig up facts instead of asking the
+  maintainer, settles delivery shape, and holds dispatch until the maintainer confirms shared understanding.
+- `research-track` bounds are now the pre-flight estimate as a binding total (exceed it only by surfacing a revised
+  estimate first), a concurrency ceiling of 8, and consumption reported honestly rather than gated.
 
 ### Fixed
 
