@@ -152,7 +152,10 @@ for p in sorted(tests.rglob("*_test.py")):
         ]
         if not candidates:
             continue
-        target = max(candidates, key=len)
+        # sort before picking: `names` is a set, so equal-length candidates would
+        # otherwise resolve by its run-to-run iteration order and flicker findings
+        # in and out between runs on an unchanged tree
+        target = max(sorted(candidates), key=len)
         body = ast.get_source_segment(text, node) or ""
         rel = p.relative_to(consumer)
         # Two tiers: [no-ref] means the named entity never appears in the body
