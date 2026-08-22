@@ -312,7 +312,7 @@ Append-only. After each workstream completes, one line in the same turn:
 
 # Research-plan shape (the `research-plan` orchestrator mode emits this, NOT the sections above)
 
-A research task (research **for** a consumer, landing in that consumer's wiki `analyses/`) uses this shape instead of the code-plan structure above. It is **deliberately light**: no workstream-style done-when ceremony, no replace-and-sweep / naming / API-usage audits. That lightness is a design choice, not an omission. Workstream-style done-whens suit code; imposed on research they **strangle the divergence** the run needs to explore. A future editor should not "fix" this by adding ceremony. Conventions (shallow-panel dispatch, the two standing lenses, bounds, grounding, durable landing) live in the `research-track` skill, not here; this shape carries only the per-plan fill-in.
+A research task (research **for** a consumer, landing in that consumer's durable records) uses this shape instead of the code-plan structure above. It is **deliberately light**: no workstream-style done-when ceremony, no replace-and-sweep / naming / API-usage audits. That lightness is a design choice, not an omission. Workstream-style done-whens suit code; imposed on research they **strangle the divergence** the run needs to explore. A future editor should not "fix" this by adding ceremony. Conventions (shallow-panel dispatch, the two standing lenses, bounds, grounding, durable landing) live in the `research-track` skill, not here; this shape carries only the per-plan fill-in.
 
 The mandatory-adversary sections (`## Adversary review`, both subsections) and grill-me's failure-mode wave (`## Failure modes`, its research branch) apply to this shape too. The shared spine covers research; they are not code-plan-only.
 
@@ -347,7 +347,7 @@ What a validated finding must clear (grounded, independently verified, adversary
 
 ## Destination artifact
 
-`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive; a minimal breadcrumb for a nothing-cohered run. Landed via research-liaison's producer path under maintainer approval.
+`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive on a consumer with a wiki; a minimal breadcrumb for a nothing-cohered run. Landed via research-liaison's producer path under maintainer approval.
 
 ## Minor pivots vs. amend-plan
 

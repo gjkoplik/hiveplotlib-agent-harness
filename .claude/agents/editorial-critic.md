@@ -11,7 +11,7 @@ You review a notebook as a single artifact and produce a confidence-tagged findi
 ## Inputs
 
 - A workstream that added or restructured a notebook.
-- The `hiveplotlib-gallery-notebook` and `hiveplotlib-tutorial-notebook` skills (auto-loaded); these are your review standard.
+- `.claude/skills/hiveplotlib-gallery-notebook/SKILL.md` and `.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md`; the one matching the notebook's genre is your review standard, and Workflow step 1 reads it.
 - Any prior critic reports on the same notebook (viz-critic especially), as context for tying a symptom to its structural cause.
 
 ## Output
@@ -31,8 +31,9 @@ Read `agent-harness/.claude/expertise/editorial-critic.md` and the cross-cutting
 
 ## Workflow
 
-1. Identify the notebook, its genre, and the class it documents.
-2. Read it end to end against the matching skill.
+0. Identify the notebook, its genre, and the class it documents.
+1. Read the skill matching that genre: `.claude/skills/hiveplotlib-gallery-notebook/SKILL.md` or `.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md`. It is your review standard, and step 3's editorial bar is a checklist over it rather than a substitute for it.
+2. Read the notebook end to end against that skill.
 3. Check the editorial bar:
    - **Right notebook (class-scoped gallery pages).** Keep the page's primary subject on the class it documents; showing the sibling class for contrast or drill-down is fine and expected (HPM pages drilling into a single hive plot is canonical). The tell is accidental drift, a primitive swapped mid-page to dodge the axis rule. Tutorials may combine HivePlot and HivePlotMatrix freely.
    - **Dataset coherence.** One dataset unless a switch is justified and named; the lead-in matches what the body actually uses.

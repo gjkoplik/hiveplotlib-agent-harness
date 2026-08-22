@@ -6,9 +6,9 @@ type: skill
 
 # Research track
 
-Conventions for running research **against** a consumer repo: bounded, grounded, and durable. Loaded by the dispatching session when a research run is invoked, and by any agent driving or reviewing one. This skill is the conventions home for the whole track; the `research-plan` orchestrator mode emits only the per-plan fill-in (Question, candidate stories, lenses, bounds, validation criteria, destination), and the conventions that hold across every run live here.
+Conventions for running research **against** a consumer repo: bounded, grounded, and durable. Loaded by the dispatching session when a research run is invoked. This skill is the conventions home for the whole track; the `research-plan` orchestrator mode emits only the per-plan fill-in (Question, candidate stories, lenses, bounds, validation criteria, destination), and the conventions that hold across every run live here.
 
-A research run researches **for** a consumer and lands its finding in that consumer's wiki `analyses/`. It uses the same adversary and grill spine as code work, not a parallel one (see "Shared spine" below). The engine it wraps already exists: the `deep-research` engine supplies the grounding and verify mechanics this skill inherits; what this track adds is a hard bound, an adversary validation gate at convergence, and a first-class durable landing.
+A research run researches **for** a consumer and lands its finding in that consumer's durable records. It uses the same adversary and grill spine as code work, not a parallel one (see "Shared spine" below). The engine it wraps already exists: the `deep-research` engine supplies the grounding and verify mechanics this skill inherits; what this track adds is a hard bound, an adversary validation gate at convergence, and a first-class durable landing.
 
 ## Entry point
 
@@ -130,6 +130,8 @@ The **literature** mode is the default and, for now, only evidence substrate: it
 ## Durable landing
 
 A research run **ends by landing** a durable `wiki/wiki/analyses/<slug>.md` page, formatted from the validated run summary and surfaced for maintainer approval (not auto-committed). This closes the loop the whole track exists for.
+
+**The landing target follows the consumer.** A consumer with a wiki gets the `analyses/` page above; a consumer with no wiki (the harness itself) lands the finding in its own durable records instead, the CHANGELOG for an adoption-worthy finding plus the maintainer's memory, never defaulting into another consumer's wiki where it would sit topically orphaned.
 
 **The point of the landing is auto-save, not formatting.** The engine's core un-niceness is that it returns a JSON object and evaporates: nothing becomes a longer-term reference. So the run must **identify and save what is of interest on its own**, without the maintainer hand-directing which finding matters. The anti-goal is the one true autonomous run that burned its budget and **saved nothing**. The in-chat run summary is the headline; this page is the durable narrative-plus-evidence artifact. The first-class requirement of a run is reaching an honest terminal outcome and reporting consumption, not always emitting a page; the durable page reflects yield (a full page for a validated finding or a validated inconclusive, a minimal breadcrumb for a nothing-cohered run), so a low-yield run that saves nothing of interest is not dressed up as a landing.
 

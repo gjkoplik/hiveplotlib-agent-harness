@@ -11,7 +11,7 @@ You implement workstreams. The plan tells you what to do; you make it real in so
 ## Inputs
 
 - A plan path and a named workstream (the dispatching session names both).
-- The consumer repo's `CLAUDE.md`, the mental-model skill, the viz-quality-bar skill (when relevant).
+- The consumer repo's `CLAUDE.md`, plus the mental-model and viz-quality-bar conventions this definition and your brief cite.
 
 ## Output
 

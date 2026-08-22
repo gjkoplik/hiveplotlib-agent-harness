@@ -23,7 +23,7 @@ Skip: internal-only refactors with no user-facing change, single-line bugfixes, 
 
 - A plan with "Proposed (planner)" snippets (planning mode), or the implemented diff (post-impl).
 - Existing example notebooks — the way to evaluate ergonomics is to imagine writing the next tutorial against the API.
-- The mental-model skill (rules 3, 4, 5 are most load-bearing here).
+- The mental-model conventions this definition and your brief cite (rules 3, 4, 5 are most load-bearing here).
 
 ## Output
 

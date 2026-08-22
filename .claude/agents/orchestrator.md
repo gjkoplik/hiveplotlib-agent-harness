@@ -29,7 +29,7 @@ Orthogonal to mode. One of `hiveplotlib`, `agent-harness`, `hiveplotlib-llm-wiki
 ## Inputs
 
 - A task description naming the consumer (or amendable from context). In `amend-plan` mode: the existing plan path and the delta source.
-- The consumer repo's `CLAUDE.md`, the mental-model skill, the viz-quality-bar skill (when relevant), the plan template.
+- The consumer repo's `CLAUDE.md`, the plan template, plus the mental-model and viz-quality-bar conventions this definition and your brief cite.
 
 ## Output
 
@@ -74,7 +74,7 @@ Read `agent-harness/.claude/expertise/orchestrator.md` and the cross-cutting `ag
 
 ## Workflow (research-plan)
 
-A research task researches **for** a consumer and lands in that consumer's wiki `analyses/`; the consumer parameter is orthogonal to this mode, exactly as it is to the other two. Load the `research-track` skill: it is the conventions home (shallow-panel dispatch, the two standing lenses, two-layer grounding, the binding pre-flight estimate and concurrency ceiling, durable landing), and this mode emits only the per-plan fill-in plus the summary shape.
+A research task researches **for** a consumer and lands in that consumer's durable records; the consumer parameter is orthogonal to this mode, exactly as it is to the other two. The `research-track` skill is the conventions home (shallow-panel dispatch, the two standing lenses, two-layer grounding, the binding pre-flight estimate and concurrency ceiling, durable landing), and this mode emits only the per-plan fill-in plus the summary shape.
 
 1. Read the task. Identify the consumer and the research question; refine the question if the ask is broad.
 2. Write the **light research-plan** at the consumer's plans path, using the template's research-plan shape. Keep it light on purpose: no workstream-style done-when ceremony. The shape carries Question; candidate stories / hypotheses; failure-mode rubric; lenses + bounds; validation criteria; destination artifact.
@@ -109,7 +109,7 @@ Destination: <reflects Yield; see the terminal outcomes below>
 - **validated inconclusive**: the question was pursued to a negative, "the evidence does not support a confident answer." A first-class outcome, not a failure; lands the full page (via the `what-was-inconclusive-and-why` slot) as a "do not re-research this dead end" reference.
 - **nothing-cohered**: the degenerate low-yield case, the panel ran but nothing of interest cohered, neither a confident finding nor a pursued-to-a-negative inconclusive. Distinct from inconclusive (which is a positive determination). Lands only a **minimal breadcrumb** (ran-this / nothing-cohered / consumption reported) so the dead end is not blindly re-researched, **never a thin finding-shaped page**.
 
-So `Destination` reflects `Yield`: a validated finding or validated inconclusive points at the full `wiki/wiki/analyses/<slug>.md` page (pending maintainer approval); a nothing-cohered run points at the minimal breadcrumb only. The first-class requirement of a run is **reaching an honest terminal outcome and reporting consumption**, not always emitting a durable page; the page reflects yield.
+So `Destination` reflects `Yield`: a validated finding or validated inconclusive points at the full page (`wiki/wiki/analyses/<slug>.md` on a consumer with a wiki, pending maintainer approval); a nothing-cohered run points at the minimal breadcrumb only. The first-class requirement of a run is **reaching an honest terminal outcome and reporting consumption**, not always emitting a durable page; the page reflects yield.
 
 ## Constraints
 

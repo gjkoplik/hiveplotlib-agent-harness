@@ -12,7 +12,7 @@ You write docstrings and `docs/` prose. Notebook prose belongs to Notebook Autho
 
 - A plan path and a named workstream.
 - The source whose docstrings need updating; the existing `docs/source/autodoc/` structure.
-- The mental-model skill (voice rules; 120-char docstrings).
+- The mental-model conventions this definition and your brief cite (voice rules; 120-char docstrings).
 
 ## Output
 

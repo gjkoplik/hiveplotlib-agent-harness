@@ -68,7 +68,7 @@ Like the rest of the grill, this wave is **record-only**: it names the modes int
 
 ### Delivery shape
 
-Before the grill closes, settle how the work ships: a single MR, or sliced MRs under a milestone with the slice boundaries named. Record the decision in the plan's `Delivery shape:` slot under `## Alignment (grill)`; when the grill is skipped or the question never comes up, the default is a single MR. The decision is always the maintainer's. Slicing composes with the plan's `## Not yet plannable` section: a later slice may sit there, realigned before its branch is cut.
+Before the grill closes, settle how the work ships: a single MR, or sliced MRs under a milestone with the slice boundaries named. Record the decision in the plan's `Delivery shape:` slot under `## Alignment (grill)`; when the grill is skipped or the question never comes up, the default is a single MR. The decision is always the maintainer's. Slicing composes with the plan's `## Not yet plannable` section: a later slice that is genuinely not yet specifiable may sit there, subject to that section's entry gate, realigned before its branch is cut.
 
 ### Capture (keep the record in one place)
 
@@ -93,7 +93,7 @@ Not every open decision gets a live answer. When the posture is async and a main
 
 ## Voice (both modes)
 
-Follow the maintainer's prose rules: no em-dashes, no AI filler, direct and slightly informal. One sharp question per genuine fork, with your recommended answer attached. Not interrogation theater, every question should be one whose answer changes what happens next.
+Follow the maintainer's prose rules: no em-dashes, no AI filler, direct and slightly informal. One sharp question per genuine fork, with your recommended answer attached across the interrogation waves. Not interrogation theater, every question should be one whose answer changes what happens next.
 
 ## Stopping (post-plan grill)
 

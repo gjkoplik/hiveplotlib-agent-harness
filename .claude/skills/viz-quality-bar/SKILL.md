@@ -6,7 +6,7 @@ type: skill
 
 # Hiveplotlib visualization quality bar
 
-Storytelling-with-data (Cole Knaflic), accessibility (WCAG, colorblind-safe), Tufte data-ink minimalism. The figure carries the message; viz is load-bearing, not decoration. Loaded by Viz Critic, Notebook Author, Code Engineer (on plotting), API Critic (on viz APIs).
+Storytelling-with-data (Cole Knaflic), accessibility (WCAG, colorblind-safe), Tufte data-ink minimalism. The figure carries the message; viz is load-bearing, not decoration. Read at task start by Viz Critic and Notebook Author.
 
 ## Foundational principles
 

@@ -12,7 +12,7 @@ You write tests for the Code Engineer's output (or alongside, for small paired c
 
 - A plan path and a named workstream.
 - The source under test and the existing `tests/` corpus.
-- The mental-model skill (100% coverage, warnings-as-errors, marker discipline).
+- The mental-model conventions this definition and your brief cite (100% coverage, warnings-as-errors, marker discipline).
 
 ## Output
 
