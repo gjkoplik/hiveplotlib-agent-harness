@@ -36,4 +36,11 @@ The full argument, the tradeoffs, and the open questions are in the design repor
 
 ## Status
 
-Unreviewed. No grill, no adversary pass, no plan. Treat every file here as a first draft written to be cut.
+**Superseded in direction, not yet rewritten.** Maintainer feedback reframed the skill: it is a cheap
+sunk-cost circuit breaker for half-formed ideas, not a rigorous adoption report. Brief by design, with
+progressive disclosure as the calibration device (what stays collapsed depends on what the reader already
+knows), renamed to `what-if`. The files here still encode the expensive first design: six phases, a blind
+advocate/skeptic pair by default, quote-level grounding, a probe.
+
+The rewrite is mostly deletion, and it is held pending confirmation rather than done twice. Nothing here
+is wired in: no grill, no adversary pass, no plan.
