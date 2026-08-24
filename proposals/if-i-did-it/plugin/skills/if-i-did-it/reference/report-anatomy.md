@@ -15,8 +15,8 @@ Sections, in order. The order is the argument:
 5. **The case against.** The skeptic's, unedited in substance.
 6. **The case for.** The advocate's, unedited in substance.
 7. **What they actually disagree about.** Usually one empirical question. Name it, and name the observation that would settle it.
-8. **Verdict.** Adopt, do not adopt, or not yet with its trigger. Plus the appetite fit and the cheapest thing that would settle the question.
-9. **What was checked, and how.** Sources with versions and dates, the probe and what it showed, and an explicit list of what was not checked. The unchecked list is load-bearing: a report that does not say what it skipped reads as if it skipped nothing.
+8. **Verdict.** Adopt, do not adopt, not yet with its trigger, or keep the tension with the seam named. Plus the appetite fit and the cheapest thing that would settle the question. On a decline or a not-yet, the reverse premortem sits here as one short paragraph, so the reader can see the method was checked against its own bias.
+9. **What was checked, and how.** Sources with versions and dates, the probe and what it showed, the local lineage result, and an explicit list of what was not checked. The unchecked list is load-bearing: a report that does not say what it skipped reads as if it skipped nothing. When an earlier run on this subject exists, this section opens with the diff against it: which objections closed, which got worse, which are new.
 
 ## Epistemic tiers
 

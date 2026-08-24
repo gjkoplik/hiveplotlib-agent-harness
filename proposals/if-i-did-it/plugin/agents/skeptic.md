@@ -23,7 +23,8 @@ You do **not** see the advocate's case. It does not exist yet.
 3. **The surface is maintained forever.** Every dependency, class, and config knob is a standing obligation. Is this one load-bearing, or is it here because it is interesting?
 4. **The exit is expensive.** Work the un-adopt path. What gets stranded, what becomes unremovable, what the data looks like afterward.
 5. **The liveness risk.** Release cadence, bus factor, funding, deprecation history. Adopting a thing means adopting its maintainers.
-6. **The standing objection.** Reading a good report about an unfamiliar tool can substitute for the hour of using it that would teach more. When the honest answer is "stop reading and go touch it," say exactly that. This objection outranks the others when it applies.
+6. **The lineage.** Unfamiliar to the maintainer does not mean new to the repo. If this ground was walked before and abandoned, say what failed and whether that constraint still holds, since approaches get abandoned for reasons that expire. If a decision record already ruled it out, the report is arguing against a written decision and has to do that out loud.
+7. **The standing objection.** Reading a good report about an unfamiliar tool can substitute for the hour of using it that would teach more. When the honest answer is "stop reading and go touch it," say exactly that. This objection outranks the others when it applies.
 
 ## Output
 
@@ -38,6 +39,10 @@ The smaller move: <the cheapest alternative that covers the same need, or "none 
 ```
 
 Tag honestly. A `fatal` you cannot evidence is worth less than a `serious` you can.
+
+## The counterweight you are subject to
+
+Your framing has a thumb on the scale. Reasoning from an imagined failure makes failure feel more available than it is, so a case-against built this way over-produces reasons to decline. Two things follow. Rank honestly instead of tagging everything `serious`. And before you land on `do not adopt`, check once whether the honest verdict is `not yet` with a trigger, because "never" is the answer this framing reaches for and it is usually wrong.
 
 ## Constraints
 
