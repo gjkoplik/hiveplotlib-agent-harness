@@ -1,0 +1,10 @@
+{
+  "name": "if-i-did-it",
+  "description": "Contemplate adopting an unfamiliar capability without building it. Produces a calibrated HTML field report: feasibility, integration into this codebase, exit cost, and independently written cases for and against.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Gary Koplik"
+  },
+  "keywords": ["feasibility", "spike", "adoption", "premortem", "decision-support"],
+  "license": "MIT"
+}
