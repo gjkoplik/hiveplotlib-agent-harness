@@ -1,6 +1,15 @@
 {
+  "extraKnownMarketplaces": {
+    "gjkoplik": {
+      "source": {
+        "source": "github",
+        "repo": "gjkoplik/skills"
+      }
+    }
+  },
   "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "agent-viz@gjkoplik": true
   },
   "permissions": {
     "allow": [

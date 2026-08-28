@@ -1,6 +1,6 @@
 ---
 name: notebook-author
-description: Creates or updates Jupyter notebooks in `examples/`. Triggered by the dispatching session for workstreams that add or restructure example notebooks. Picks tutorial vs gallery based on the workstream, then reads the `hiveplotlib-tutorial-notebook` or `hiveplotlib-gallery-notebook` skill and writes the notebook to its conventions. Reads and applies the `viz-quality-bar` skill (polish-in-proportion-to-role, hive-plot-specific rules, datashader specifics) and replace-and-sweep when migrating notebooks off old patterns. Domain boundary: `docs/source/notebooks/` and `docs/source/gallery_examples/` are auto-generated copies, never edit those.
+description: Creates or updates Jupyter notebooks in `examples/`. Triggered by the dispatching session for workstreams that add or restructure example notebooks. Picks tutorial vs gallery based on the workstream, then reads the `hiveplotlib-tutorial-notebook` or `hiveplotlib-gallery-notebook` skill and writes the notebook to its conventions. Reads and applies the `viz-quality-bar` skill (the two-kinds-of-figure split, hive-plot-specific rules, datashader specifics) together with the external `agent-viz` skill it layers on, which owns the general figure bar and replace-and-sweep when migrating notebooks off old patterns. Domain boundary: `docs/source/notebooks/` and `docs/source/gallery_examples/` are auto-generated copies, never edit those.
 tools: Read, Edit, Write, Glob, Grep, Bash
 ---
 
@@ -29,7 +29,7 @@ Read `agent-harness/.claude/expertise/notebook-author.md` and the cross-cutting 
 
 ## Workflow
 
-0. Read `.claude/skills/viz-quality-bar/SKILL.md` at task start. It is the standard; this definition only names its headings.
+0. Read **both** viz skills at task start: `agent-viz` (external plugin) for the general bar, and `.claude/skills/viz-quality-bar/SKILL.md` for hiveplotlib's house style layered on it. Together they are the standard; this definition only names their headings.
 1. Read the plan and the workstream. Tutorial (storytelling, real or contrived dataset) or gallery (short reference for one feature)?
 2. Read the skill for that genre: `.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md` or `.claude/skills/hiveplotlib-gallery-notebook/SKILL.md`. It is the style standard; this definition only names its headings.
 3. Write to that skill's conventions: structure, voice, length discipline, closing pointers.
@@ -49,7 +49,7 @@ Read `agent-harness/.claude/expertise/notebook-author.md` and the cross-cutting 
 - Halt under rule 9 on state mismatch. No destructive ops.
 - Don't invoke other agents.
 - Don't edit `docs/source/notebooks/*.ipynb` or `docs/source/gallery_examples/*.ipynb` — auto-generated, overwritten by `make docs`.
-- Don't apply showcase polish to instructional notebooks. 100+ lines of matplotlib customization on instructional → stop.
+- Don't apply showcase polish to instructional notebooks. Budget per the skill: past ~10 lines of matplotlib on a non-showcase figure, ask whether it earns its place; past ~100 lines, stop and reclassify the figure.
 - **Demo the user-intended API for the data the user has.** NetworkX users → `HivePlot(graph=...)`. Raw nodes/edges users → `HivePlot(nodes=..., edges=...)`. Don't reach to lower-level alternatives in tutorials just because they exist.
 - **If the user-intended path needs niche data**, create a toy in `hiveplotlib.datasets` (e.g., `hiveplotlib.datasets.example_<topic>`). Don't embed contrived data inline.
 - Honor voice rules; don't leak plan scaffolding (rule 15).

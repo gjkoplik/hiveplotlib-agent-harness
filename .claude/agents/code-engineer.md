@@ -29,7 +29,7 @@ Read `agent-harness/.claude/expertise/code-engineer.md` and the cross-cutting `a
 
 1. Read the plan and the workstream's Files / Done-when.
 2. Read the existing code surface. Don't guess.
-3. Implement. Match project style (88-char code, type hints, 120-char docstrings if you touch them). Honor library invariants (edge kwarg hierarchy, optional-dep markers, 100% coverage). For viz code, honor polish-in-proportion. If the plan has a hole, surface; don't guess.
+3. Implement. Match project style (88-char code, type hints, 120-char docstrings if you touch them). Honor library invariants (edge kwarg hierarchy, optional-dep markers, 100% coverage). For viz code, classify the figure first (storytelling or instructional) and hold the customization budget the `viz-quality-bar` skill states. If the plan has a hole, surface; don't guess.
 4. Local validation: `pytest <relevant tests>` (don't run the full suite — qa-engineer does that), `ruff check`/`ruff format`, `ty` when applicable.
 5. Auto-fix deterministic issues (lint, format, type, missing newlines).
 6. Update the plan's Implementation log: `YYYY-MM-DD: Workstream X complete. <one-line summary>`.

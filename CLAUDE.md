@@ -16,7 +16,7 @@ Distributed into the consumer's `.claude/` by `bash sync.sh`. Defaults to syncin
 ## Layout
 
 - `.claude/skills/mental-model/` — shared mental model: loaded by the dispatching session; agent definitions and dispatch briefs cite its rules rather than loading it. **Start here.**
-- `.claude/skills/viz-quality-bar/` — viz principles, polish-in-proportion, hive-plot-specific rules, datashader specifics, empirical patterns.
+- `.claude/skills/viz-quality-bar/` — **hiveplotlib house style only; layered on the external `agent-viz` skill** (`/plugin marketplace add gjkoplik/skills`, then `/plugin install agent-viz@gjkoplik`), which owns the general figure bar. Carries the storytelling-versus-instructional split as this corpus practises it, hive-plot-specific rules, datashader specifics, interactive backends, empirical palette and layout conventions.
 - `.claude/skills/hiveplotlib-tutorial-notebook/` — tutorial-style notebook conventions.
 - `.claude/skills/hiveplotlib-gallery-notebook/` — gallery-style notebook conventions.
 - `.claude/agents/orchestrator.md` — produces plans (`initial-plan` and `amend-plan` modes).
@@ -47,7 +47,16 @@ Three principles bind every skill added or edited here:
 
 `<consumer>/.claude/settings.json` is harness-managed: `sync.sh` overwrites it from `agent-harness/.claude/settings.json` every run. Consumer overrides (additional `enabledPlugins`, extra `Bash`/`Read` permissions) live in `<consumer>/.claude/settings.local.json`, which `sync.sh` never touches.
 
-Currently shipped: `Edit`/`Write` on `agent-harness/.claude/expertise/**` (for rule-11 expertise updates) in both the consumer-relative and harness-relative forms (`.claude/expertise/**`), so the allowance holds whether a session is rooted at the consumer or at the harness repo itself; and `skill-creator@claude-plugins-official` enablement.
+Currently shipped: `Edit`/`Write` on `agent-harness/.claude/expertise/**` (for rule-11 expertise updates) in both the consumer-relative and harness-relative forms (`.claude/expertise/**`), so the allowance holds whether a session is rooted at the consumer or at the harness repo itself; `skill-creator@claude-plugins-official` enablement; and the **external viz dependency**, declared as `extraKnownMarketplaces` (`gjkoplik/skills`) plus `enabledPlugins` (`agent-viz@gjkoplik`). See the caveat below: the declaration records the dependency, it does not satisfy it.
+
+**The declaration records the dependency; it does not install it.** Settings marks the plugin enabled and `sync.sh` propagates that, but enabling is not installing: an external-source plugin stays uninstalled until someone installs it. The `extraKnownMarketplaces` entry has not been observed to register the marketplace either; checked from a consumer whose synced settings declare it, `claude plugin marketplace list` did not list `gjkoplik` and the skill was not loadable. Both steps are manual:
+
+```
+claude plugin marketplace add gjkoplik/skills
+claude plugin install agent-viz@gjkoplik
+```
+
+`sync.sh` probes for each and prints whichever is missing, so the gap surfaces at setup time rather than at the moment a figure is being drawn.
 
 Defensive backup: if the consumer's pre-existing `.claude/settings.json` differs from the harness template at sync time, it's copied to `.claude/settings.json.pre-harness-sync.bak` with a warning. Migrate content to `.claude/settings.local.json` and delete the `.bak`.
 

@@ -4,6 +4,19 @@ Building an agent harness to improve agentic independence on Hiveplotlib softwar
 
 Intended use: a submodule of Hiveplotlib used in correspondence with an adjacent [Hiveplotlib LLM Wiki](https://github.com/gjkoplik/hiveplotlib-llm-wiki) submodule.
 
+## External dependency
+
+One skill here is deliberately a thin layer over a skill maintained outside this repo. `viz-quality-bar` carries only hiveplotlib's visualization house style and defers the general figure bar (quantitative honesty, statistical honesty, accessibility, production) to **`agent-viz`**, from [gjkoplik/skills](https://github.com/gjkoplik/skills).
+
+`.claude/settings.json` records the dependency and `sync.sh` propagates that to every consumer, but the record does not satisfy it. Two steps stay manual:
+
+```
+claude plugin marketplace add gjkoplik/skills
+claude plugin install agent-viz@gjkoplik
+```
+
+`sync.sh` probes for each and prints whichever is missing. Nothing else here depends on an external install, and the harness still runs without it: `viz-quality-bar` degrades to house style plus a short labeled summary of what it is missing, and says so at the top of the file. The general bar was split out because it is useful to people who will never draw a hive plot, and because two copies of the same prose diverge.
+
 ## How it works
 
 The dispatching session (the consumer-repo Claude Code conversation the maintainer types into) is the sole dispatcher: every sub-agent is invoked from it, sub-agents never invoke each other, and every report returns to it for the maintainer to see. The plan file is the shared memory the agents coordinate through.

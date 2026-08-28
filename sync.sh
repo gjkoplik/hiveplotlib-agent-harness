@@ -204,3 +204,19 @@ done
 echo
 echo "Sync complete to $CONSUMER/.claude/"
 echo "(plans for hiveplotlib live in the wiki submodule at wiki/wiki/plans/; harness-self plans at agent-harness/.claude/plans/)"
+
+# settings.json enables agent-viz, but enabling is not installing, and the marketplace
+# entry there has not been observed to register on its own. Both steps stay manual, so
+# probe for each and print whichever is missing, at the moment a consumer is set up.
+if command -v claude >/dev/null 2>&1 && ! claude plugin list 2>/dev/null | grep -q "agent-viz"; then
+  echo
+  echo "viz-quality-bar layers on the external agent-viz skill, which is not installed"
+  echo "here. Reviewing against viz-quality-bar alone covers hive-plot house style only."
+  echo
+  if ! claude plugin marketplace list 2>/dev/null | grep -q "gjkoplik"; then
+    echo "    claude plugin marketplace add gjkoplik/skills"
+  fi
+  echo "    claude plugin install agent-viz@gjkoplik"
+  echo
+  echo "(the /plugin slash-command forms work too; restart to apply)"
+fi

@@ -1,6 +1,6 @@
 ---
 name: mental-model
-description: Mental model for working on hiveplotlib (network visualization Python library) — workflow rules including plan-then-execute, replace-and-sweep, naming-at-planning; library invariants including the 2-3 axis rule, NetworkX optional, 100% coverage; viz quality bar (storytelling-with-data, Cole Knaflic-aligned); and prose voice (no em-dashes, no AI filler). Load whenever working on hiveplotlib code, tests, docs, notebooks, or research.
+description: Mental model for working on hiveplotlib (network visualization Python library) — workflow rules including plan-then-execute, replace-and-sweep, naming-at-planning; library invariants including the 2-3 axis rule, NetworkX optional, 100% coverage; the two-skill viz bar (the external `agent-viz` general bar plus hiveplotlib's `viz-quality-bar` house-style layer); and prose voice (no em-dashes, no AI filler). Load whenever working on hiveplotlib code, tests, docs, notebooks, or research.
 type: skill
 ---
 
@@ -169,7 +169,7 @@ When work hits a step only the maintainer can perform (a hosted-service setting,
 
 ## Viz quality bar
 
-Loaded as its own skill at `<harness>/.claude/skills/viz-quality-bar/SKILL.md`. Storytelling-with-data, accessibility, data-ink discipline, palette discipline, polish-in-proportion-to-role, hive-plot-specific rules, datashader specifics, empirical patterns from the corpus. Load that skill whenever working on figures, viz cells, viz backend code, or reviewing rendered figures.
+Two skills, not one. The **general** figure bar is `agent-viz`, maintained outside this repo (`/plugin marketplace add gjkoplik/skills`, then `/plugin install agent-viz@gjkoplik`; enabling it in settings is not installing it): quantitative honesty, statistical honesty, accessibility, how a figure argues, production, and the pre-ship checks. It scopes itself by role, so an honesty-and-accessibility floor binds on every figure while narrative polish scales with the job, and a deliberately minimal API-demo figure is correct rather than unfinished. The **hiveplotlib layer** is `<harness>/.claude/skills/viz-quality-bar/SKILL.md`: house style, hive-plot-specific rules, datashader specifics, empirical patterns from the corpus. Load both before producing or reviewing a figure; the house-style layer does not restate the general bar.
 
 ## Prose voice
 

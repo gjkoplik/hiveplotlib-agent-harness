@@ -83,7 +83,7 @@ A research task researches **for** a consumer and lands in that consumer's durab
 
 ### The summary shape
 
-Owned here, reported by the bounded run, and formatted into the durable `analyses/` page by research-liaison's producer path. The `Yield` field and the outcome-conditional `Destination` are what keep a low-yield run from landing a tidy finding-shaped page it should not (the run classifies its own terminal outcome; the synth and convergence gate produce that classification):
+Owned here, reported by the bounded run, and formatted into the durable `analyses/` page by research-liaison's producer path (on a wiki-less consumer that path stops, and the run names its own destination per `research-track`). The `Yield` field and the outcome-conditional `Destination` are what keep a low-yield run from landing a tidy finding-shaped page it should not (the run classifies its own terminal outcome; the synth and convergence gate produce that classification):
 
 ```
 Question: <the refined research question>
@@ -109,7 +109,7 @@ Destination: <reflects Yield; see the terminal outcomes below>
 - **validated inconclusive**: the question was pursued to a negative, "the evidence does not support a confident answer." A first-class outcome, not a failure; lands the full page (via the `what-was-inconclusive-and-why` slot) as a "do not re-research this dead end" reference.
 - **nothing-cohered**: the degenerate low-yield case, the panel ran but nothing of interest cohered, neither a confident finding nor a pursued-to-a-negative inconclusive. Distinct from inconclusive (which is a positive determination). Lands only a **minimal breadcrumb** (ran-this / nothing-cohered / consumption reported) so the dead end is not blindly re-researched, **never a thin finding-shaped page**.
 
-So `Destination` reflects `Yield`: a validated finding or validated inconclusive points at the full page (`wiki/wiki/analyses/<slug>.md` on a consumer with a wiki, pending maintainer approval); a nothing-cohered run points at the minimal breadcrumb only. The first-class requirement of a run is **reaching an honest terminal outcome and reporting consumption**, not always emitting a durable page; the page reflects yield.
+So `Destination` reflects `Yield`: a validated finding or validated inconclusive points at the full page (`wiki/wiki/analyses/<slug>.md` on a consumer with a wiki, pending maintainer approval; on a wiki-less consumer, at whatever destination the run named per `research-track`); a nothing-cohered run points at the minimal breadcrumb only. The first-class requirement of a run is **reaching an honest terminal outcome and reporting consumption**, not always emitting a durable page; the page reflects yield.
 
 ## Constraints
 

@@ -347,7 +347,7 @@ What a validated finding must clear (grounded, independently verified, adversary
 
 ## Destination artifact
 
-`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive on a consumer with a wiki; a minimal breadcrumb for a nothing-cohered run. Landed via research-liaison's producer path under maintainer approval.
+`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive on a consumer with a wiki, landed via research-liaison's producer path under maintainer approval; a minimal breadcrumb for a nothing-cohered run. On a wiki-less consumer, name the destination explicitly per the `research-track` skill's landing conventions rather than assuming a page.
 
 ## Minor pivots vs. amend-plan
 

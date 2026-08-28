@@ -21,6 +21,10 @@ pared down to a point-don't-describe rule (its bash-script form deliberately rej
 principles became the harness's own. The delivery-shape convention was prompted by `wayfinder`'s map-above-tickets
 framing.
 
+Visualization review now reads two skills. The general figure bar moved out to `agent-viz`, and `viz-quality-bar`
+keeps only hive-plot house style. This is the harness's first external dependency, and it does not install itself: a
+consumer needs two manual commands before the general bar is available, and `sync.sh` prints them when it is missing.
+
 ### Model Compatibility
 
 Reviewed the harness against Claude Fable 5 (in contrast to Opus 4.8). Implemented some suggested changes: moving the
@@ -30,7 +34,7 @@ gaps left by the recent adversary and research additions.
 ### Added
 
 - `grill-me` **brief mode**: the harness can now interview the maintainer before planning when the ask is fuzzy, and
-  each plan records whether we bothered.
+  each plan records whether it ran or was knowingly skipped.
 - Security audit in `qa-engineer`: dependencies get audited and security-relevant changes get a sanity check before
   code is recommended to the maintainer.
 - Performance check in `qa-engineer`: touching library source now gets the consumer's perf/equivalence suite run, plus
@@ -41,7 +45,7 @@ gaps left by the recent adversary and research additions.
 - Opt-in **auto-dispatch mode**: approve a plan once ("run it through") and it runs gate-to-gate, with no
   between-workstream stops unless something actually needs the maintainer.
 - **`research-track`**: the harness can now do research, not just build code; runs stay bounded and cheap, get
-  adversarially checked, and land durable wiki pages.
+  adversarially checked, and land a durable page wherever the consumer keeps one.
 - `audit.sh`: qa-engineer's deterministic audits (plan scaffolding, test-name contract, rationalization markers,
   CHANGELOG cap) now run as a script qa interprets, so every pass runs the same checks instead of re-deriving greps
   from prose.
@@ -82,11 +86,27 @@ gaps left by the recent adversary and research additions.
   maintainer, settles delivery shape, and holds dispatch until the maintainer confirms shared understanding.
 - `research-track` bounds are now the pre-flight estimate as a binding total (exceed it only by surfacing a revised
   estimate first), a concurrency ceiling of 8, and consumption reported honestly rather than gated.
+- A research run's landing target follows the consumer: a wiki page where there is a wiki, and on the harness itself
+  an expertise entry or a CHANGELOG line rather than another repo's wiki.
+- Figures are now reviewed against two skills: [`agent-viz`](https://github.com/gjkoplik/skills/tree/main/plugins/agent-viz)
+  for the general figure bar, and `viz-quality-bar`, cut down to hive-plot house style. Both apply to any figure a
+  person will look at, not just hive plots. `agent-viz` is an external plugin whose install is manual (two commands,
+  printed by `sync.sh`), and `viz-quality-bar` says what a reader is missing when it is absent.
 
 ### Fixed
 
-- Routing vocabulary now matches the tags critics actually emit; a phantom tag no one ever used is retired.
-- Agents can reliably write their own expertise files regardless of which repo the session was opened from.
+- Routing vocabulary matches the tags critics actually emit; a tag that was documented but never emitted is retired.
+- Agents can write their own expertise files regardless of which repo the session was opened from.
+- A sub-agent's governing skill is read by path at task start, with a short labeled summary as a fallback, for the
+  notebook author, viz critic, and editorial critic. No definition claims a skill loads itself any more, because a
+  sub-agent never loaded one. Instructed reads land about half the time, so this raises the floor rather than
+  guaranteeing arrival.
+- A session's skill list is not fixed at session start. That claim is out of two expertise files; the barrier it
+  described was an unsynced consumer copy.
+- `viz-quality-bar` carries the partition-design rule `viz-critic` was already reviewing against.
+- `viz-quality-bar` and `notebook-author` state one matplotlib customization budget rather than two 10x apart, so a
+  figure can no longer be compliant when written and flagged in review.
+- Corpus greps are scoped to tracked files; `examples/.ipynb_checkpoints/` was roughly doubling every count.
 
 ## 2026.07.03
 
