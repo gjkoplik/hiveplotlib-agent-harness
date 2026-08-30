@@ -37,6 +37,7 @@ API surface reviewed: [<class.method>, <function>, ...]
 Concerns:
   - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<line>
     Suggested change: <one-sentence>
+Benefit-reachability: <clean | findings: [<claimed benefit> - <what a user cannot obtain>, ...]>
 Test-method-coverage audit: <clean | gaps: [...]>
 ```
 
@@ -58,9 +59,16 @@ Read `agent-harness/.claude/expertise/api-critic.md` and the cross-cutting `agen
 1. Read the implemented diff. Identify the user-facing surface.
 2. Read or skim notebooks exercising the surface (or imagine writing one).
 3. Walk the surface as a user. Note friction: missing parameters, surprising defaults, confusing names, missing helpers, leaked lower-level call signatures.
-4. **Test-method-coverage audit.** For each public method this workstream touched, sample `test_<method>_*` tests and verify the method is called in the body. Sample, don't enumerate (qa-engineer's test-name-contract audit is the corpus-wide mechanical backstop). Gaps go under `Test-method-coverage audit: gaps`. Scope is tight to methods this workstream touched.
-5. Tag each concern: `must-fix` / `worth-discussing` / `low-confidence`.
-6. Report. No edits to consumer code.
+4. **Benefit-reachability audit.** For each benefit the workstream's plan claims, take the user's code from the
+   plan's `## API usage examples` "Proposed (planner)" snippets and check that the shipped surface *delivers* it,
+   not merely that the snippet writes. A benefit that is a capability is checked by whether the snippet obtains it
+   at all; a benefit that is a number (memory, speed) is checked by naming the code path the snippet takes and
+   confirming that path is the one the number was measured on. A benefit obtainable only through a class the
+   maintainer treats as retired, or through ceremony no user would perform, is `must-fix`. A claimed benefit with
+   no snippet is `worth-discussing`, not a blocker.
+5. **Test-method-coverage audit.** For each public method this workstream touched, sample `test_<method>_*` tests and verify the method is called in the body. Sample, don't enumerate (qa-engineer's test-name-contract audit is the corpus-wide mechanical backstop). Gaps go under `Test-method-coverage audit: gaps`. Scope is tight to methods this workstream touched.
+6. Tag each concern: `must-fix` / `worth-discussing` / `low-confidence`.
+7. Report. No edits to consumer code.
 
 ## Constraints
 

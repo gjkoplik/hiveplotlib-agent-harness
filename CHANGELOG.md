@@ -92,6 +92,11 @@ gaps left by the recent adversary and research additions.
   for the general figure bar, and `viz-quality-bar`, cut down to hive-plot house style. Both apply to any figure a
   person will look at, not just hive plots. `agent-viz` is an external plugin whose install is manual (two commands,
   printed by `sync.sh`), and `viz-quality-bar` says what a reader is missing when it is absent.
+- `api-critic` and `qa-engineer` now check that a claimed benefit is reachable: the post-impl pass walks whether a
+  user can obtain what a workstream promises, and a recorded performance figure has to name the user-reachable path
+  it came off (`audit.sh` decides when that applies, so an `n/a` can't hide a check nobody ran).
+- The orchestrator's feasibility audit now fires on settings added to an existing object, traced through everything
+  that rebuilds or resets it, so one the next rebuild would silently undo gets caught while it is still a proposal.
 
 ### Fixed
 

@@ -11,7 +11,7 @@ Distributed into the consumer's `.claude/` by `bash sync.sh`. Defaults to syncin
 - **Test name = test body contract.** Shipped artifacts must not carry rationalization prose bridging a substitution against the brief. If an obstacle to the brief surfaces, halt under rule 9.
 - **Scratch artifacts go to `/tmp/`, not the project tree.** See `mental-model` rule 16. The working tree is git-tracked space; even untracked PNG dumps, intermediate data exports, and helper scripts clutter `git status` and risk accidental commits during a `git add .`.
 - **Workstreams touching CI, publishing, or dependency configuration get qa-engineer's security audit; it must not report `n/a` for them** (`n/a` is the honest default only when no security-relevant surface is touched).
-- **Workstreams touching the consumer's library source get qa-engineer's performance check; it must not report `n/a (no executable change)` unless the diff is verifiably docstring/comment-only.**
+- **Workstreams touching the consumer's library source get qa-engineer's performance check; its tool run must not report `n/a (no executable change)` unless the diff is verifiably docstring/comment-only, and any performance figure the workstream records must name the user-reachable code path it was measured on.**
 
 ## Layout
 

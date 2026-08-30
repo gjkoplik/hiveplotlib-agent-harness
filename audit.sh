@@ -295,6 +295,12 @@ if want surface; then
       data_paths=$(match_files '(^|/)datasets?/|loader')
       data_content=$(printf '%s\n' "$added_py" | grep -nE 'pickle\.(load|loads)|\.read_pickle|joblib\.load|urlopen|requests\.(get|post)|urllib|np\.load|np\.fromfile' || true)
       subprocess=$(printf '%s\n' "$added_py" | grep -nE 'subprocess\.|os\.system|shell\s*=\s*True|Popen\(' || true)
+      # Perf figures: added prose lines carrying a measured magnitude or speedup, so a
+      # `figure provenance: n/a` is checkable rather than assumed. Prose-scoped, so this
+      # script's own patterns cannot match themselves.
+      added_prose=$(git -C "$CONSUMER" diff "$BASE" -- '*.md' '*.rst' '*.ipynb' 2>/dev/null; git -C "$CONSUMER" diff --cached "$BASE" -- '*.md' '*.rst' '*.ipynb' 2>/dev/null)
+      added_prose=$(printf '%s\n' "$added_prose" | grep '^+' | grep -v '^+++' || true)
+      perf_figures=$(printf '%s\n' "$added_prose" | grep -nEi '[0-9]+(\.[0-9]+)? ?[gmk]b\b|[0-9]+(\.[0-9]+)? ?(ms|sec|seconds?)\b|[0-9]+(\.[0-9]+)?x (faster|slower|speedup)' || true)
       # Perf: changed .py under a src package tree (qa makes the docstring-only call from the diff).
       libsrc=$(match_files '(^|/)src/.+\.py$')
 
@@ -306,6 +312,7 @@ if want surface; then
       emit "security.data_deser (added calls)" "$data_content"
       emit "security.subprocess (added calls)" "$subprocess"
       emit "perf.library_source" "$libsrc"
+      emit "perf.figure_candidates" "$perf_figures"
 
       sec_fire=""
       [ -n "$ci_config$publishing$dependencies$data_paths$data_content$subprocess" ] && sec_fire=1
@@ -317,7 +324,12 @@ if want surface; then
       if [ -n "$libsrc" ]; then
         echo "=> performance check MUST fire unless the src diff is verifiably docstring/comment-only"
       else
-        echo "=> no library source touched (perf n/a (no executable change) is honest)"
+        echo "=> no library source touched (perf tool-run n/a (no executable change) is honest)"
+      fi
+      if [ -n "$perf_figures" ]; then
+        echo "=> figure provenance MUST fire (a figure provenance n/a here is wrong)"
+      else
+        echo "=> no performance figure recorded (figure provenance n/a is honest)"
       fi
     fi
   fi
