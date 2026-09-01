@@ -10,6 +10,10 @@ This cycle extends the harness beyond building code into also supporting *doing 
 validated research capability that rides the same spine as a code plan, with a focus on keeping a run cheap, staying
 scientifically honest, and durably saving what it finds instead of burning the budget for nothing.
 
+The cycle also puts a **spec** above every code plan: a one-page signed statement of intent that the maintainer reads
+and signs before any plan exists, and that every later stage answers to. Plans, the per-workstream gate, the adversary,
+and qa all now check against the spec, so a change of intent is a visible re-sign rather than a silent drift.
+
 The cycle also adapts ideas from reviewing the harness against
 [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (reviewed at version `0.6.3`, July 2026):
 adversarial-review hardening, a security audit, a pre-plan interview, opt-in auto-dispatch, and changelog discipline.
@@ -63,6 +67,10 @@ gaps left by the recent adversary and research additions.
   user-only is chosen explicitly, and every skill edit is checked against growth.
 - Multi-agent executions now report agents dispatched, peak concurrency, and approximate tokens (basis named, "unknown"
   when unmeasurable), with a plan total at plan end; the weekly dream watches whether the new mechanisms get used.
+- Specs: a one-page intent artifact stating the outcome and the literal call shape a user types, signed by the
+  maintainer before any plan is written; plans serve specs, any later change is a dated re-sign only the maintainer
+  approves, and the per-workstream gate, the adversary, and qa now check the work (claimed at dispatch, shipped at
+  review) against the spec rather than the plan alone.
 
 ### Changed
 
@@ -112,6 +120,11 @@ gaps left by the recent adversary and research additions.
 - `viz-quality-bar` and `notebook-author` state one matplotlib customization budget rather than two 10x apart, so a
   figure can no longer be compliant when written and flagged in review.
 - Corpus greps are scoped to tracked files; `examples/.ipynb_checkpoints/` was roughly doubling every count.
+- `audit.sh` no longer reports `clean` off a sweep that read no files; an empty sweep reports `skipped`. On the
+  harness itself the scaffolding sweep covers `.claude/` and the root markdown, which is what the harness ships, so
+  rule 15 is checked on harness-self work; `plans/`, `expertise/` and `templates/` are excluded as definition sites
+  for the swept strings. The rationalization audit reports `excluded` there, its markers being ordinary English in
+  agent prose.
 
 ## 2026.07.03
 

@@ -21,7 +21,7 @@ Status: clean | propose
 Figures reviewed: [<file>:<cell> or <file>:<line>, ...]
 Polish budget: [showcase | instructional | HPM] for each figure
 Concerns:
-  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<location>
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> (at <file>:<location>)
 ```
 
 When rule 9 fires, output the halt template.

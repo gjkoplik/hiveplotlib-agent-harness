@@ -12,11 +12,11 @@ Shared knowledge every agent in the hiveplotlib harness loads. Source of truth f
 
 ### 1. Plan before execute
 
-Non-trivial work needs a plan. Hiveplotlib (and wiki-structure) plans live at `wiki/wiki/plans/<topic>.md` in the wiki submodule. Harness-self plans live at `agent-harness/.claude/plans/<topic>.md` (gitignored). Template: `agent-harness/.claude/templates/plan-template.md`. The Orchestrator owns plan production; specialists execute against accepted plans. Trivial tasks (one-line fixes, docstring tweaks) skip the plan.
+Non-trivial work needs a plan, and a code plan starts from a **signed spec**: a one-page intent artifact (outcome statement plus the literal call shape) the maintainer signs before the Orchestrator writes the plan, which then serves it. Spec template: `agent-harness/.claude/templates/spec-template.md`; hiveplotlib and wiki-structure specs live at `wiki/wiki/specs/<topic>.md`, harness-self specs at `agent-harness/.claude/specs/<topic>.md`. A plan no spec governs says so on its `Spec:` line and proceeds; there is no bypass field, and a plan predating the spec convention simply has none, so any gate that finds no spec says so and moves on. Research runs have no spec. Hiveplotlib (and wiki-structure) plans live at `wiki/wiki/plans/<topic>.md` in the wiki submodule. Harness-self plans live at `agent-harness/.claude/plans/<topic>.md` (gitignored). Template: `agent-harness/.claude/templates/plan-template.md`. The Orchestrator owns plan production; specialists execute against accepted plans. Trivial tasks (one-line fixes, docstring tweaks) skip the plan.
 
 New plans always start in the top-level `plans/` directory. Shipped wiki plans move to `wiki/wiki/plans/archived/<topic>.md` (see rule 10); listing *active* plans means the top-level glob `wiki/wiki/plans/*.md`, which excludes `archived/`. When resolving a referenced plan by name, check `archived/` as a fallback. Harness-self plans stay flat (no `archived/`).
 
-Plans that add or modify user-facing API include an "API usage examples" section with runnable snippets, reviewed by the API Critic at planning time.
+Plans that add or modify user-facing API include an "API usage examples" section with runnable snippets, transcribed from the signed spec's call shape; the API Critic reviews that call shape at spec stage, and reviews the plan's snippets directly where no spec governs the plan.
 
 ### 2. Replace-and-sweep is part of the change
 
@@ -143,12 +143,12 @@ Binds the Orchestrator (plans, amendments) and Research Liaison (ADRs) at author
 
 ### 18. Cold-context dissent is mandatory on every plan
 
-Every plan that exists (non-trivial, per rule 1) gets the `adversary`: a cold pre-grill challenge before grill-me, and a post-impl attack on each shipped workstream. The adversary is a **sub-agent for independence**; grill-me runs inline in the agreeable dispatching session that produced the work and cannot supply the cold read. The full sequence: cold pre-grill challenge (rubric-free) → grill (with its failure-mode wave) → conditional post-grill rubric-check → dispatch → post-impl per workstream.
+Every plan that exists (non-trivial, per rule 1) gets the `adversary`: one planning pass per layer (the spec before the maintainer signs it, the plan before grill-me), and a post-impl attack on each shipped workstream. The adversary is a **sub-agent for independence**; grill-me runs inline in the agreeable dispatching session that produced the work and cannot supply the cold read. The full sequence: failure-mode wave into the drafted spec → spec-stage adversary pass → maintainer signs → plan written → plan-stage adversary pass → grill → dispatch → post-impl per workstream.
 
 Why mandatory when grill-me is optional: the adversary is the harness being *intrinsically* self-critical on every plan, independent of whether the maintainer chooses to be in the loop; grill-me is the maintainer's *optional* way to put themselves in the loop. Different purposes justify the cheaper mechanism being optional and the costlier one mandatory.
 
-- **Tiered disposition.** The planning challenge is the maintainer's to fight in the grill (resulting changes follow "Route emergent work back through the Orchestrator" like grill changes do); the orchestrator never silently disposes it. An adversary-self-tagged `existential-must-fix` (the could-this-not-exist angle landing as "this plan should not exist") surfaces *before* grill-me as a "reconsider before grilling" checkpoint, raised by the dispatching session, not the plan-authoring orchestrator. Only a **post-impl** `must-fix` / `worth-discussing` routes to amend-plan like the other critics (under a plan's opt-in auto-dispatch mode, a `worth-discussing` finding with no downstream bearing batches to plan-end qa instead, per rule 14), and the mode joins the critic-completeness gate (an unfilled "Adversary post-impl" section is a `must-fix`).
-- **Planning mode is rubric-aware, not rubric-required.** The cold pre-grill pass works three mandated angles (premise, approach, size-and-maintenance / could-this-not-exist) and does not depend on the plan's "Failure modes" rubric, which the grill names *after* it. The post-grill rubric-check is the same mode's second invocation: a delta-check against the newly-named modes only, skipped when the cold pass already covered them.
+- **Tiered disposition.** The plan-stage challenge is the maintainer's to fight in the grill (resulting changes follow "Route emergent work back through the Orchestrator" like grill changes do); the spec-stage challenge is weighed at the sign-off gate, where accepted items are folded into the draft by the drafting agent before the signature; the orchestrator never silently disposes either. An adversary-self-tagged `existential-must-fix` (the could-this-not-exist angle landing as "this plan should not exist") surfaces a checkpoint raised by the dispatching session, not the plan-authoring orchestrator: "reconsider before signing" at spec stage, "reconsider before grilling" at plan stage. Only a **post-impl** `must-fix` / `worth-discussing` routes to amend-plan like the other critics (under a plan's opt-in auto-dispatch mode, a `worth-discussing` finding with no downstream bearing batches to plan-end qa instead, per rule 14), and the mode joins the critic-completeness gate (an unfilled "Adversary post-impl" section is a `must-fix`).
+- **Both planning passes are rubric-aware.** The failure-mode wave runs at spec stage, so the rubric normally exists before either pass opens anything. The three mandated angles split by target: the spec-stage pass works premise and size-and-maintenance / could-this-not-exist; the plan-stage pass works approach and size-and-maintenance against the workstream set. There is no conditional second invocation. The rubric-free cases (a research plan, a plan no spec governs, a signed spec whose failure-mode wave was knowingly skipped) get one pass per layer they have, working all three angles there.
 - **Phase-aware authority.** On code the adversary subtracts (push toward less surface). In research it is a non-killing dissenting voice during divergence and the validation gate at convergence. Plan-section-as-memory carries between modes, blind-first: the post-impl context attacks the diff against the done-whens and rubric first, and only then reads its own challenge and the disposition to reconcile; no live continuity is designed.
 
 ### 19. Point, don't describe
@@ -185,8 +185,8 @@ Applies to text the reader sees (notebook markdown, README/docs prose, PR descri
 
 ## Pointers
 
-- `hiveplotlib/CLAUDE.md` — architecture, commands, entry points
-- `<harness>/.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md` — tutorial style
-- `<harness>/.claude/skills/hiveplotlib-gallery-notebook/SKILL.md` — gallery style
-- `wiki/wiki/` — research, prior thinking, ADRs at `wiki/wiki/adr/`
-- `<harness>/.claude/templates/plan-template.md` — the plan template
+- `hiveplotlib/CLAUDE.md`: architecture, commands, entry points
+- `<harness>/.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md`: tutorial style
+- `<harness>/.claude/skills/hiveplotlib-gallery-notebook/SKILL.md`: gallery style
+- `wiki/wiki/`: research, prior thinking, ADRs at `wiki/wiki/adr/`
+- `<harness>/.claude/templates/plan-template.md`: the plan template

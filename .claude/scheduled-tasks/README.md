@@ -47,5 +47,5 @@ When porting the whole setup to a new machine, re-register each task once with `
 
 Both run weekly in the middle of the night, Saturday ~3am local (`7 3 * * 6`), timed to land before the weekly token reset.
 
-- **`harness-reflection`** — local "dream": mines the week's hiveplotlib session transcripts for recurring mistakes and updates the harness gotchas (the per-role `expertise/<agent>.md` files by preference, the cross-cutting `expertise/personal-gotchas.md` as a fallback) plus a memory-consolidation pass. Writes a digest to `~/.claude/reflections/`.
-- **`wiki-update`** — review of the project's changes, updates the research wiki, writes a digest to `~/.claude/reflections/`.
+- **`harness-reflection`**: local "dream": mines the week's hiveplotlib session transcripts for recurring mistakes and updates the harness gotchas (the per-role `expertise/<agent>.md` files by preference, the cross-cutting `expertise/personal-gotchas.md` as a fallback) plus a memory-consolidation pass. Writes a digest to `~/.claude/reflections/`.
+- **`wiki-update`**: review of the project's changes, updates the research wiki, writes a digest to `~/.claude/reflections/`.

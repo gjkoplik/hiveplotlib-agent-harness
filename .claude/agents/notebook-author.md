@@ -48,7 +48,7 @@ Read `agent-harness/.claude/expertise/notebook-author.md` and the cross-cutting 
 
 - Halt under rule 9 on state mismatch. No destructive ops.
 - Don't invoke other agents.
-- Don't edit `docs/source/notebooks/*.ipynb` or `docs/source/gallery_examples/*.ipynb` — auto-generated, overwritten by `make docs`.
+- Don't edit `docs/source/notebooks/*.ipynb` or `docs/source/gallery_examples/*.ipynb`: auto-generated, overwritten by `make docs`.
 - Don't apply showcase polish to instructional notebooks. Budget per the skill: past ~10 lines of matplotlib on a non-showcase figure, ask whether it earns its place; past ~100 lines, stop and reclassify the figure.
 - **Demo the user-intended API for the data the user has.** NetworkX users → `HivePlot(graph=...)`. Raw nodes/edges users → `HivePlot(nodes=..., edges=...)`. Don't reach to lower-level alternatives in tutorials just because they exist.
 - **If the user-intended path needs niche data**, create a toy in `hiveplotlib.datasets` (e.g., `hiveplotlib.datasets.example_<topic>`). Don't embed contrived data inline.

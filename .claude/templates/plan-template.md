@@ -13,7 +13,7 @@ mental-model rule 17 (plans shape).
 
 One paragraph. What user-visible value lands when this ships?
 
-Brief-mode gate: <ran (interview record folded into Goal/non-goals above) | knowingly skipped>. One line, written at plan creation from the dispatch brief, so the gate outcome survives the conversation transcript.
+Spec: `<path>` (signed YYYY-MM-DD), or `none` when no spec governs this plan. Written at plan creation by the orchestrator, which also transcribes the spec's call shape and failure-mode rubric into the sections below. The spec stays canonical; those copies exist so the agents reading this plan do not have to open it.
 
 ## Alignment (grill)
 
@@ -39,13 +39,17 @@ Captures are record-only; resulting plan changes route to amend-plan. The `Deliv
 
 ## Failure modes
 
-The ways this work could be hollow, wrong, or fake even if every test passes (a feature no user needs, a default that silently corrupts a common case, a result that is an artifact of how it was measured). Seeded by grill-me's failure-mode wave (the maintainer names them, in their words), so the rubric is the maintainer's standard, not the model's. This rubric is **living**: seeded here at planning, appended by implementers when they hit a weeds-level mode mid-task, and consumed by the adversary (its post-grill rubric-check maps the plan against these modes; its post-impl pass attacks the shipped artifact against them).
+The ways this work could be hollow, wrong, or fake even if every test passes (a feature no user needs, a default that silently corrupts a common case, a result that is an artifact of how it was measured). The **top tier is transcribed by the orchestrator from the signed spec**, where grill-me's failure-mode wave named the modes in the maintainer's own words before the signature, so the rubric is the maintainer's standard and not the model's; the copy is one-directional and the spec stays canonical. Beneath it sits the **plan-local implementer tier**: weeds-level modes an implementer hits mid-task that no planner could have foreseen, appended here and nowhere else. That is what makes the rubric **living**, and the adversary's post-impl pass attacks the shipped artifact against both tiers.
 
-Until the wave runs:
+Until it is named:
 
 ```
-Not yet named — grill-me's failure-mode wave populates this. Each mode one line,
-in the maintainer's words.
+Not yet named. Only two branches reach this state, since a spec-governed plan whose
+wave ran has the top tier transcribed at plan creation. Where that spec's
+failure-mode wave was knowingly skipped, name that here in one line. Where no spec
+governs this plan, no wave runs for it at any stage, so the top tier stays empty by
+design; say so in one line. Implementers append the weeds-level tier beneath either
+case as they hit one.
 ```
 
 Once named:
@@ -55,13 +59,13 @@ Once named:
 - ...
 ```
 
-If the plan is trivial enough not to warrant a grill, state "Not warranted: <one-line why>" and skip (the same call as the grill itself).
+An empty section and an absent rubric are different things, and the adversary reads the difference, so never leave this blank: a blank one reads as an oversight, while a named case reads as the decided cost it is. On a plan too trivial for a wave, state "Not warranted: <one-line why>".
 
 ## Prior ADRs / design docs
 
 Populated by research-liaison at planning start. List relevant entries:
 
-- `wiki/wiki/adr/NNNN-topic.md` — one-line on why it's relevant.
+- `wiki/wiki/adr/NNNN-topic.md`: one-line on why it's relevant.
 - ...
 
 Or "None — net new design space" / "None — out of scope for ADR review."
@@ -92,6 +96,8 @@ Names settled here are the shared vocabulary later sessions must reuse. Internal
 
 Required when this work adds or modifies user-facing API.
 
+The snippets below are transcribed by the orchestrator from the signed spec's call shape, every fence with its `Path:` line attached, so each claimed benefit's reachability is checkable without opening the spec. The spec stays canonical: a snippet here that contradicts it is a re-sign trigger, not a plan-local override. Where no spec governs this plan, the planner authors them directly.
+
 ### Proposed (from planner / Orchestrator)
 
 Each example uses `# Example N: <context>` / `# Example data:` / `# Call site:`. Must be runnable Python with no placeholders. Ellipses, `g = nx.Graph(...)` without edges, "imagine the user has..." fail.
@@ -109,7 +115,13 @@ Carve-out for ecosystem inputs: when the input is user-constructed (an `nx.Graph
 
 ### API Critic's take (planning mode)
 
-`Agreed`, or preferred snippets with one-sentence reasons:
+api-critic's planning mode walks the **signed spec's call shape**, at spec stage and before the signature, so on a spec-governed plan this subsection is a pointer rather than a review:
+
+```
+Ran at spec stage YYYY-MM-DD against <spec path>; surfaced at the sign-off gate.
+```
+
+Where no spec governs this plan, this is the live destination and api-critic fills it against the snippets above. `Agreed`, or preferred snippets with one-sentence reasons:
 
 ```python
 # Critic's preferred form for Example 1: <reason for the difference>
@@ -120,7 +132,7 @@ Note recurring patterns across snippets if applicable.
 
 ### API Critic — post-implementation review
 
-Filled by api-critic after each workstream that lands user-facing API code (including mechanical propagations to sibling classes — see mental-model rule 7). Until filled:
+Filled by api-critic after each workstream that lands user-facing API code (including mechanical propagations to sibling classes — see mental-model rule 7). Two audits ride the block: **benefit-reachability**, whether each benefit this workstream claims is obtainable from the shipped surface through the call a user actually types, and **test-method coverage**, whether the `test_<method>_*` tests for the methods it touched call the method they name. Until filled:
 
 ```
 Pending — invoke api-critic in post-implementation mode after Workstream <X> ships.
@@ -132,8 +144,10 @@ Once filled:
 Status: clean | propose
 API surface reviewed: [<class.method>, <function>, ...]
 Concerns:
-  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<line>
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> (at <file>:<line>)
     Suggested change: <one-sentence>
+Benefit-reachability: <clean | findings: [<claimed benefit> - <what a user cannot obtain>, ...]>
+Test-method-coverage audit: <clean | gaps: [...]>
 ```
 
 If no user-facing API change, state "No API surface change" and skip all three subsections.
@@ -152,7 +166,7 @@ Once filled:
 Status: clean | propose
 Notebook reviewed: <file>, genre (gallery | tutorial), class documented
 Concerns:
-  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<cell>
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> (at <file>:<cell>)
 ```
 
 If the plan touches no notebooks, state "No notebook change" and skip this section.
@@ -172,37 +186,37 @@ Status: clean | propose
 Figures reviewed: [<file>:<cell> or <file>:<line>, ...]
 Polish budget: [showcase | instructional | HPM] per figure
 Concerns:
-  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<location>
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> (at <file>:<location>)
 ```
 
 If the plan touches no figures, state "No figure change" and skip this section.
 
 ## Adversary review
 
-Cold-context dissent against the plan and the artifact it ships (the structural fix for model sycophancy). Both subsections are **mandatory on every plan** (rides rule 1: a plan exists iff the work is non-trivial, which is itself the signal it deserves cold criticism). The challenge is written by the adversary in planning mode, before grill-me; the post-impl section after the artifact ships. See `agent-harness/.claude/agents/adversary.md`.
+Cold-context dissent against the plan and the artifact it ships (the structural fix for model sycophancy). Both subsections are **mandatory on every plan** (rides rule 1: a plan exists iff the work is non-trivial, which is itself the signal it deserves cold criticism). Planning mode runs **once per layer**: the spec-stage pass attacks the drafted spec before the maintainer signs it and **reports to the dispatching session** for the sign-off gate rather than writing here, since no agent edits a spec; the plan-stage pass attacks this plan before grill-me and writes `### Adversary's challenge`. The post-impl subsection is filled after the artifact ships. See `agent-harness/.claude/agents/adversary.md`.
 
 ### Adversary's challenge (planning mode)
 
-Written by the adversary on a cold read of this plan, before grill-me, working the three mandated angles (premise, approach, size-and-maintenance / could-this-not-exist). A light conditional post-grill rubric-check may append to it after the failure-mode wave names the modes. Until filled:
+Written by the adversary's **plan-stage** pass on a cold read of this plan, before grill-me, working approach and size-and-maintenance against the workstream set. Premise and could-this-not-exist were worked at spec stage against the signed outcome statement, and that pass reports rather than writing here. Where no spec governs this plan, and on a research plan, which has none, the plan-stage pass is the only one and works all three angles itself. Until filled:
 
 ```
-Pending — invoke the adversary in planning mode (cold, before grill-me).
+Pending — invoke the adversary in planning mode (plan stage, cold, before grill-me).
 ```
 
 Once filled:
 
 ```
-Status: challenge (<n> items) | clean | clean — no new modes to check
-Plan reviewed: <plan path> (cold | cold, post-grill rubric-check)
+Status: challenge (<n> items) | clean
+Plan reviewed: <plan path> (plan stage, cold)
 Items:
-  - [must-fix | worth-discussing | low-confidence | existential-must-fix] <one-line challenge> — at <plan section>
-    Rubric: <"Failure modes" entry it maps to | "no entry — flagging anyway" | "no rubric yet — pre-grill">
+  - [must-fix | worth-discussing | low-confidence | existential-must-fix] <one-line challenge> (at <plan section>)
+    Rubric: <"Failure modes" entry it maps to | "no entry — flagging anyway" | "no rubric (<research plan | no spec governs this plan | failure-mode wave knowingly skipped>)">
     Push: <the change or the question the maintainer must answer>
 ```
 
 ### Adversary post-impl
 
-Filled by the adversary after each workstream ships: a fresh context attacks the shipped artifact blind first, against the workstream's done-whens and the living `## Failure modes` rubric, then reads its own planning challenge plus the orchestrator's disposition (plan-section-as-memory) and reconciles, checking whether each disposition held or scope quietly ballooned. Until filled:
+Filled by the adversary after each workstream ships: a fresh context attacks the shipped artifact blind first, against the workstream's done-whens and the living `## Failure modes` rubric, then reads its own planning challenge, the orchestrator's disposition of it (plan-section-as-memory), the workstream's Implementation log entry and the signed spec, and reconciles. It checks whether each disposition held or scope quietly ballooned, and re-grades the workstream's recorded spec-gate call. Where no spec governs this plan, that re-grade is out of scope and says so. Until filled:
 
 ```
 Pending — invoke the adversary in post-impl mode after Workstream <X> ships.
@@ -214,8 +228,9 @@ Once filled:
 Status: clean | propose
 Artifact reviewed: <workstream / diff>
 Dispositions held: <yes | scope ballooned: ...>
+Spec-gate re-grade: <held | mismatch: ... | not recorded | n/a (no spec governs this plan)>
 Concerns:
-  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<line>
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> (at <file>:<line>)
     Rubric: <"Failure modes" entry, or "no entry">
 ```
 
@@ -225,7 +240,7 @@ Coherent, dispatchable chunks with checkable done-when criteria. Don't pre-assig
 
 Multiple workstreams may dispatch concurrently. In-tree state from a co-running workstream is expected, not broken. When the state genuinely doesn't match the brief, halt under rule 9.
 
-**Section ownership (this file has many writers).** Each agent writes only its own named section(s): critics their review blocks, the adversary its two subsections, implementers their Implementation log line and any `## Failure modes` append, the orchestrator the rest (`## Not yet plannable` included). `## Maintainer questionnaire` items are appendable by any implementing agent with Edit; editorial-critic and viz-critic, which carry no Edit, record items through the same recording hop their review blocks already use; transcribing the maintainer's answer on close belongs to the agent running the amendment. Never rewrite another agent's section. The dispatching session avoids concurrently dispatching two agents that write the same section, and serializes Implementation-log appends when workstreams run concurrently.
+**Section ownership (this file has many writers).** Each agent writes only its own named section(s): critics their review blocks, the adversary its two subsections, implementers their Implementation log line and any `## Failure modes` implementer-tier append, the orchestrator the rest (`## Not yet plannable` included, and the spec-derived lines: `## Goal`'s `Spec:` line, the transcribed call shape under `## API usage examples`, and the transcribed top tier of `## Failure modes`). `## Maintainer questionnaire` items are appendable by any implementing agent with Edit; editorial-critic and viz-critic, which carry no Edit, record items through the same recording hop their review blocks already use; transcribing the maintainer's answer on close belongs to the agent running the amendment. Never rewrite another agent's section. The dispatching session avoids concurrently dispatching two agents that write the same section, and serializes Implementation-log appends when workstreams run concurrently.
 
 ### Workstream A: <name>
 
@@ -303,9 +318,9 @@ Optional. Patterns the replace-and-sweep audit should leave alone:
 
 ## Implementation log
 
-Append-only. After each workstream completes, one line in the same turn:
+Append-only. After each workstream completes, one line in the same turn: what shipped, the workstream's **consumption figures** (the plan-end aggregate reads them from here rather than from reconstructed chat), and the **pre-dispatch spec-gate post** with its match call and a one-line rationale (the post-impl spec-gate re-grade reads that call off this entry, and prints `not recorded` when it is absent). Where no spec governs this plan, that last clause reads `n/a (no spec governs this plan)`.
 
-- YYYY-MM-DD: Workstream A complete. <one-line summary>
+- YYYY-MM-DD: Workstream A complete. <one-line summary>. Consumption: <n> agents, peak concurrency <n>, token total <n | unknown (<basis>)>. Spec gate: <what the post claimed a user types and gets>; <match | mismatch: ...>; <rationale>.
 - YYYY-MM-DD: ...
 
 ---
@@ -314,7 +329,7 @@ Append-only. After each workstream completes, one line in the same turn:
 
 A research task (research **for** a consumer, landing in that consumer's durable records) uses this shape instead of the code-plan structure above. It is **deliberately light**: no workstream-style done-when ceremony, no replace-and-sweep / naming / API-usage audits. That lightness is a design choice, not an omission. Workstream-style done-whens suit code; imposed on research they **strangle the divergence** the run needs to explore. A future editor should not "fix" this by adding ceremony. Conventions (shallow-panel dispatch, the two standing lenses, bounds, grounding, durable landing) live in the `research-track` skill, not here; this shape carries only the per-plan fill-in.
 
-The mandatory-adversary sections (`## Adversary review`, both subsections) and grill-me's failure-mode wave (`## Failure modes`, its research branch) apply to this shape too. The shared spine covers research; they are not code-plan-only.
+The mandatory-adversary sections (`## Adversary review`, both subsections) and grill-me's failure-mode wave (its research branch, still post-plan, landing in `## Failure-mode rubric` below) apply to this shape too. The shared spine covers research; they are not code-plan-only.
 
 ## Question
 

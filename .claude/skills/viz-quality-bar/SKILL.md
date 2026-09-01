@@ -124,9 +124,9 @@ Descriptive appendix; house style. When in doubt, do what the corpus does.
 
 ## Pointers
 
-- `<harness>/.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md` — tutorial-specific viz
-- `<harness>/.claude/skills/hiveplotlib-gallery-notebook/SKILL.md` — gallery-specific viz
-- `examples/edge_kwarg_hierarchy.ipynb` — edge styling reference
-- `examples/karate_club.ipynb` — storytelling-aligned tutorial reference
-- `examples/comparing_network_subgroups.ipynb` — showcase polish at scale
-- `examples/bitcoin_user_ratings.ipynb` — HPM small-multiples + datashader pinning
+- `<harness>/.claude/skills/hiveplotlib-tutorial-notebook/SKILL.md`: tutorial-specific viz
+- `<harness>/.claude/skills/hiveplotlib-gallery-notebook/SKILL.md`: gallery-specific viz
+- `examples/edge_kwarg_hierarchy.ipynb`: edge styling reference
+- `examples/karate_club.ipynb`: storytelling-aligned tutorial reference
+- `examples/comparing_network_subgroups.ipynb`: showcase polish at scale
+- `examples/bitcoin_user_ratings.ipynb`: HPM small-multiples + datashader pinning

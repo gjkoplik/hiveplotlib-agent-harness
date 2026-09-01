@@ -80,9 +80,9 @@ Half of blind-usage failures are *working code that makes a bad plot*. The libra
 
 A single hive plot targets **two or three axes**. Putting a 4+-group partition on one `HivePlot` silently hides most edges (edges only draw between neighboring axes), so when a partition has more than three groups the recommended starting point is a `HivePlotMatrix`. A single hive plot with more than three axes is still legitimate when you specifically want it (it only works when nodes can be ordered so edges connect neighboring axes; see the *Hive Plots with More Than Three Groups* notebook), but that is a deliberate decision, not the reflexive reach. Pick the matrix constructor by intent:
 
-- `HivePlotMatrix.from_partition(...)` — one partition variable with many groups; one cell per group. This is the canonical "I have more than three groups" path.
-- `HivePlotMatrix.from_tags(...)` — one panel per edge type / relationship / predicate (one tagged edge set per cell).
-- `HivePlotMatrix.from_variable_sweep(...)` — sweep a sorting variable across cells.
+- `HivePlotMatrix.from_partition(...)`: one partition variable with many groups; one cell per group. This is the canonical "I have more than three groups" path.
+- `HivePlotMatrix.from_tags(...)`: one panel per edge type / relationship / predicate (one tagged edge set per cell).
+- `HivePlotMatrix.from_variable_sweep(...)`: sweep a sorting variable across cells.
 
 Do not write a helper that returns a `HivePlot` or a `HivePlotMatrix` depending on group count; they are different objects with different call sites.
 
@@ -133,8 +133,8 @@ Bulk styling follows a fixed precedence (lowest → highest priority): `all_edge
 
 The two `add_edge_kwargs` methods are **not** interchangeable across classes:
 
-- `P2CP.add_edge_kwargs(tag=..., **edge_kwargs)` — per-tag styling by tag alone.
-- `HivePlot.add_edge_kwargs(axis_id_1, axis_id_2, tag=..., **edge_kwargs)` — styles a *specific axis pair* and requires both axis IDs. It is fine-grained, not the "style all edges" call. For all-edge styling on a `HivePlot`, use the hierarchy kwargs above.
+- `P2CP.add_edge_kwargs(tag=..., **edge_kwargs)`: per-tag styling by tag alone.
+- `HivePlot.add_edge_kwargs(axis_id_1, axis_id_2, tag=..., **edge_kwargs)`: styles a *specific axis pair* and requires both axis IDs. It is fine-grained, not the "style all edges" call. For all-edge styling on a `HivePlot`, use the hierarchy kwargs above.
 
 Don't invent top-level `edge_color=` / `edge_style=` kwargs; they don't exist.
 

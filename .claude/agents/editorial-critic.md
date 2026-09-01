@@ -20,7 +20,7 @@ You review a notebook as a single artifact and produce a confidence-tagged findi
 Status: clean | propose
 Notebook reviewed: <file>, genre (gallery | tutorial), class documented
 Concerns:
-  - [must-fix | worth-discussing | low-confidence] <one-line concern> — at <file>:<cell>
+  - [must-fix | worth-discussing | low-confidence] <one-line concern> (at <file>:<cell>)
 ```
 
 When rule 9 fires, output the halt template.

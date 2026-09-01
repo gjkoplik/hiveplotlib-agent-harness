@@ -15,8 +15,9 @@
 # --base <ref> sets the diff base for the `surface` audit (default HEAD, i.e.
 # staged + unstaged changes vs the last commit).
 # Output: one "== <audit> ==" block per audit, each "clean", "skipped (...)",
-# or file:line hits. Exit code is always 0 (findings are qa's to interpret,
-# not a build failure); a genuinely broken run prints "ERROR:" lines.
+# "excluded (...)" (deliberately not run for this consumer), or file:line hits.
+# Exit code is always 0 (findings are qa's to interpret, not a build failure);
+# a genuinely broken run prints "ERROR:" lines.
 #
 # The `surface` audit classifies the diff into security-relevant and
 # performance-relevant buckets so qa's "must this audit fire?" decision is
@@ -51,25 +52,54 @@ want() {
   return 1
 }
 
-# Directories swept by the grep-based audits, when they exist. Auto-generated
-# notebook copies are excluded per the qa spec.
-SWEEP_DIRS=()
-for d in src tests examples docs; do
-  [ -d "$CONSUMER/$d" ] && SWEEP_DIRS+=("$CONSUMER/$d")
-done
-
 GREP_EXCLUDES=(--exclude-dir=notebooks --exclude-dir=gallery_examples --exclude-dir=.ipynb_checkpoints --exclude-dir=__pycache__)
+
+# The harness repo is itself a consumer, and what it ships is markdown, not a
+# Python package. Detect it by layout, so the answer survives a checkout at any
+# path: sync.sh and .claude/agents/ at the root, and no Python project file.
+harness_self() {
+  [ -f "$CONSUMER/sync.sh" ] && [ -d "$CONSUMER/.claude/agents" ] && [ ! -f "$CONSUMER/pyproject.toml" ]
+}
+
+# Paths swept by the grep-based audits, when they exist. Auto-generated notebook
+# copies are excluded per the qa spec.
+SWEEP_TARGETS=()
+if harness_self; then
+  # The harness's shipped artifacts are .claude/ plus the root markdown. Three
+  # exclusions: .claude/plans/ is gitignored working scratch holding append-only
+  # adversary and grill records; the expertise files quote the swept patterns
+  # on purpose, as records of what went wrong; and a template is a scaffolding
+  # generator, so its own workstream headings and log-format examples are
+  # definition sites by construction, not survivors (same argument as the
+  # expertise exclusion). .claude/specs/ is deliberately NOT excluded, however
+  # much it looks symmetric with plans/: plans/ is working scratch, while a spec
+  # is signed and maintainer-facing, the most reader-facing artifact the harness
+  # has, so a spec carrying plan scaffolding is exactly the defect rule 15
+  # exists to catch.
+  SWEEP_TARGETS+=("$CONSUMER/.claude")
+  GREP_EXCLUDES+=(--exclude-dir=plans --exclude-dir=expertise --exclude-dir=templates)
+  for f in CLAUDE.md README.md CHANGELOG.md diagrams.md; do
+    [ -f "$CONSUMER/$f" ] && SWEEP_TARGETS+=("$CONSUMER/$f")
+  done
+else
+  for d in src tests examples docs; do
+    [ -d "$CONSUMER/$d" ] && SWEEP_TARGETS+=("$CONSUMER/$d")
+  done
+fi
 
 sweep_grep() {
   # $1: extended regex. Prints file:line hits; silent when none.
-  [ ${#SWEEP_DIRS[@]} -eq 0 ] && return 0
-  grep -rnE "${GREP_EXCLUDES[@]}" -e "$1" "${SWEEP_DIRS[@]}" 2>/dev/null || true
+  [ ${#SWEEP_TARGETS[@]} -eq 0 ] && return 0
+  grep -rnE "${GREP_EXCLUDES[@]}" -e "$1" "${SWEEP_TARGETS[@]}" 2>/dev/null || true
 }
 
-report() {
-  # $1: audit name, $2: hits (possibly empty)
+report_sweep() {
+  # $1: audit name, $2: hits (possibly empty). A sweep with nothing to read
+  # reports "skipped", never "clean": a check that read zero files has not passed.
   echo "== $1 =="
-  if [ -z "$2" ]; then
+  if [ ${#SWEEP_TARGETS[@]} -eq 0 ]; then
+    echo "skipped (no sweep dirs)"
+  elif [ -z "$2" ]; then
     echo "clean"
   else
     echo "$2"
@@ -80,22 +110,34 @@ report() {
 
 if want scaffolding; then
   hits=$(sweep_grep 'Workstream [A-Z]|Phase [0-9]|per Workstream|per Phase')
-  report scaffolding "$hits"
+  report_sweep scaffolding "$hits"
 fi
 
 # --- Rationalization-marker audit -------------------------------------------
 
 if want rationalization; then
-  regular=$(sweep_grep 'rather than|instead of|to save|to keep cheap|would be expensive|more efficient than|as a compromise|for efficiency')
-  high_fp=$(sweep_grep 'to avoid|to simplify|for simplicity')
-  hits=""
-  [ -n "$regular" ] && hits=$(echo "$regular" | sed 's/^/[marker] /')
-  if [ -n "$high_fp" ]; then
-    tagged=$(echo "$high_fp" | sed 's/^/[high-fp] /')
-    if [ -n "$hits" ]; then hits="$hits
+  if harness_self; then
+    # Deliberately not run on the harness's own prose, and not an oversight. The
+    # markers catch a substitution rationalized in a code comment; in agent and
+    # skill definitions "rather than" and "instead of" are ordinary English, and a
+    # hand-run over that corpus returned ten hits, all of them legitimate prose. A
+    # gate that fires every time teaches its reader to skip it. The scaffolding
+    # audit is the opposite case and does run here: "Workstream A" is never
+    # legitimate in shipped prose.
+    echo "== rationalization =="
+    echo "excluded (harness-self: markers are ordinary prose in agent definitions, not a substitution signal)"
+  else
+    regular=$(sweep_grep 'rather than|instead of|to save|to keep cheap|would be expensive|more efficient than|as a compromise|for efficiency')
+    high_fp=$(sweep_grep 'to avoid|to simplify|for simplicity')
+    hits=""
+    [ -n "$regular" ] && hits=$(echo "$regular" | sed 's/^/[marker] /')
+    if [ -n "$high_fp" ]; then
+      tagged=$(echo "$high_fp" | sed 's/^/[high-fp] /')
+      if [ -n "$hits" ]; then hits="$hits
 $tagged"; else hits="$tagged"; fi
+    fi
+    report_sweep rationalization "$hits"
   fi
-  report rationalization "$hits"
 fi
 
 # --- Test-name-contract audit (mental-model rule 9 backstop) -----------------

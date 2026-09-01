@@ -6,22 +6,29 @@ Detailed records of how and when the dispatching session invokes each agent and 
 
 ```mermaid
 flowchart TD
-    brief([Maintainer brief, non-trivial]) --> gate{"Brief-mode gate:<br/>brief underdetermines<br/>plan-shaping choices?"}
+    brief([Maintainer brief, non-trivial]) --> gate{"Brief-mode gate:<br/>brief underdetermines<br/>outcome or call shape?"}
     gate -- "yes (or maintainer invokes)" --> grillbrief["grill-me: brief mode<br/>(extraction interview,<br/>one question at a time)"]
-    gate -- "knowingly skipped<br/>(recorded in plan Goal)" --> liaison
+    gate -- "knowingly skipped<br/>(recorded on the spec's<br/>intent-extraction line)" --> liaison
     grillbrief --> liaison["research-liaison: pre-task<br/>(search wiki for prior<br/>ADRs / design docs)"]
-    liaison --> orch["orchestrator: initial-plan<br/>writes wiki/wiki/plans/&lt;topic&gt;.md"]
-    orch --> advpre["adversary: planning mode<br/>cold pre-grill challenge<br/>(did-not-author read)"]
+    liaison --> spec["Spec drafted (agent-transcribed)<br/>wiki/wiki/specs/&lt;topic&gt;.md"]
+    spec --> wave["grill-me: failure-mode wave<br/>(maintainer names the modes<br/>into the spec)"]
+    wave --> advspec["adversary: spec-stage pass<br/>(premise + could-this-not-exist,<br/>rubric-aware)"]
+    advspec --> apicrit["api-critic: planning mode<br/>(walks the spec's call shape,<br/>Path: line per fence)"]
+    apicrit --> existspec{"self-tagged<br/>existential-must-fix?"}
+    existspec -- yes --> checkpointspec["Dispatching session surfaces<br/>reconsider-before-signing<br/>checkpoint"]
+    checkpointspec -- abort --> deadspec([Spec abandoned])
+    checkpointspec -- continue --> signoff
+    existspec -- no --> signoff["Sign-off gate: maintainer reads<br/>spec + both challenges,<br/>signs or amends (no agent signs)"]
+    signoff --> orch["orchestrator: initial-plan<br/>(signed spec as input)<br/>writes wiki/wiki/plans/&lt;topic&gt;.md"]
+    orch --> advpre["adversary: plan-stage pass<br/>(approach + size-and-maintenance,<br/>rubric-aware, did-not-author read)"]
     advpre --> exist{"self-tagged<br/>existential-must-fix?"}
     exist -- yes --> checkpoint["Dispatching session surfaces<br/>reconsider-before-grilling<br/>checkpoint"]
     checkpoint -- abort --> dead([Plan abandoned])
     checkpoint -- continue --> grill
-    exist -- no --> grill["grill-me: post-plan grill<br/>(waves high to low, incl.<br/>failure-mode wave that names<br/>the Failure modes rubric)"]
-    grill --> newmodes{"grill named modes<br/>the cold pass<br/>didn't cover?"}
-    newmodes -- yes --> rubricheck["adversary: post-grill<br/>rubric-check (delta only)"]
-    newmodes -- "no (clean)" --> accept
-    rubricheck --> accept["Plan accepted<br/>(optional 'run it through'<br/>= auto-dispatch, pauses removed,<br/>gates intact)"]
-    accept --> ws["Workstream specialist:<br/>code-engineer / test-engineer /<br/>docs-engineer / notebook-author"]
+    exist -- no --> grill["grill-me: post-plan grill<br/>(interrogation waves high to low<br/>+ delivery shape)"]
+    grill --> accept["Plan accepted<br/>(optional 'run it through'<br/>= auto-dispatch, pauses removed,<br/>gates intact)"]
+    accept --> specgate["Per-workstream spec gate:<br/>chat post quoting the spec's<br/>outcome statement + call shape;<br/>match recorded, mismatch = re-sign"]
+    specgate --> ws["Workstream specialist:<br/>code-engineer / test-engineer /<br/>docs-engineer / notebook-author"]
     ws --> critics["Conditional post-impl critics:<br/>api-critic (user-facing API)<br/>viz-critic (figures)<br/>editorial-critic (notebooks)"]
     critics --> advpost["adversary: post-impl<br/>(blind attack on diff first,<br/>then reconcile via<br/>two-message dispatch)"]
     advpost --> qa["qa-engineer: tests, lint, type,<br/>doc build, audit.sh, security/perf<br/>trip-wires, Implementation log,<br/>CHANGELOG"]
@@ -31,7 +38,7 @@ flowchart TD
     findings -- worth-discussing --> wd["Maintainer-gated at checkpoint<br/>(auto-routes only if it bears on<br/>a downstream workstream;<br/>batches to plan-end under<br/>auto-dispatch)"]
     wd --> more
     findings -- pass --> more{More workstreams?}
-    more -- yes --> ws
+    more -- yes --> specgate
     more -- no --> adr["qa-engineer surfaces<br/>ADR-promotion worth-discussing"]
     adr --> liaison2["research-liaison: post-task<br/>(entity page + log.md;<br/>ADR promotion on green-light)"]
     liaison2 --> done([Plan ships, moves to plans/archived/])

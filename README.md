@@ -24,9 +24,9 @@ The dispatching session (the consumer-repo Claude Code conversation the maintain
 ```mermaid
 flowchart TD
     M([Maintainer]) <--> DS["Dispatching session<br/>(sole dispatcher, no direct edits)"]
-    DS -. "runs inline<br/>(skill, not a sub-agent)" .-> GRILL["grill-me<br/>brief interview + plan grill"]
-    DS --> ORCH["orchestrator<br/>writes & amends the plan"]
-    DS --> ADV["adversary<br/>attacks the plan, then the ship"]
+    DS -. "runs inline<br/>(skill, not a sub-agent)" .-> GRILL["grill-me<br/>brief interview + spec failure-mode<br/>wave + plan grill"]
+    DS --> ORCH["orchestrator<br/>writes & amends the plan<br/>from the signed spec"]
+    DS --> ADV["adversary<br/>attacks the spec, the plan,<br/>then the ship"]
     DS --> SPEC["specialists<br/>code / test / docs / notebook"]
     DS --> CRIT["critics<br/>api / viz / editorial"]
     DS --> QA["qa-engineer<br/>release-readiness gate"]
@@ -38,21 +38,22 @@ flowchart TD
     QA --> PLAN
 ```
 
-Rough order for a coding task: grill-me brief interview (optional) → research-liaison pre-task → orchestrator plans → adversary challenges → grill-me grills → per workstream: specialist → critics → adversary post-impl → qa-engineer → research-liaison closes out to the wiki. A research run swaps the specialists for a bounded panel of parallel research lenses, with the same adversary/grill spine.
+Rough order for a coding task: grill-me brief interview (optional) → research-liaison pre-task → spec drafted, challenged (failure-mode wave, then adversary and api-critic) and signed by the maintainer → orchestrator plans from the signed spec → adversary challenges the plan → grill-me grills → per workstream: spec-gate post → specialist → critics → adversary post-impl → qa-engineer → research-liaison closes out to the wiki. A research run swaps the specialists for a bounded panel of parallel research lenses, with the same adversary/grill spine and no spec.
 
 ### The build loop (autonomous coding)
 
-How code actually gets built: a generate-evaluate loop (the evaluator-optimizer shape from Anthropic's *Building Effective Agents*, with the roles split further). A plan-hardening loop runs before any code exists; then each workstream flows specialists → reviewers, with the two big loops drawn as back-edges: `must-fix` findings route back through the orchestrator for amend-and-re-dispatch (drawn once from qa to keep the diagram clean; a `must-fix` from any reviewer takes the same edge), and a clean workstream cycles to the next until the plan is done (qa also has a self-fix micro-loop, noted in its box). Within a workstream the session dispatches the relevant specialists in order (test-engineer follows code-engineer) and only the reviewers the surface calls for. Under auto-dispatch ("run it through") the pauses between workstreams are removed but every gate still runs; the run halts to the maintainer on `must-fix`, `BLOCKED`, or a finding that bears on a downstream workstream.
+How code actually gets built: a generate-evaluate loop (the evaluator-optimizer shape from Anthropic's *Building Effective Agents*, with the roles split further). A spec-and-plan-hardening loop runs before any code exists; then each workstream flows specialists → reviewers, with the two big loops drawn as back-edges: `must-fix` findings route back through the orchestrator for amend-and-re-dispatch (drawn once from qa to keep the diagram clean; a `must-fix` from any reviewer takes the same edge), and a clean workstream cycles to the next until the plan is done (qa also has a self-fix micro-loop, noted in its box). Within a workstream the session dispatches the relevant specialists in order (test-engineer follows code-engineer) and only the reviewers the surface calls for. Under auto-dispatch ("run it through") the pauses between workstreams are removed but every gate still runs; the run halts to the maintainer on `must-fix`, `BLOCKED`, or a finding that bears on a downstream workstream.
 
 Arrows show the logical hand-off order; physically, every dispatch is made by the dispatching session (the hub above), which is how each agent keeps a clean context.
 
 ```mermaid
 flowchart TD
-    M([maintainer brief]) --> ORCH
+    M([maintainer brief]) --> SIGN
 
-    subgraph PLAN["plan loop (no code yet)"]
-        ORCH[orchestrator] -- "drafts plan" --> ADV1["adversary<br/>(cold challenge)"]
-        ADV1 --> GRILL["grill-me<br/>(alignment + failure modes)"]
+    subgraph PLAN["spec + plan loop (no code yet)"]
+        SIGN["spec drafted + failure-mode wave;<br/>adversary + api-critic challenge;<br/>maintainer signs"] -- "signed spec" --> ORCH[orchestrator]
+        ORCH -- "drafts plan" --> ADV1["adversary<br/>(plan-stage challenge)"]
+        ADV1 --> GRILL["grill-me<br/>(alignment grill)"]
         GRILL -. "amendments" .-> ORCH
     end
 

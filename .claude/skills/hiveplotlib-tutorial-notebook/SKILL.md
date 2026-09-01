@@ -14,10 +14,10 @@ Pick tutorial if the notebook needs a "why this technique?" motivation, walks a 
 
 ## Subtypes
 
-1. **Concept introductions** (`introduction_to_hive_plots.ipynb`, `introduction_to_p2cps.ipynb`) — heavy motivation, compare against alternatives, synthetic data inline. Title: `### An Introduction to ...`.
-2. **Quick starts** (`quick_hive_plots.ipynb`) — practical workflow end-to-end with a contrived dataset. Title: `### Quick Start ...`.
-3. **Real-data examples** (`karate_club.ipynb`, `bitcoin_user_ratings.ipynb`, `election_96.ipynb`) — Background section explaining provenance, References section at the end. Title: noun phrase naming the dataset.
-4. **Conceptual deep-dives** (`comparing_network_subgroups.ipynb`, `hive_plots_for_large_networks.ipynb`, `hive_plot_matrices.ipynb`) — one big idea with multiple variants. Title: noun phrase naming the concept.
+1. **Concept introductions** (`introduction_to_hive_plots.ipynb`, `introduction_to_p2cps.ipynb`): heavy motivation, compare against alternatives, synthetic data inline. Title: `### An Introduction to ...`.
+2. **Quick starts** (`quick_hive_plots.ipynb`): practical workflow end-to-end with a contrived dataset. Title: `### Quick Start ...`.
+3. **Real-data examples** (`karate_club.ipynb`, `bitcoin_user_ratings.ipynb`, `election_96.ipynb`): Background section explaining provenance, References section at the end. Title: noun phrase naming the dataset.
+4. **Conceptual deep-dives** (`comparing_network_subgroups.ipynb`, `hive_plots_for_large_networks.ipynb`, `hive_plot_matrices.ipynb`): one big idea with multiple variants. Title: noun phrase naming the concept.
 
 ## File layout
 
@@ -112,8 +112,8 @@ Tutorials read top-to-bottom but aren't essays. Prose explains the visualization
 A tutorial much longer than its closest sibling is too long. Tells you've over-written:
 
 - More than 1-2 sentences of preamble before a code cell.
-- A "Why bin?" abstract section alongside the visualization that already answers it — cut the section.
-- Meta-discussion of which tools you're using ("we will use `flexitext` to embed legends" — just use it).
+- A "Why bin?" abstract section alongside the visualization that already answers it: cut the section.
+- Meta-discussion of which tools you're using ("we will use `flexitext` to embed legends"; just use it).
 - Multiple paragraphs reflecting on a single figure. One is plenty.
 
 If you're above 2x the closest existing notebook's word count for comparable scope, cut.
@@ -131,7 +131,7 @@ Read like the maintainer wrote it. No em-dashes. No AI filler ("delve", "moreove
 - **Cross-link to gallery pages** when mentioning a parameter with a deep-dive: `For a high-level overview of the supported visualization back ends, see the [Hive Plots Using Other Visualization Libraries notebook](hive_plot_viz_outside_matplotlib.ipynb).`
 - **Format cross-links as prose paragraphs**, not bulleted `## See Also`. Canonical: one paragraph per pointer in the form `For more on X, see the [Y](Y.ipynb) page.` (or `notebook` for a tutorial target). A generic `## See Also` + bullets reads as reference-index genre.
 - **Exception:** topic-specific closing sections with their own depth are fine (e.g., `setting_partition_variable.ipynb` closes with `## Using Node Graph Metrics as Partition Variables`). The heading earns its place by naming a specific topic, not by being a catch-all.
-- **Link to the single best next-step notebook, not every subordinate reference.** Don't enumerate "see the X Table, the Y Method, and the Z Walkthrough" — pick the walkthrough.
+- **Link to the single best next-step notebook, not every subordinate reference.** Don't enumerate "see the X Table, the Y Method, and the Z Walkthrough": pick the walkthrough.
 - **Anchor links:** `[Section Name](other_notebook.ipynb#section-name-slug)` (lowercased heading, spaces → hyphens). Use when the destination has multiple sections.
 
 ### Use the library; don't reinvent it
