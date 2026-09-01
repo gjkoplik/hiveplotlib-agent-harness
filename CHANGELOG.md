@@ -6,6 +6,8 @@ Dated versioning, most recent release first.
 
 ## Unreleased
 
+## 2026.09.01
+
 This cycle extends the harness beyond building code into also supporting *doing research*: a bounded, adversarially
 validated research capability that rides the same spine as a code plan, with a focus on keeping a run cheap, staying
 scientifically honest, and durably saving what it finds instead of burning the budget for nothing.
