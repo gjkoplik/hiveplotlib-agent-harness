@@ -30,7 +30,7 @@ flowchart TD
     DS --> SPEC["specialists<br/>code / test / docs / notebook"]
     DS --> CRIT["critics<br/>api / viz / editorial"]
     DS --> QA["qa-engineer<br/>release-readiness gate"]
-    DS --> RL["research-liaison<br/>wiki in (pre-task), wiki out (ADRs, analyses)"]
+    DS --> RL["record-keeper<br/>wiki in (pre-task), wiki out (ADRs, analyses)"]
     ORCH --> PLAN[("plan file<br/>shared memory; each agent<br/>writes only its own sections")]
     ADV --> PLAN
     SPEC --> PLAN
@@ -38,7 +38,7 @@ flowchart TD
     QA --> PLAN
 ```
 
-Rough order for a coding task: grill-me brief interview (optional) → research-liaison pre-task → spec drafted, challenged (failure-mode wave, then adversary and api-critic) and signed by the maintainer → orchestrator plans from the signed spec → adversary challenges the plan → grill-me grills → per workstream: spec-gate post → specialist → critics → adversary post-impl → qa-engineer → research-liaison closes out to the wiki. A research run swaps the specialists for a bounded panel of parallel research lenses, with the same adversary/grill spine and no spec.
+Rough order for a coding task: grill-me brief interview (optional) → record-keeper pre-task → spec drafted, challenged (failure-mode wave, then adversary and api-critic) and signed by the maintainer → orchestrator plans from the signed spec → adversary challenges the plan → grill-me grills → per workstream: spec-gate post → specialist → critics → adversary post-impl → qa-engineer → record-keeper closes out to the wiki. A research run swaps the specialists for a bounded panel of parallel research lenses, with the same adversary/grill spine and no spec.
 
 ### The build loop (autonomous coding)
 
@@ -77,7 +77,7 @@ flowchart TD
     SPEC --> CRIT
     CRIT --> ADV2
     ADV2 --> QA
-    QA -- "all workstreams clean" --> RL["research-liaison<br/>(wiki close-out)"]
+    QA -- "all workstreams clean" --> RL["record-keeper<br/>(wiki close-out)"]
     QA -- "BLOCKED" --> HALT([halt to maintainer])
     RL --> DONE([shipped])
 

@@ -6,6 +6,15 @@ Dated versioning, most recent release first.
 
 ## Unreleased
 
+### Changed
+
+- `research-liaison` is now `record-keeper`, named for what every pass does: moving knowledge in and out of durable
+  records. Its pre-task pass reports to the dispatching session rather than writing into a plan. Transcripts from
+  before the change record the agent as `research-liaison`.
+- The producer path in `record-keeper` now reads the research plan's `## Destination artifact` alongside the validated
+  summary: it enriches the page that section names or rebuilds one at a kept slug, and its approval draft lists every
+  instruction there, marked acted on or not. The section decides where the page lands, never which findings land.
+
 ## 2026.09.01
 
 This cycle extends the harness beyond building code into also supporting *doing research*: a bounded, adversarially

@@ -71,13 +71,13 @@ The ban is absolute. User authorization to ship a workstream is not authorizatio
 
 ### 10. Promote major plans to wiki ADRs
 
-When a major plan finishes shipping (work complete, tests pass, user has reviewed), Research Liaison distills it into `wiki/wiki/adr/NNNN-topic.md`. Conventions: 4-digit sequential `NNNN`, kebab-case slug naming the decision, `Status: Proposed | Accepted | Superseded by NNNN`, append-only (supersede with a new record, link both directions). Concision per rule 17 (ADR shape).
+When a major plan finishes shipping (work complete, tests pass, user has reviewed), Record Keeper distills it into `wiki/wiki/adr/NNNN-topic.md`. Conventions: 4-digit sequential `NNNN`, kebab-case slug naming the decision, `Status: Proposed | Accepted | Superseded by NNNN`, append-only (supersede with a new record, link both directions). Concision per rule 17 (ADR shape).
 
 **Scope:** hiveplotlib consumer-repo plans only. Harness-self plans use `agent-harness/CHANGELOG.md` as their durable record. Trivial plans skip.
 
-**Triggers:** Orchestrator invokes Research Liaison at planning start to surface relevant prior ADRs. QA Engineer flags eligibility at task close as a `worth-discussing` concern; user green-lights; Research Liaison promotes.
+**Triggers:** the dispatching session runs Record Keeper's pre-task pass at task start and puts its findings in the orchestrator's brief; the Orchestrator writes the relevant prior ADRs into the plan. QA Engineer flags eligibility at task close as a `worth-discussing` concern; user green-lights; Record Keeper promotes.
 
-**Archiving:** once a wiki plan has fully shipped, it moves to `wiki/wiki/plans/archived/<topic>.md` so the active `plans/` directory shows only in-flight work. Research Liaison *proposes* the move (at ADR promotion for ADR-eligible plans, or in its post-task pass for non-ADR plans); the user confirms and performs it. Agents never move plan files. A technically-done plan still bundled with unshipped work stays active until the bundle ships. Harness-self plans don't archive.
+**Archiving:** once a wiki plan has fully shipped, it moves to `wiki/wiki/plans/archived/<topic>.md` so the active `plans/` directory shows only in-flight work. Record Keeper *proposes* the move (at ADR promotion for ADR-eligible plans, or in its post-task pass for non-ADR plans); the user confirms and performs it. Agents never move plan files. A technically-done plan still bundled with unshipped work stays active until the bundle ships. Harness-self plans don't archive.
 
 ### 11. Agents grow their own expertise
 
@@ -139,7 +139,7 @@ Plans, plan amendments, and ADRs are written to be read directly, not skimmed pa
 - **Amendments:** as tight as an expertise entry: delta, rationale, which done-whens it touches, the In-scope / Added / Deferred tag. Not a narration of how the ask arrived.
 - **ADRs:** a distilled record, not a narrative. Keep it short, single screen typically.
 
-Binds the Orchestrator (plans, amendments) and Research Liaison (ADRs) at authoring time.
+Binds the Orchestrator (plans, amendments) and Record Keeper (ADRs) at authoring time.
 
 ### 18. Cold-context dissent is mandatory on every plan
 

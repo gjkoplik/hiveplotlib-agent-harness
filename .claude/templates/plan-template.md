@@ -63,7 +63,7 @@ An empty section and an absent rubric are different things, and the adversary re
 
 ## Prior ADRs / design docs
 
-Populated by research-liaison at planning start. List relevant entries:
+Written by the orchestrator from record-keeper's pre-task findings, which the dispatching session puts in the orchestrator's brief. List relevant entries:
 
 - `wiki/wiki/adr/NNNN-topic.md`: one-line on why it's relevant.
 - ...
@@ -362,7 +362,7 @@ What a validated finding must clear (grounded, independently verified, adversary
 
 ## Destination artifact
 
-`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive on a consumer with a wiki, landed via research-liaison's producer path under maintainer approval; a minimal breadcrumb for a nothing-cohered run. On a wiki-less consumer, name the destination explicitly per the `research-track` skill's landing conventions rather than assuming a page.
+`wiki/wiki/analyses/<slug>.md` for a validated finding or validated inconclusive on a consumer with a wiki, landed via record-keeper's producer path under maintainer approval; a minimal breadcrumb for a nothing-cohered run. On a wiki-less consumer, name the destination explicitly per the `research-track` skill's landing conventions rather than assuming a page. This section decides where and how the page lands (a new page, an existing page to enrich, or a slug to rebuild), never which findings land. Name the mode in words; a slug that already exists is an enrich or a rebuild.
 
 ## Minor pivots vs. amend-plan
 

@@ -8,9 +8,9 @@ Detailed records of how and when the dispatching session invokes each agent and 
 flowchart TD
     brief([Maintainer brief, non-trivial]) --> gate{"Brief-mode gate:<br/>brief underdetermines<br/>outcome or call shape?"}
     gate -- "yes (or maintainer invokes)" --> grillbrief["grill-me: brief mode<br/>(extraction interview,<br/>one question at a time)"]
-    gate -- "knowingly skipped<br/>(recorded on the spec's<br/>intent-extraction line)" --> liaison
-    grillbrief --> liaison["research-liaison: pre-task<br/>(search wiki for prior<br/>ADRs / design docs)"]
-    liaison --> spec["Spec drafted (agent-transcribed)<br/>wiki/wiki/specs/&lt;topic&gt;.md"]
+    gate -- "knowingly skipped<br/>(recorded on the spec's<br/>intent-extraction line)" --> keeper
+    grillbrief --> keeper["record-keeper: pre-task<br/>(search wiki for prior<br/>ADRs / design docs)"]
+    keeper --> spec["Spec drafted (agent-transcribed)<br/>wiki/wiki/specs/&lt;topic&gt;.md"]
     spec --> wave["grill-me: failure-mode wave<br/>(maintainer names the modes<br/>into the spec)"]
     wave --> advspec["adversary: spec-stage pass<br/>(premise + could-this-not-exist,<br/>rubric-aware)"]
     advspec --> apicrit["api-critic: planning mode<br/>(walks the spec's call shape,<br/>Path: line per fence)"]
@@ -40,8 +40,8 @@ flowchart TD
     findings -- pass --> more{More workstreams?}
     more -- yes --> specgate
     more -- no --> adr["qa-engineer surfaces<br/>ADR-promotion worth-discussing"]
-    adr --> liaison2["research-liaison: post-task<br/>(entity page + log.md;<br/>ADR promotion on green-light)"]
-    liaison2 --> done([Plan ships, moves to plans/archived/])
+    adr --> keeper2["record-keeper: post-task<br/>(entity page + log.md;<br/>ADR promotion on green-light)"]
+    keeper2 --> done([Plan ships, moves to plans/archived/])
 ```
 
 Simplifications in the diagram: finding-routing from the three critics, the adversary, and qa is merged into one decision node (in practice each surfaces its own report, and a `must-fix` routes to `amend-plan` from any of them), and the qa-engineer backstop is not drawn (a still-`Pending` critic section flags `must-fix` and forces the missing critic to run).
@@ -64,6 +64,6 @@ flowchart TD
     s2 --> ground
     ground["Two-layer grounding:<br/>gen-time required quotes +<br/>second-vote self-flag;<br/>verify-time claim-maker != voucher,<br/>default-refuted"]
     ground --> converge["Convergence: adversary is the<br/>validation gate (was a non-killing<br/>dissenting voice during divergence)"]
-    converge --> liaison["research-liaison: producer path<br/>formats validated report into<br/>wiki/wiki/analyses/&lt;slug&gt;.md"]
-    liaison --> approve(["Surfaced for maintainer approval,<br/>not auto-committed"])
+    converge --> keeper["record-keeper: producer path<br/>formats validated report into<br/>wiki/wiki/analyses/&lt;slug&gt;.md"]
+    keeper --> approve(["Surfaced for maintainer approval,<br/>not auto-committed"])
 ```

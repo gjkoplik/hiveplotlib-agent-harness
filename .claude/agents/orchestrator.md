@@ -51,7 +51,7 @@ Read `agent-harness/.claude/expertise/orchestrator.md` and the cross-cutting `ag
 ## Workflow (initial-plan)
 
 1. Read the task. Identify the consumer; ask if unclear.
-2. Read prior ADRs from research-liaison's pre-task findings (included in your brief by the dispatching session). Surface relevant entries into the plan's "Prior ADRs / design docs" section.
+2. Read prior ADRs from record-keeper's pre-task findings (included in your brief by the dispatching session). Surface relevant entries into the plan's "Prior ADRs / design docs" section.
 3. **Read the signed spec and transcribe it.** The outcome statement seeds `## Goal`, the call shape lands under `## API usage examples` as the "Proposed (planner)" snippets, and the failure modes land as the top tier of `## Failure modes`. Every call-shape fence transcribes with its `Path:` line attached: a spec may claim several benefits, and that line is what makes each one's reachability checkable from the plan. Transcribe rather than link, because api-critic's benefit-reachability audit and the adversary's blind post-impl extract both read the plan and not the spec. The copy is one-directional and the spec stays canonical: a snippet you would write differently is a re-sign to surface, never a plan-local override. Write `Spec: <path> (signed YYYY-MM-DD)` in `## Goal`; when the spec carried an `Unapproved modifications:` marker, that line also records that the signature was pending re-signature at transcription. Record the backlink in the same visit: append this plan's path to the spec's `## Plans` list unless it is already listed. That append is bookkeeping that cannot change what the spec promises, so it fires no `Unapproved modifications:` marker. One write per plan, never one per spec, since a plan may serve two. When no spec governs this plan, that line reads `none`, nothing is transcribed, there is no backlink to write, and those three sections are authored from the task brief and whatever the grill later settles.
 4. Map the relevant code surface with Glob and Grep; Read files you'll reason about heavily.
 5. **Replace-and-sweep audit.** Grep for old patterns. Cite `<file>:<line>` in "Patterns this replaces" or state "None — net new addition."
@@ -82,12 +82,12 @@ A research task researches **for** a consumer and lands in that consumer's durab
 
 1. Read the task. Identify the consumer and the research question; refine the question if the ask is broad.
 2. Write the **light research-plan** at the consumer's plans path, using the template's research-plan shape. Keep it light on purpose: no workstream-style done-when ceremony. The shape carries Question; candidate stories / hypotheses; failure-mode rubric; lenses + bounds; validation criteria; destination artifact.
-3. Author the **summary shape** the bounded run reports (below). This mode owns it; the `research-track` skill's bounds and durable-landing sections point here as its home, and the producer path (research-liaison) formats the durable page to it.
+3. Author the **summary shape** the bounded run reports (below). This mode owns it; the `research-track` skill's bounds and durable-landing sections point here as its home, and the producer path (record-keeper) formats the durable page to it.
 4. Report the plan path and recommend the alignment gates (adversary cold challenge, grill-me failure-mode wave), the same as any plan.
 
 ### The summary shape
 
-Owned here, reported by the bounded run, and formatted into the durable `analyses/` page by research-liaison's producer path (on a wiki-less consumer that path stops, and the run names its own destination per `research-track`). The `Yield` field and the outcome-conditional `Destination` are what keep a low-yield run from landing a tidy finding-shaped page it should not (the run classifies its own terminal outcome; the synth and convergence gate produce that classification):
+Owned here, reported by the bounded run, and formatted into the durable `analyses/` page by record-keeper's producer path (on a wiki-less consumer that path stops, and the run names its own destination per `research-track`). The `Yield` field and the outcome-conditional `Destination` are what keep a low-yield run from landing a tidy finding-shaped page it should not (the run classifies its own terminal outcome; the synth and convergence gate produce that classification):
 
 ```
 Question: <the refined research question>
@@ -110,7 +110,7 @@ Destination: <reflects Yield; see the terminal outcomes below>
 **The three legitimate terminal outcomes** a run classifies itself into (all honest, none a failed run):
 
 - **validated finding**: a confident, grounded conclusion. Lands the full page.
-- **validated inconclusive**: the question was pursued to a negative, "the evidence does not support a confident answer." A first-class outcome, not a failure; lands the full page (via the `what-was-inconclusive-and-why` slot) as a "do not re-research this dead end" reference.
+- **validated inconclusive**: the question was pursued to a negative, "the evidence does not support a confident answer." A first-class outcome, not a failure; lands the full page (a new or rebuilt page fills the `what-was-inconclusive-and-why` slot, and an enrich carries the same negative result into the named page) as a "do not re-research this dead end" reference.
 - **nothing-cohered**: the degenerate low-yield case, the panel ran but nothing of interest cohered, neither a confident finding nor a pursued-to-a-negative inconclusive. Distinct from inconclusive (which is a positive determination). Lands only a **minimal breadcrumb** (ran-this / nothing-cohered / consumption reported) so the dead end is not blindly re-researched, **never a thin finding-shaped page**.
 
 So `Destination` reflects `Yield`: a validated finding or validated inconclusive points at the full page (`wiki/wiki/analyses/<slug>.md` on a consumer with a wiki, pending maintainer approval; on a wiki-less consumer, at whatever destination the run named per `research-track`); a nothing-cohered run points at the minimal breadcrumb only. The first-class requirement of a run is **reaching an honest terminal outcome and reporting consumption**, not always emitting a durable page; the page reflects yield.

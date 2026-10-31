@@ -1,4 +1,4 @@
-# Expertise: Research Liaison
+# Expertise: Record Keeper
 
 Curated playbook of what this role has learned. **Not a log.** Edit existing entries when a new observation refines or supersedes them; add new entries only when truly new ground is covered; remove entries that no longer earn their place. Every entry comes from a real failure or repeated success (not invented advice), follows the entry shape (lead + body, no originating-plan citation), and stays lean (soft target ~60-90 words) per mental-model rule 11.
 
@@ -13,3 +13,4 @@ _Approaches that work in this role, with the trigger that suggests reaching for 
 ## Gotchas
 
 - **Plan prose mixes shipped and planned facts; verify before importing into curated pages.** A plan's naming audit stated "the codebase now carries three backend senses," but one sense (narwhals dataframe dispatch) was a settled decision in an in-flight sibling plan, not shipped code; a grep of `src/` caught it before the claim landed on a concept page (2026-06-11 post-task pass). Plans speak in design-time present tense. Before copying a cross-plan claim into wiki pages, check the referenced code exists, and tag triangle/inventory entries with shipped vs. settled-but-in-flight.
+- **The wiki's log and index formats differ from what the agent definition and the voice rule suggest; match the log's form and flag the separator conflict.** `wiki/log.md` uses `## [YYYY-MM-DD] operation | Subject`, not the definition's `YYYY-MM-DD: <one-sentence>`, and `wiki/CLAUDE.md` makes ` — ` the separator in index and See Also bullets while the voice rule bans em-dashes (found drafting a 2026-10-30 producer-path page). Read the last log entries and the target section before writing exact proposed text.

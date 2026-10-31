@@ -26,7 +26,7 @@ The `adversary` gets one pass per layer, both rubric-aware (`agent-harness/.clau
 
 **When.** Before the spec is drafted, on a non-trivial brief that underdetermines plan-shaping choices (scope ambition, the deliverable set, a fork the drafter would otherwise settle by default). Maintainer-invoked, or offered by the dispatching session. The offer is a **surfaced gate** like the grill gate: on every non-trivial brief the dispatching session names that brief mode ran or was knowingly skipped, so a silent non-offer is visible after the fact. The gate outcome is also recorded on the spec, as one line in its `## Sign-off` section above the append-only fence, so the record survives the conversation transcript and the signer sees how the intent was extracted. The "looks underdetermined" judgment stays with the dispatching session, not a checklist.
 
-**Ordering.** Brief-mode interview first, then research-liaison pre-task, then the spec draft: extraction sharpens what the liaison searches for, and the liaison's findings reach the spec. If planning judgment prefers another order for a given task, record why.
+**Ordering.** Brief-mode interview first, then record-keeper pre-task, then the spec draft: extraction sharpens what record-keeper searches for, and its findings reach the spec. If planning judgment prefers another order for a given task, record why.
 
 **Method.** An interview, not a review; there is no plan yet.
 
